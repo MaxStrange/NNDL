@@ -90,3 +90,6 @@ ENV/
 
 # OSX nonsense
 .DS_Store
+
+# .swp files
+*.swp
