@@ -11,4 +11,7 @@ mv NNDL*.tokens build/
 cp NNDL.g4 build/
 cp examples/* build/
 
-echo "Done. To grun, cd into build and run: 'grun NNDL prog <EXAMPLE> -gui'"
+echo "Moving everything to the nndl program's grammar directory..."
+cp build/* ../nndl/grammar/
+
+echo "Done. Now the python runtime files should be in the nndl/grammar dir"
