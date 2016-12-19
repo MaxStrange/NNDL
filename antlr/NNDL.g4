@@ -3,7 +3,7 @@ grammar NNDL;
 prog:               (import_stat)* network_stat EOF
                     ;
 
-import_stat:        IMPORT ID
+import_stat:        IMPORT ID STAT_END
                     ;
 
 network_stat:       NETWORK_OPEN neuron_stat connection_stat NETWORK_END
@@ -16,10 +16,10 @@ connection_stat:    CONNECT_OPEN (con_stat)* CONNECT_END
                     ;
 
 //TODO: Make layer_stat allow multiple types of neurons in a single layer
-layer_stat:         LAYER ':' LAYER_ID MAT_DECL '=' ID
+layer_stat:         LAYER ':' ID MAT_DECL '=' ID STAT_END
                     ;
 
-con_stat:           neuron_selection ':' CONNECT neuron_selection (',' neuron_selection)* '=' ID
+con_stat:           neuron_selection ':' CONNECT neuron_selection (',' neuron_selection)* '=' ID STAT_END
                     ;
 
 neuron_selection:   '(' logical_expr ',' logical_expr ')'
@@ -42,6 +42,9 @@ math_expr:          math_expr ('*'|'/'|'%') math_expr
                     | math_expr ('+'|'-') math_expr
                     | NEUR_VAR
                     | NUM
+                    ;
+
+STAT_END:           ';'
                     ;
 
 IMPORT:             'import'
@@ -68,16 +71,13 @@ CONNECT_END:        'end connections'
 LAYER:              'layer'
                     ;
 
-LAYER_ID:           ID
-                    ;
-
 MAT_DECL:           NUM 'x' NUM
                     ;
 
 CONNECT:            'connect'
                     ;
 
-CLASS:              '*'
+CLASS:              'ALL'
                     | NUM '-' NUM
                     ;
 
@@ -100,5 +100,5 @@ DIGIT:              '0'..'9'
                     ;
 
 
-WS:                 [ \t\u000C]+ -> skip
+WS:                 [ \t\u000C\r\n]+ -> skip
                     ;
