@@ -9,7 +9,7 @@ echo "Moving everything to the build directory..."
 mv NNDL*.py build/
 mv NNDL*.tokens build/
 cp NNDL.g4 build/
-cp examples/* build/
+cp ../examples/* build/
 
 echo "Moving everything to the nndl program's grammar directory..."
 cp build/* ../nndl/grammar/

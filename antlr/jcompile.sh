@@ -13,6 +13,6 @@ mv NNDL*.java build/
 mv NNDL*.class build/
 mv NNDL*.tokens build/
 cp NNDL.g4 build/
-cp examples/* build/
+cp ../examples/* build/
 
 echo "Done. To grun, cd into build and run: 'grun NNDL prog <EXAMPLE> -gui'"
