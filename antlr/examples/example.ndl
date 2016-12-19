@@ -1,0 +1,21 @@
+import n
+import s
+
+network
+    neurons
+        layer : input 4x1 = n
+        layer : h0 4x1 = n
+        layer : h1 4x1 = n
+        layer : h2 4x1 = n
+        layer : output 2x1 = n
+    end neurons
+
+    connections
+        (0, {j % 2 == 0}) : connect (1, j), (1, j + 1) = s
+        (0, {j % 2 == 1}) : connect (1, j), (1, j - 1) = s
+        (1, [*]) : connect (2, [*]) = s
+        (2, {j % 2 == 0}) : connect (3, j + 1) = s
+        (2, {j % 2 == 1}) : connect (3, j - 1) = s
+        (3, [*]) : connect (4, j / 2) = s
+    end connections
+end network
