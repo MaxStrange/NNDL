@@ -4,6 +4,8 @@ and generate dot graphs.
 """
 
 import compiler.dotwriter as dotwriter
+import compiler.logic as logic
+import compiler.network as network
 from grammar import NNDLListener
 
 class DotGenerator(NNDLListener.NNDLListener):
@@ -13,12 +15,13 @@ class DotGenerator(NNDLListener.NNDLListener):
     def __init__(self, fname, output_fname):
         self._fname = fname
         self._output_fname = output_fname
-        self._num_layers = 0
+        self._network = network.Network()
 
     def enterProg(self, ctx):
         dotwriter.write_boilerplate(self._output_fname)
 
     def exitProg(self, ctx):
+        dotwriter.write_end(self._output_fname);
         print("Wrote dot file for %s to %s." %\
                 (self._fname, self._output_fname))
 
@@ -27,17 +30,59 @@ class DotGenerator(NNDLListener.NNDLListener):
         num_rows = int(ctx.MAT_DECL().getText()[0])
         num_cols = int(ctx.MAT_DECL().getText()[-1])
         neuron_type = ctx.ID()[1].getText()
-        color = dotwriter.get_color(self._num_layers)
+        color = dotwriter.get_color(len(self._network.layers))
         dotwriter.write_layer(name=layer_name, nrows=num_rows, ncols=num_cols,
                 neur_type=neuron_type, color=color, fname=self._output_fname)
 
-        self._num_layers += 1
+        self._network.add_layer(nrows=num_rows, ncols=num_cols,
+                neurtype=neuron_type)
 
-    def exitCon_stat(self, ctx):
-        #TODO: figure out the connections and write them to the file
-        print("con_stat: ", repr(ctx))
+    def enterConnection_stat(self, ctx):
+        self._conx = []
+
+    def exitConnection_stat(self, ctx):
+        cons = ctx.con_stat()
+        for con_stat in cons:
+            connect_from = con_stat.neuron_selection()[0]
+            connect_to = con_stat.neuron_selection()[1:]
+
+            from_logic_layer = connect_from.logical_expr()[0].getText()
+            log_type = self._lookup_log_type(connect_from.logical_expr()[0])
+            from_logic_layer = logic.py(from_logic_layer, log_type, "i")
+
+            from_logic_neurs = connect_from.logical_expr()[1].getText()
+            log_type = self._lookup_log_type(connect_from.logical_expr()[1])
+            from_logic_neurs = logic.py(from_logic_neurs, log_type, "j")
+
+            print("Connect from layer ", from_logic_layer)
+            print("Neurons ", from_logic_neurs)
+
+            for to in connect_to:
+                to_logic_layer = to.logical_expr()[0].getText()
+                log_type = self._lookup_log_type(to.logical_expr()[0])
+                to_logic_layer = logic.py(to_logic_layer, log_type, "k")
+
+                to_logic_neurs = to.logical_expr()[1].getText()
+                log_type = self._lookup_log_type(to.logical_expr()[1])
+                to_logic_neurs = logic.py(to_logic_neurs, log_type, "l")
+                print("To layer ", to_logic_layer)
+                print("Neurons ", to_logic_neurs)
+
+        #conx -> [(neur0, neur1), (neur0, neur1), ...]
+        dotwriter.write_connections(self._conx, self._output_fname)
 
 
+    def _lookup_log_type(self, logical_expr):
+        """
+        Looks up whether the logical_expr is log_pred_expr
+        or class_expr, or math_expr.
+        """
+        if logical_expr.log_pred_expr():
+            return "pred"
+        elif logical_expr.class_expr():
+            return "class"
+        else:
+            return "math"
 
 
 

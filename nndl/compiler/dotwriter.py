@@ -65,6 +65,25 @@ def write_boilerplate(fname):
         f.write(os.linesep + os.linesep)
 
 
+def write_connections(conx, fname):
+    """
+    Writes the connections to the file.
+    """
+    for pair in conx:
+        n0, n1 = pair[0], pair[1]
+        lines = ["\t" + n0 + " -> " + n1 + ";"]
+        text = os.linesep.join(lines)
+        with open(fname, 'a') as f:
+            f.write(text)
+
+
+def write_end(fname):
+    """
+    Writes the closing curly brace to the file.
+    """
+    with open(fname, 'a') as f:
+        f.write("}" + os.linesep)
+
 def write_layer(name, nrows, ncols, neur_type, color, fname):
     """
     Writes a subgraph corresponding to the layer information
