@@ -13,6 +13,7 @@ class DotGenerator(NNDLListener.NNDLListener):
     def __init__(self, fname, output_fname):
         self._fname = fname
         self._output_fname = output_fname
+        self._num_layers = 0
 
     def enterProg(self, ctx):
         dotwriter.write_boilerplate(self._output_fname)
@@ -22,11 +23,15 @@ class DotGenerator(NNDLListener.NNDLListener):
                 (self._fname, self._output_fname))
 
     def exitLayer_stat(self, ctx):
-        #TODO: make a subgraph and write it to the file
-        print("Found a layer: ", repr(ctx))
-        text = ctx.getText()
-        # text --> layer : h2 4x1 = n;
-        #TODO: send whitespace on hidden channel
+        layer_name = ctx.ID()[0].getText()
+        num_rows = int(ctx.MAT_DECL().getText()[0])
+        num_cols = int(ctx.MAT_DECL().getText()[-1])
+        neuron_type = ctx.ID()[1].getText()
+        color = dotwriter.get_color(self._num_layers)
+        dotwriter.write_layer(name=layer_name, nrows=num_rows, ncols=num_cols,
+                neur_type=neuron_type, color=color, fname=self._output_fname)
+
+        self._num_layers += 1
 
     def exitCon_stat(self, ctx):
         #TODO: figure out the connections and write them to the file

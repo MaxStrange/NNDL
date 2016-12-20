@@ -100,5 +100,5 @@ DIGIT:              '0'..'9'
                     ;
 
 
-WS:                 [ \t\u000C\r\n]+ -> skip
+WS:                 [ \t\u000C\r\n]+ -> channel(HIDDEN)
                     ;
