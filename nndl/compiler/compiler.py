@@ -3,6 +3,7 @@ The main compiler file for the nndl compiler.
 """
 
 import antlr4
+import compiler.dotgen as dotgen
 from grammar import NNDLLexer
 from grammar import NNDLParser
 import os
@@ -31,6 +32,9 @@ def _compile_file(file_to_compile):
     stream = antlr4.CommonTokenStream(lexer)
     parser = NNDLParser.NNDLParser(stream)
     tree = parser.prog()
+    dg = dotgen.DotGenerator(file_to_compile)
+    walker = antlr4.ParseTreeWalker()
+    walker.walk(dg, tree)
 
 
 
