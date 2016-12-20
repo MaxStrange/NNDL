@@ -21,7 +21,7 @@ digraph G {
     subgraph cluster2 {
         color=white;
         node [style=solid, color=purple, shape=circle];
-        y
+        y;
         label="Output Layer";
     }
 
@@ -39,3 +39,4 @@ digraph G {
     h2 -> y;
     h3 -> y;
 }
+

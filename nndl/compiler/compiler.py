@@ -27,7 +27,11 @@ def _compile_file(file_to_compile):
     """
     Compiles the given file, which should actually be a path to a file.
     """
-    output_file_name = #TODO
+    output_file_name = os.path.splitext(file_to_compile)[0]
+    # Now we have output_file_name = "path/to/file" without the .ndl
+    # but we want "file" not "path/to/file", so:
+    output_file_name = output_file_name.split(os.path.sep)[-1]
+
     input = antlr4.FileStream(file_to_compile)
     lexer = NNDLLexer.NNDLLexer(input)
     stream = antlr4.CommonTokenStream(lexer)

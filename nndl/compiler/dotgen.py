@@ -20,7 +20,8 @@ class DotGenerator(NNDLListener.NNDLListener):
         pass
 
     def exitProg(self, ctx):
-        print("Wrote dot file for %s." % self._fname)
+        print("Wrote dot file for %s to %s." %\
+                (self._fname, self._output_fname))
 
     def exitLayer_stat(self, ctx):
         #TODO: make a subgraph and write it to the file
