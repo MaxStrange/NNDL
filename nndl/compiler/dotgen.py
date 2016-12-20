@@ -15,9 +15,7 @@ class DotGenerator(NNDLListener.NNDLListener):
         self._output_fname = output_fname
 
     def enterProg(self, ctx):
-        #TODO: write the dot file's boiler plate
-        print("Enter prog")
-        pass
+        dotwriter.write_boilerplate(self._output_fname)
 
     def exitProg(self, ctx):
         print("Wrote dot file for %s to %s." %\
@@ -26,6 +24,9 @@ class DotGenerator(NNDLListener.NNDLListener):
     def exitLayer_stat(self, ctx):
         #TODO: make a subgraph and write it to the file
         print("Found a layer: ", repr(ctx))
+        text = ctx.getText()
+        # text --> layer : h2 4x1 = n;
+        #TODO: send whitespace on hidden channel
 
     def exitCon_stat(self, ctx):
         #TODO: figure out the connections and write them to the file
