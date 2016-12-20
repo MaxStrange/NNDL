@@ -27,12 +27,13 @@ def _compile_file(file_to_compile):
     """
     Compiles the given file, which should actually be a path to a file.
     """
+    output_file_name = #TODO
     input = antlr4.FileStream(file_to_compile)
     lexer = NNDLLexer.NNDLLexer(input)
     stream = antlr4.CommonTokenStream(lexer)
     parser = NNDLParser.NNDLParser(stream)
     tree = parser.prog()
-    dg = dotgen.DotGenerator(file_to_compile)
+    dg = dotgen.DotGenerator(file_to_compile, output_file_name + ".dot")
     walker = antlr4.ParseTreeWalker()
     walker.walk(dg, tree)
 

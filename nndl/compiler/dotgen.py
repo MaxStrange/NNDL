@@ -10,8 +10,9 @@ class DotGenerator(NNDLListener.NNDLListener):
     """
     Listener that generates dot files when walked over the nndl tree.
     """
-    def __init__(self, fname):
+    def __init__(self, fname, output_fname):
         self._fname = fname
+        self._output_fname = output_fname
 
     def enterProg(self, ctx):
         #TODO: write the dot file's boiler plate
