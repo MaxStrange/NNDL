@@ -52,7 +52,7 @@ def _pyclass(logical_expr, var):
 
 
 def _pymath(logical_expr, var):
-    expr = "{" + var + "==" + "(" + logical_expr + ")}"
+    expr = "{" + var + "==" + "int(" + logical_expr + ")}"
     return expr
 
 def pygen(rules, network):
