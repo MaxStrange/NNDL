@@ -8,6 +8,6 @@ network
     end neurons
 
     connections
-        (0, [ALL]) : connect ({i > 0}, [ALL]) = s;
+        (0, [ALL]) : connect ({k > 0}, [ALL]) = s;
     end connections
 end network

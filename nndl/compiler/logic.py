@@ -31,12 +31,23 @@ def py(logical_expr, log_type, var):
                          l for connection to neuron
     """
     if log_type == "pred":
-        return logical_expr
+        return _pylogical(logical_expr, var)
     elif log_type == "class":
         return _pyclass(logical_expr, var)
     else:
         return _pymath(logical_expr, var)
 
+
+def _pylogical(logical_expr, var):
+    ands = logical_expr.strip("{").strip("}").split("&&")
+    ands = ["(" + a + ")" for a in ands]
+    logical_expr = " and ".join(ands)
+
+    ors = logical_expr.split("||")
+    ors = ["(" + o + ")" for o in ors]
+    logical_expr = " or ".join(ors)
+
+    return logical_expr
 
 def _pyclass(logical_expr, var):
     # A class-type logical expression: [ something ]
