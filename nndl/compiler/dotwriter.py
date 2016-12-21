@@ -71,10 +71,10 @@ def write_connections(conx, fname):
     """
     for pair in conx:
         n0, n1 = pair[0], pair[1]
-        lines = ["\t" + n0 + " -> " + n1 + ";"]
-        text = os.linesep.join(lines)
+        lines = ["    " + n0 + " -> " + n1 + ";"]
         with open(fname, 'a') as f:
-            f.write(text)
+            for line in lines:
+                f.write(line + os.linesep)
 
 
 def write_end(fname):
@@ -94,12 +94,12 @@ def write_layer(name, nrows, ncols, neur_type, color, fname):
 
     nodes = [name + "_" + str(i) for i in range(nrows * ncols)]
     nodes_str = ", ".join(nodes)
-    text = "\t" + "subgraph " + name + " {" + os.linesep
-    text += "\t\t" + "color=white;" + os.linesep
-    text += "\t\t" + "node [style=solid, color=" + color + ", shape=circle];" + os.linesep
-    text += "\t\t" + nodes_str + ";" + os.linesep
-    text += "\t\t" + "label=\"" + name + " Layer\";" + os.linesep
-    text += "\t" + "}" + os.linesep
+    text = "    " + "subgraph " + name + " {" + os.linesep
+    text += "        " + "color=white;" + os.linesep
+    text += "        " + "node [style=solid, color=" + color + ", shape=circle];" + os.linesep
+    text += "        " + nodes_str + ";" + os.linesep
+    text += "        " + "label=\"" + name + " Layer\";" + os.linesep
+    text += "    " + "}" + os.linesep
 
     with open(fname, 'a') as f:
         f.write(text)

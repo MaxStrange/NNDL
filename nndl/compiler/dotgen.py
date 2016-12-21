@@ -7,6 +7,8 @@ import compiler.dotwriter as dotwriter
 import compiler.logic as logic
 import compiler.network as network
 from grammar import NNDLListener
+import subprocess
+
 
 class DotGenerator(NNDLListener.NNDLListener):
     """
@@ -22,8 +24,12 @@ class DotGenerator(NNDLListener.NNDLListener):
 
     def exitProg(self, ctx):
         dotwriter.write_end(self._output_fname);
+        subprocess.call(["dot", "-Tpng", self._output_fname, "-o",\
+                self._output_fname.strip(".dot") + ".dot"])
         print("Wrote dot file for %s to %s." %\
                 (self._fname, self._output_fname))
+        print("Also compiled it into a .png file %s." %\
+                (self._output_fname.strip(".dot") + ".png"))
 
     def exitLayer_stat(self, ctx):
         layer_name = ctx.ID()[0].getText()
@@ -35,13 +41,16 @@ class DotGenerator(NNDLListener.NNDLListener):
                 neur_type=neuron_type, color=color, fname=self._output_fname)
 
         self._network.add_layer(nrows=num_rows, ncols=num_cols,
-                neurtype=neuron_type)
+                neurtype=neuron_type, name=layer_name)
 
     def enterConnection_stat(self, ctx):
         self._conx = []
 
     def exitConnection_stat(self, ctx):
         cons = ctx.con_stat()
+        # A list of from rules and their corresponding to rules (which
+        # is a list)
+        rules = []
         for con_stat in cons:
             connect_from = con_stat.neuron_selection()[0]
             connect_to = con_stat.neuron_selection()[1:]
@@ -54,9 +63,9 @@ class DotGenerator(NNDLListener.NNDLListener):
             log_type = self._lookup_log_type(connect_from.logical_expr()[1])
             from_logic_neurs = logic.py(from_logic_neurs, log_type, "j")
 
-            print("Connect from layer ", from_logic_layer)
-            print("Neurons ", from_logic_neurs)
+            from_rule = logic.Rule(from_logic_layer, from_logic_neurs)
 
+            to_rules = []
             for to in connect_to:
                 to_logic_layer = to.logical_expr()[0].getText()
                 log_type = self._lookup_log_type(to.logical_expr()[0])
@@ -65,11 +74,14 @@ class DotGenerator(NNDLListener.NNDLListener):
                 to_logic_neurs = to.logical_expr()[1].getText()
                 log_type = self._lookup_log_type(to.logical_expr()[1])
                 to_logic_neurs = logic.py(to_logic_neurs, log_type, "l")
-                print("To layer ", to_logic_layer)
-                print("Neurons ", to_logic_neurs)
 
-        #conx -> [(neur0, neur1), (neur0, neur1), ...]
-        dotwriter.write_connections(self._conx, self._output_fname)
+                to_rule = logic.Rule(to_logic_layer, to_logic_neurs)
+                to_rules.append(to_rule)
+            rules.append((from_rule, to_rules))
+
+        self._network = logic.pygen(rules, self._network)
+        dotwriter.write_connections(self._network.connections,
+                self._output_fname)
 
 
     def _lookup_log_type(self, logical_expr):
