@@ -24,7 +24,9 @@ class Network:
         """
         nfrom = self.layer_names[i] + "_" + str(j)
         nto = self.layer_names[k] + "_" + str(l)
-        self.connections.append((nfrom, nto))
+        connection = (nfrom, nto)
+        if connection not in self.connections:
+            self.connections.append(connection)
 
 
 

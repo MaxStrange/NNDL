@@ -2,6 +2,7 @@
 Provides methods to write various parts of a dot file
 """
 
+import math
 import os
 
 def get_color(index):
@@ -69,12 +70,28 @@ def write_connections(conx, fname):
     """
     Writes the connections to the file.
     """
+    lines = []
     for pair in conx:
         n0, n1 = pair[0], pair[1]
-        lines = ["    " + n0 + " -> " + n1 + ";"]
-        with open(fname, 'a') as f:
-            for line in lines:
-                f.write(line + os.linesep)
+        index_from = int(n0.split('_')[1])
+        index_to = int(n1.split('_')[1])
+        # Make the weight biggest when the difference between
+        # the two indexes is 0
+        weight = 10.0 * _gauss(index_from - index_to)
+        line = "    " + n0 + " -> " + n1
+        line += " [weight=" + str(weight) + "];"
+        lines.append(line)
+    with open(fname, 'a') as f:
+        for line in lines:
+            f.write(line + os.linesep)
+
+
+def _gauss(x):
+    mu = 0
+    sigma = 1.0
+    ex = pow(math.e, (-(x - mu) ** 2) / (2 * sigma ** 2))
+    base = 1.0 / math.sqrt(2 * sigma ** 2 * math.pi)
+    return base * ex
 
 
 def write_end(fname):
@@ -83,6 +100,7 @@ def write_end(fname):
     """
     with open(fname, 'a') as f:
         f.write("}" + os.linesep)
+
 
 def write_layer(name, nrows, ncols, neur_type, color, fname):
     """
@@ -97,6 +115,7 @@ def write_layer(name, nrows, ncols, neur_type, color, fname):
     nodes_str = (";" + os.linesep + "        ").join(nodes)
     text = "    " + "subgraph " + name + " {" + os.linesep
     text += "        " + "color=white;" + os.linesep
+    text += "        " + "rank=same;" + os.linesep
     text += "        " + "node [style=solid, color=" + color + ", shape=circle];" + os.linesep
     text += "        " + nodes_str + ";" + os.linesep
     text += "        " + "label=\"" + name + " Layer\";" + os.linesep
