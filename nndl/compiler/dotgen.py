@@ -27,7 +27,7 @@ class DotGenerator(NNDLListener.NNDLListener):
         with open(self._output_fname) as f:
             lines = [line for line in f]
         subprocess.call(["dot", "-Tpng", self._output_fname, "-o",\
-                self._output_fname.strip(".dot") + ".dot"])
+                self._output_fname.strip(".dot") + ".png"])
         with open(self._output_fname, 'w') as f:
             for line in lines:
                 f.write(line)
@@ -42,8 +42,9 @@ class DotGenerator(NNDLListener.NNDLListener):
         num_cols = int(ctx.MAT_DECL().getText()[-1])
         neuron_type = ctx.ID()[1].getText()
         color = dotwriter.get_color(len(self._network.layers))
-        dotwriter.write_layer(name=layer_name, nrows=num_rows, ncols=num_cols,
-                neur_type=neuron_type, color=color, fname=self._output_fname)
+        dotwriter.write_layer(name=layer_name, nrows=num_rows,
+                ncols=num_cols, neur_type=neuron_type, color=color,
+                fname=self._output_fname)
 
         self._network.add_layer(nrows=num_rows, ncols=num_cols,
                 neurtype=neuron_type, name=layer_name)

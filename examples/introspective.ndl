@@ -1,0 +1,17 @@
+import n;
+import s;
+
+network
+    neurons
+        layer : input 3x1 = n;
+        layer : h0 3x1 = n;
+        layer : h1 3x1 = n;
+        layer : output 3x1 = n;
+    end neurons
+
+    connections
+        ({i < 3}, 0) : connect (i, 1) = s;
+        ({i < 3}, 1) : connect (i + 1, [ALL]) = s;
+        ({i < 3}, 2) : connect (i, 1) = s;
+    end connections
+end network

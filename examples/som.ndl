@@ -1,0 +1,13 @@
+import n;
+import s;
+
+network
+    neurons
+        layer : input 2x1 = n;
+        layer : som 3x3 = n;
+    end neurons
+
+    connections
+        (0, [ALL]) : connect ({i > 0}, [ALL]) = s;
+    end connections
+end network

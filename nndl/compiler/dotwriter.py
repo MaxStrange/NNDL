@@ -59,7 +59,7 @@ def write_boilerplate(fname):
     rankdir=LR
     splines=line
 
-    node [fixedsize=true, label=""];"""
+    node [fixedsize=true];"""
     with open(fname, 'w') as f:
         f.write(boilerplate)
         f.write(os.linesep + os.linesep)
@@ -92,8 +92,9 @@ def write_layer(name, nrows, ncols, neur_type, color, fname):
     # Currently just lay out the layer in a single dimension
     # Would love to change this in the future
 
-    nodes = [name + "_" + str(i) for i in range(nrows * ncols)]
-    nodes_str = ", ".join(nodes)
+    nodes = [name + "_" + str(i) + "[label=\"" + name + "_" + str(i)+\
+                "\"]" for i in range(nrows * ncols)]
+    nodes_str = (";" + os.linesep + "        ").join(nodes)
     text = "    " + "subgraph " + name + " {" + os.linesep
     text += "        " + "color=white;" + os.linesep
     text += "        " + "node [style=solid, color=" + color + ", shape=circle];" + os.linesep
