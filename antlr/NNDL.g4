@@ -83,6 +83,8 @@ CLASS:              'ALL'
 
 NEUR_VAR:           'i'
                     | 'j'
+                    | 'k'
+                    | 'l'
                     ;
 
 ID:                 LETTER (LETTER|DIGIT|'_')*

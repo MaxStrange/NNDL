@@ -71,17 +71,38 @@ def write_connections(conx, fname):
     """
     Writes the connections to the file.
     """
-    lines = []
+    weights = []
     for pair in conx:
         n0, n1 = pair[0], pair[1]
         index_from = int(n0.split('_')[1])
         index_to = int(n1.split('_')[1])
         # Make the weight biggest when the difference between
         # the two indexes is 0
-        weight = 10.0 * _gauss(index_from - index_to)
+        weight = _gauss(index_from - index_to)
+        weights.append(weight)
+
+    # Now scale the weights so that they are all n.x where n > 0
+    smallest = min(weights)
+    # one-off function that calculates the number of leading zeros
+    # in a floating point value
+    def calc_sf(x):
+        sf = 0
+        while x < 1.0:
+            x = x * 10
+            sf += 1
+        return sf
+    scale_factor = calc_sf(smallest)
+    weights = [int(w * 10 ** scale_factor) for w in weights]
+    weights = _interpolate(weights, 0, 100)
+    weights = [int(x) for x in weights]
+
+    lines = []
+    for weight, pair in zip(weights, conx):
+        n0, n1 = pair[0], pair[1]
         line = "    " + n0 + " -> " + n1
         line += " [weight=" + str(weight) + "];"
         lines.append(line)
+
     with open(fname, 'a') as f:
         for line in lines:
             f.write(line + os.linesep)
@@ -92,7 +113,16 @@ def _gauss(x):
     sigma = 1.0
     ex = pow(math.e, (-(x - mu) ** 2) / (2 * sigma ** 2))
     base = 1.0 / math.sqrt(2 * sigma ** 2 * math.pi)
-    return base * ex
+    y = base * ex
+    return y
+
+def _interpolate(xs, y_min, y_max):
+    largest = max(xs)
+    smallest = min(xs)
+    interp = lambda a: (a - smallest) * (y_max - y_min) /\
+            (largest - smallest) + y_min
+    ys = [interp(x) for x in xs]
+    return ys
 
 
 def write_end(fname):
