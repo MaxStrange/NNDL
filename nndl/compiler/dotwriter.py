@@ -2,6 +2,7 @@
 Provides methods to write various parts of a dot file
 """
 
+import itertools
 import math
 import os
 
