@@ -93,3 +93,18 @@ ENV/
 
 # .swp files
 *.swp
+
+# dot files
+*.dot
+
+# png files
+*.png
+
+# Anything in the grammar directory
+*nndl/grammar/
+
+# Auto-generated .py files
+apply_rules.py
+
+# .o files
+*.o
