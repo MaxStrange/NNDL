@@ -108,3 +108,8 @@ apply_rules.py
 
 # .o files
 *.o
+
+# tags
+*.out
+*tags
+
