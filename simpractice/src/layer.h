@@ -6,6 +6,8 @@
 #ifndef __LAYER_H__
 #define __LAYER_H__
 
+#include "neuron.h"
+
 class Layer
 {
 public:
@@ -14,11 +16,11 @@ public:
 
     Neuron& operator[] (const int index);
 
-    void add_neuron(Neuron &n);
+    void add_neuron(const Neuron &n);
     Neuron& at(int index);
 
 private:
-    std:vector<Neuron> neurons;
+    std::vector<Neuron> neurons;
 };
 
 

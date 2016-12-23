@@ -10,7 +10,7 @@ srcdir                := $(rootdir)/src
 src                   := $(wildcard $(srcdir)/*.cpp)
 src                   += $(wildcard $(srcdir)/*.cu)
 
-CXX                   := clang++
+CXX                   := g++
 
 RM                    := rm -f
 MKDIR                 := mkdir -p
