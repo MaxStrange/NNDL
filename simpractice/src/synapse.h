@@ -18,18 +18,23 @@
 #ifndef __SYNAPSE_H__
 #define __SYNAPSE_H__
 
+#include "neuron.h"
+
 class Synapse
 {
 public:
-    Synapse(const Neuron &from, const Neuron &to);
+    Synapse(const Neuron *from, const Neuron *to);
+    Synapse(const Synapse &other);
     ~Synapse();
 
-    const Signal& fire_backward(float t, const Signal &incoming);
-    const Signal& fire_forward(float t, const Signal &incoming);
+    Synapse& operator=(const Synapse &other);
+
+    Signal fire_backward(float t, const Signal &incoming);
+    Signal fire_forward(float t, const Signal &incoming);
 
 private:
-    const Neuron &from;
-    const Neuron &to;
+    const Neuron *from;
+    const Neuron *to;
 };
 
 

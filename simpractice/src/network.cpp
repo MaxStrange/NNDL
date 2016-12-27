@@ -7,7 +7,7 @@
 #include "network.h"
 
 
-Network::Network(std::vector<Layer> layers, std::vector<Synapse> connections)
+Network::Network(std::vector<Layer> *layers, std::vector<Synapse> *connections)
 {
     this->layers = layers;
     this->connections = connections;

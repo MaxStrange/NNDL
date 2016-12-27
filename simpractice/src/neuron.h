@@ -16,6 +16,8 @@
 #ifndef __NEURON_H__
 #define __NEURON_H__
 
+#include <vector>
+
 #include "signal.h"
 
 
@@ -28,8 +30,8 @@ public:
 
     Neuron& operator=(const Neuron &rhs);
 
-    virtual const Signal& fire_backward(std::vector<Signal> input_vector);
-    virtual const Signal& fire_forward(std::vector<Signal> input_vector);
+    virtual Signal fire_backward(std::vector<Signal> input_vector);
+    virtual Signal fire_forward(std::vector<Signal> input_vector);
 
 private:
 };

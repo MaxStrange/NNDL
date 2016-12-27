@@ -1,13 +1,20 @@
+/*
+ * This is the network ADT - it is class that holds information and functions
+ * relating to the Neural Network created by the NNDL file.
+ */
 #ifndef __NETWORK_H__
 #define __NETWORK_H__
 
 
+#include "layer.h"
 #include "synapse.h"
+
+
 
 class Network
 {
 public:
-    Network(std::vector<Layer> layers, std::vector<Synapse> connections);
+    Network(std::vector<Layer> *layers, std::vector<Synapse> *connections);
     ~Network();
 
     /*
@@ -27,8 +34,8 @@ public:
 
 
 private:
-    std::vector<Layer> layers;
-    std::vector<Synapse> connections;
+    std::vector<Layer> *layers;
+    std::vector<Synapse> *connections;
 };
 
 

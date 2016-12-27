@@ -19,15 +19,15 @@
 class Simulator
 {
 public:
-    Simulator(Network &network, Source &source, Sink &sink);
+    Simulator(Network *network, Source *source, Sink *sink);
     ~Simulator();
 
     void run();
 
 private:
-    Network &network;
-    Sink &sink;
-    Source &source;
+    Network *network;
+    Sink *sink;
+    Source *source;
 };
 
 

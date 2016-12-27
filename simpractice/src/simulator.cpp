@@ -4,8 +4,10 @@
 #include "sink.h"
 #include "source.h"
 
+#include "simulator.h"
 
-Simulator::Simulator(Network &network, Source &source, Sink &sink)
+
+Simulator::Simulator(Network *network, Source *source, Sink *sink)
 {
     this->network = network;
     this->sink = sink;

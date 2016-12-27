@@ -2,6 +2,8 @@
 
 #include "signal.h"
 
+#include "source.h"
+
 
 Source::Source()
 {

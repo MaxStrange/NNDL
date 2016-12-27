@@ -2,6 +2,8 @@
 
 #include "signal.h"
 
+#include "sink.h"
+
 
 Sink::Sink()
 {

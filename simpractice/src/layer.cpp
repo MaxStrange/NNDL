@@ -10,19 +10,37 @@ Layer::Layer()
 {
 }
 
+Layer::Layer(const Layer &other)
+{
+    *this = other;
+}
+
 Layer::~Layer()
 {
-#if 0
     for (unsigned int i = 0; i < this->neurons.size(); i++)
     {
         delete this->neurons.at(i);
     }
-#endif
 }
 
-Neuron& Layer::operator[] (const int index)
+Layer& Layer::operator=(const Layer &rhs)
 {
-    return this->neurons[index];
+    if (this != &rhs)
+    {
+        for (unsigned int i = 0; i < rhs.neurons.size(); i++)
+        {
+            Neuron n = rhs.copy_at(i);
+            this->add_neuron(n);
+        }
+    }
+
+    return *this;
+}
+
+Neuron* Layer::operator[](const int index)
+{
+    Neuron *n = this->neurons[index];
+    return n;
 }
 
 void Layer::add_neuron(const Neuron &n)
@@ -30,13 +48,19 @@ void Layer::add_neuron(const Neuron &n)
     //This class is responsible for holding on to and doling
     //out references or pointers to neurons. It allocates the heap
     //memory for them and frees that memory as well.
-    //Neuron *local_n_pointer = new Neuron(n);
-    //this->neurons.push_back(local_n);
+    Neuron *heap_n_pointer = new Neuron(n);
+    this->neurons.push_back(heap_n_pointer);
 }
 
-Neuron& Layer::at(const int index)
+Neuron* Layer::at(const int index)
 {
     return (*this)[index];
+}
+
+Neuron Layer::copy_at(int index) const
+{
+    Neuron copy(*this->neurons[index]);
+    return copy;
 }
 
 

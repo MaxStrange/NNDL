@@ -5,23 +5,41 @@
 #include "synapse.h"
 
 
-Synapse::Synapse(const Neuron &from, const Neuron &to)
+Synapse::Synapse(const Neuron *from, const Neuron *to)
 {
     this->from = from;
     this->to = to;
+}
+
+Synapse::Synapse(const Synapse &other)
+{
+    *this = other;
 }
 
 Synapse::~Synapse()
 {
 }
 
-const Signal& Synapse::fire_backward(float t, const Signal &incoming)
+Synapse& Synapse::operator=(const Synapse &rhs)
 {
+    if (this != &rhs)
+    {
+        this->from = rhs.from;
+        this->to = rhs.to;
+    }
+
+    return *this;
+}
+
+Signal Synapse::fire_backward(float t, const Signal &incoming)
+{
+    //TODO
     return Signal();
 }
 
-const Signal& Synapse::fire_forward(float t, const Signal &incoming)
+Signal Synapse::fire_forward(float t, const Signal &incoming)
 {
+    //TODO
     return Signal();
 }
 
