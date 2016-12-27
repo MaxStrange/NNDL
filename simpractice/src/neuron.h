@@ -16,6 +16,7 @@
 #ifndef __NEURON_H__
 #define __NEURON_H__
 
+#include <iostream>
 #include <vector>
 
 #include "signal.h"
@@ -27,6 +28,8 @@ public:
     Neuron();
     Neuron(const Neuron& to_copy);
     virtual ~Neuron();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Neuron &n);
 
     Neuron& operator=(const Neuron &rhs);
 

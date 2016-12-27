@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 
 #include "signal.h"
@@ -17,6 +18,12 @@ Neuron::Neuron(const Neuron& to_copy)
 
 Neuron::~Neuron()
 {
+}
+
+std::ostream& operator<<(std::ostream &outstream, const Neuron &n)
+{
+    outstream << "Neuron here";
+    return outstream;
 }
 
 Neuron& Neuron::operator=(const Neuron &rhs)

@@ -1,4 +1,6 @@
+#include <iostream>
 
+#include "debug.h"
 #include "neuron.h"
 #include "signal.h"
 
@@ -18,6 +20,18 @@ Synapse::Synapse(const Synapse &other)
 
 Synapse::~Synapse()
 {
+}
+
+std::ostream& operator<<(std::ostream &outstream, const Synapse &s)
+{
+    outstream << debug_print_header("Synapse") << std::endl;
+    outstream << "From: " << std::endl;
+    outstream << *(s.from) << std::endl;
+    outstream << "To: " << std::endl;
+    outstream << *(s.to) << std::endl;
+    outstream << debug_print_closing("Synapse") << std::endl;
+
+    return outstream;
 }
 
 Synapse& Synapse::operator=(const Synapse &rhs)

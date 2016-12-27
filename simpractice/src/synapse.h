@@ -18,6 +18,8 @@
 #ifndef __SYNAPSE_H__
 #define __SYNAPSE_H__
 
+#include <iostream>
+
 #include "neuron.h"
 
 class Synapse
@@ -26,6 +28,8 @@ public:
     Synapse(const Neuron *from, const Neuron *to);
     Synapse(const Synapse &other);
     ~Synapse();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Synapse &s);
 
     Synapse& operator=(const Synapse &other);
 

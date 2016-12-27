@@ -10,6 +10,7 @@
 #ifndef __SOURCE_H__
 #define __SOURCE_H__
 
+#include <iostream>
 #include <vector>
 
 #include "signal.h"
@@ -19,6 +20,8 @@ class Source
 public:
     Source();
     ~Source();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Source &s);
 
     /*
      * Gets the next vector of input data. The vector must be of length

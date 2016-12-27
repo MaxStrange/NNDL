@@ -5,6 +5,7 @@
 #ifndef __NETWORK_H__
 #define __NETWORK_H__
 
+#include <iostream>
 
 #include "layer.h"
 #include "synapse.h"
@@ -16,6 +17,8 @@ class Network
 public:
     Network(std::vector<Layer> *layers, std::vector<Synapse> *connections);
     ~Network();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Network &nw);
 
     /*
      * Loads the given vector of Signals (which must of size equal to

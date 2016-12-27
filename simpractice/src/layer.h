@@ -6,6 +6,8 @@
 #ifndef __LAYER_H__
 #define __LAYER_H__
 
+#include <iostream>
+
 #include "neuron.h"
 
 class Layer
@@ -14,6 +16,8 @@ public:
     Layer();
     Layer(const Layer &other);
     ~Layer();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Layer &l);
 
     Layer& operator=(const Layer &rhs);
     Neuron* operator[](const int index);

@@ -6,6 +6,7 @@
 #ifndef __SINK_H__
 #define __SINK_H__
 
+#include <iostream>
 #include <vector>
 
 #include "signal.h"
@@ -16,6 +17,8 @@ class Sink
 public:
     Sink();
     ~Sink();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Sink &s);
 
     std::vector<Signal> take(std::vector<Signal> outputs);
 

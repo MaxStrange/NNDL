@@ -1,5 +1,7 @@
+#include <iostream>
 #include <vector>
 
+#include "debug.h"
 #include "neuron.h"
 
 #include "layer.h"
@@ -21,6 +23,20 @@ Layer::~Layer()
     {
         delete this->neurons.at(i);
     }
+}
+
+std::ostream& operator<<(std::ostream &outstream, const Layer &l)
+{
+    outstream << debug_print_header("Layer") << std::endl;
+    outstream << "Neurons: " << std::endl;
+    for (unsigned int i = 0; i < l.neurons.size(); i++)
+    {
+        Neuron *n = l.neurons.at(i);
+        outstream << *n << std::endl;
+    }
+    outstream << debug_print_closing("Layer") << std::endl;
+
+    return outstream;
 }
 
 Layer& Layer::operator=(const Layer &rhs)

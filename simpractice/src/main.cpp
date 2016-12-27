@@ -14,15 +14,21 @@ std::vector<Synapse> connect_layers(std::vector<Layer>& layers);
 
 int main(int argv, char **argc)
 {
+    std::cout << "Initializing..." << std::endl;
+
     //Just for playing around purposes, just hard code a small network
     std::vector<Layer> layers = create_layers();
     std::vector<Synapse> connections = connect_layers(layers);
     Network network(&layers, &connections);
+    std::cout << "Created network: " << network << std::endl;
     Source source;
     Sink sink;
     Simulator simulator(&network, &source, &sink);
+    std::cout << "Created simulator: " << simulator << std::endl;
 
     simulator.run();
+
+    std::cout << "Simulator has been run!" << std::endl;
 }
 
 std::vector<Layer> create_layers(void)

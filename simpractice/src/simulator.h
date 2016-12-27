@@ -10,6 +10,7 @@
  * back into the Network's fire_backward function, which is usually used for
  * training.
  */
+#include <iostream>
 
 #include "network.h"
 #include "sink.h"
@@ -21,6 +22,8 @@ class Simulator
 public:
     Simulator(Network *network, Source *source, Sink *sink);
     ~Simulator();
+
+    friend std::ostream& operator<<(std::ostream &outstream, const Simulator &s);
 
     void run();
 
