@@ -39,13 +39,13 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
     return outstream;
 }
 
-std::vector<Signal> fire_backward(std::vector<Signal> input)
+std::vector<Signal> Network::fire_backward(std::vector<Signal> input)
 {
     //TODO
     return std::vector<Signal>();
 }
 
-std::vector<Signal> fire_forward(std::vector<Signal> input)
+std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
 {
     //TODO
     return std::vector<Signal>();

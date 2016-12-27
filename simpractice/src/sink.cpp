@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream &outstream, const Sink &s)
     return outstream;
 }
 
-std::vector<Signal> take(std::vector<Signal> outputs)
+std::vector<Signal> Sink::take(std::vector<Signal> outputs)
 {
     //TODO
     return std::vector<Signal>();

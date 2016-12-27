@@ -20,11 +20,11 @@ int main(int argv, char **argc)
     std::vector<Layer> layers = create_layers();
     std::vector<Synapse> connections = connect_layers(layers);
     Network network(&layers, &connections);
-    std::cout << "Created network: " << network << std::endl;
+    //std::cout << "Created network: " << network << std::endl;
     Source source;
     Sink sink;
     Simulator simulator(&network, &source, &sink);
-    std::cout << "Created simulator: " << simulator << std::endl;
+    //std::cout << "Created simulator: " << simulator << std::endl;
 
     simulator.run();
 

@@ -28,6 +28,13 @@ public:
      * equal to the number of input neurons in the network.
      */
     std::vector<Signal> get();
+    /*
+     * Gets whether or not the source has more data to give up.
+     */
+    bool has_more(void);
+
+private:
+    uint64_t ntimes_given;
 };
 
 #endif //header guard

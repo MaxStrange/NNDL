@@ -35,17 +35,17 @@ std::ostream& operator<<(std::ostream &outstream, const Simulator &s)
 void Simulator::run()
 {
     std::cout << "Running simulator..." << std::endl;
-    //TODO
-#if 0
-    while (this->source.has_more())
+
+    while (this->source->has_more())
     {
-        std::vector<Signal> inputs = this->source.get();
-        std::vector<Signal> outputs = this->network.fire_forward(inputs);
-        std::vector<Signal> back_inputs = this->sink.take(outputs);
+        std::cout << "Running..." << std::endl;
+
+        std::vector<Signal> inputs = this->source->get();
+        std::vector<Signal> outputs = this->network->fire_forward(inputs);
+        std::vector<Signal> back_inputs = this->sink->take(outputs);
         std::vector<Signal> back_outputs =
-                this->network.fire_backward(back_inputs);
+                this->network->fire_backward(back_inputs);
     }
-#endif
 }
 
 
