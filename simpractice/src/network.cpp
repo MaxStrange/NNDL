@@ -22,7 +22,7 @@ Network::Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connectio
             neurons.push_back(n);
         }
     }
-    this->connection_map = ConnectionMap(connections, neurons);
+    this->connection_map = ConnectionMap(*connections, neurons);
 }
 
 Network::~Network()
@@ -65,14 +65,17 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
     //Set of neurons that has already fired during this round of firing
     std::set<Neuron *> already_fired;
 
+    //List of tuples of the form output Neuron to the signal it is sending
+    //but not necessarily in the right order
+    std::vector<std::tuple<Neuron *, Signal>> output_neurons;
+
     //For each input neuron,
     //fire that neuron and pair its signal with the neurons the signal will go to
-    tuples = this->fire_input_layer(tuples, already_fired, forward);
+    tuples = this->fire_input_layer(tuples, already_fired, forward, output_neurons);
 
     //Now you should have a vector of tuples of each neuron's result paired
     //with the neurons that that result is going to
 
-    std::vector<std::tuple<Neuron *, Signal>> output_neurons;
 
     //As long as there are still non-output neurons that have signals being
     //sent to them AND as long as those neurons haven't already fired once
@@ -80,7 +83,8 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
     while (this->keep_going(tuples))
     {
         //Fire the neurons who are indicated by the list of signal/neurons pairs
-        tuples = fire_neurons_in_list(tuples, already_fired, forward, output_neurons);
+        tuples = fire_neurons_in_list(tuples, already_fired,
+                forward, output_neurons);
 
         //Again you are left with a vector of tuples of each neuron's result
         //paired with the neurons that the result is going to
@@ -109,13 +113,22 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
  */
 std::tuple<Signal, std::vector<Neuron *> *>& Network::fire_input_layer(
         std::tuple<Signal, std::vector<Neuron *> *> &tuples,
-        std::set<Neuron *> &already_fired, bool forward)
+        std::set<Neuron *> &already_fired, bool forward,
+        std::vector<std::tuple<Neuron *, Signal>> &output_neurons)
 {
     for (unsigned int i = 0; i < this->get_input_layer()->size(); i++)
     {
         Neuron *n_i = this->get_input_layer()->at(i);
         Signal s_i = input.at(i);
-        auto output_to_neurons = this->fire_neuron(n_i, s_i, already_fired, forward);
+        std::vector<Signal> signals;
+        signals.push_back(s_i);
+        auto output_to_neurons =
+                this->fire_neuron(n_i, signals, already_fired, forward);
+        if (this->neuron_is_output_neuron(n_i))
+        {
+            auto tup = std::make_tuple(n_i, s_i);
+            output_neurons.push_back(tup);
+        }
         tuples.push_back(output_to_neurons);
     }
 
@@ -123,7 +136,7 @@ std::tuple<Signal, std::vector<Neuron *> *>& Network::fire_input_layer(
 }
 
 std::tuple<Signal, std::vector<Neuron *> *> Network::fire_neuron(
-        Neuron *n_i, const Signal &s_i,
+        Neuron *n_i, const std::vector<Signal> &signals,
         std::set<Neuron *> &already_fired, bool forward)
 {
     Signal n_i_output;
@@ -132,8 +145,26 @@ std::tuple<Signal, std::vector<Neuron *> *> Network::fire_neuron(
     else
         n_i_output = n_i->fire_backward(s_i);
 
-    std::vector<Neuron *> *n_i_output_neurons =
-            this->connection_map->get_outputs(n_i);
+    std::vector<Neuron *> n_i_output_neurons;
+    std::vector<Synapse *> output_synapses;
+    if (forward)
+    {
+        this->connection_map->get_outputs(n_i, n_i_output_neurons);
+        this->connection_map->get_synapses_from_neuron(n_i, output_synapses);
+    }
+    else
+    {
+        this->connection_map->get_inputs(n_i, n_i_output_neurons);
+        this->connection_map->get_synapses_to_neuron(n_i, output_synapses);
+    }
+
+    //Now give each synapse a chance to do model-specific stuff
+    for (unsigned int i = 0; i < output_synapses.size(); i++)
+    {
+        if (forward)
+            n_i_output
+    }
+
     auto output_to_neurons = std::make_tuple(n_i, n_i_output_neurons);
 
     already_fired.insert(n_i);

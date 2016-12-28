@@ -42,10 +42,11 @@ private:
 
     std::tuple<Signal, std::vector<Neuron *> *>& fire_input_layer(
             std::tuple<Signal, std::vector<Neuron *> *> &tuples,
-            std::set<Neuron *> &already_fired, bool forward);
+            std::set<Neuron *> &already_fired, bool forward,
+            std::vector<std::tuple<Neuron *, Signal>> &output_neurons);
 
     std::tuple<Signal, std::vector<Neuron *> *> fire_neuron(
-            Neuron *n_i, const Signal &s_i,
+            Neuron *n_i, const std::vector<Signal> &signals,
             std::set<Neuron *> &already_fired, bool forward);
 
     std::tuple<Signal, std::vector<Neuron *> *>& fire_neurons_in_list(

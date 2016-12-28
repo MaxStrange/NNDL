@@ -20,11 +20,11 @@ public:
     friend std::ostream& operator<<(std::ostream &outstream, const Layer &l);
 
     Layer& operator=(const Layer &rhs);
-    Neuron* operator[](const int index);
+    Neuron* operator[](const int index) const;
 
     void add_neuron(const Neuron &n);
 
-    Neuron* at(int index);
+    Neuron* at(int index) const;
 
     bool contains(const Neuron *n) const;
 

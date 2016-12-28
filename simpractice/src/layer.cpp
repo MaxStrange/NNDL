@@ -53,7 +53,7 @@ Layer& Layer::operator=(const Layer &rhs)
     return *this;
 }
 
-Neuron* Layer::operator[](const int index)
+Neuron* Layer::operator[](const int index) const
 {
     Neuron *n = this->neurons[index];
     return n;
@@ -68,7 +68,7 @@ void Layer::add_neuron(const Neuron &n)
     this->neurons.push_back(heap_n_pointer);
 }
 
-Neuron* Layer::at(const int index)
+Neuron* Layer::at(const int index) const
 {
     return (*this)[index];
 }

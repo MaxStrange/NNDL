@@ -33,8 +33,8 @@ public:
 
     Neuron& operator=(const Neuron &rhs);
 
-    virtual Signal fire_backward(Signal input_value);
-    virtual Signal fire_forward(Signal input_value);
+    virtual Signal fire_backward(const std::vector<Signal> &input_vector);
+    virtual Signal fire_forward(const std::vector<Signal> &input_vector);
 
 private:
 };
