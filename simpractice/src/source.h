@@ -27,13 +27,13 @@ public:
      * Gets the next vector of input data. The vector must be of length
      * equal to the number of input neurons in the network.
      */
-    std::vector<Signal> get();
+    virtual std::vector<Signal> get();
     /*
      * Gets whether or not the source has more data to give up.
      */
-    bool has_more(void);
+    virtual bool has_more();
 
-private:
+protected:
     uint64_t ntimes_given;
 };
 

@@ -9,6 +9,9 @@
 #include "source.h"
 #include "synapse.h"
 
+#include SOURCE_HEADER
+
+
 std::vector<Layer> create_layers(void);
 std::vector<Synapse> connect_layers(std::vector<Layer>& layers);
 
@@ -16,12 +19,11 @@ int main(int argv, char **argc)
 {
     std::cout << "Initializing..." << std::endl;
 
-    //Just for playing around purposes, just hard code a small network
     std::vector<Layer> layers = create_layers();
     std::vector<Synapse> connections = connect_layers(layers);
     Network network(&layers, &connections);
     //std::cout << "Created network: " << network << std::endl;
-    Source source;
+    SOURCE source;
     Sink sink;
     Simulator simulator(&network, &source, &sink);
     //std::cout << "Created simulator: " << simulator << std::endl;

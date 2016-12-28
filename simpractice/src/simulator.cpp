@@ -36,9 +36,10 @@ void Simulator::run()
 {
     std::cout << "Running simulator..." << std::endl;
 
+    unsigned int times_so_far = 0;
     while (this->source->has_more())
     {
-        std::cout << "Running..." << std::endl;
+        std::cout << "Running " << times_so_far++ << std::endl;
 
         std::vector<Signal> inputs = this->source->get();
         std::vector<Signal> outputs = this->network->fire_forward(inputs);

@@ -6,9 +6,12 @@ rootdir               := $(shell pwd)
 BUILDDIR              := $(rootdir)/build
 OBJDIR                := $(BUILDDIR)/obj
 srcdir                := $(rootdir)/src
+source_examples_dir   := $(srcdir)/sources
 
 src                   := $(wildcard $(srcdir)/*.cpp)
 src                   += $(wildcard $(srcdir)/*.cu)
+src                   += $(wildcard $(source_examples_dir)/*.cpp)
+src                   += $(wildcard $(source_examples_dir)/*.cu)
 
 CXX                   := g++
 
@@ -17,6 +20,7 @@ MKDIR                 := mkdir -p
 SED                   := sed
 
 inc_path              := $(srcdir)
+inc_path              += $(source_examples_dir)
 
 WARNING               += -Wall
 WARNING               += -Werror

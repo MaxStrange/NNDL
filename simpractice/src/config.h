@@ -16,6 +16,12 @@
  */
 #define NUM_NEURONS             3
 
+/*
+ * Defines for what example to use.
+ */
+#define SOURCE_HEADER           "mnist_source.h"
+#define SOURCE                  MnistSource
+
 
 /*
  * You can change this from a float to a double.
