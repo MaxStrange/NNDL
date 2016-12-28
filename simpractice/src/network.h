@@ -40,10 +40,28 @@ private:
     std::vector<Layer *> *layers;
     ConnectionMap connection_map;
 
+    std::tuple<Signal, std::vector<Neuron *> *>& fire_input_layer(
+            std::tuple<Signal, std::vector<Neuron *> *> &tuples,
+            std::set<Neuron *> &already_fired, bool forward);
+
     std::tuple<Signal, std::vector<Neuron *> *> fire_neuron(
             Neuron *n_i, const Signal &s_i,
             std::set<Neuron *> &already_fired, bool forward);
+
+    std::tuple<Signal, std::vector<Neuron *> *>& fire_neurons_in_list(
+            std::tuple<Signal, std::vector<Neuron *> *> &tuples,
+            std::set<Neuron *> &already_fired, bool forward,
+            std::vector<std::tuple<Neuron *, Signal>> &output_neurons);
+
+    Layer* get_input_layer();
+    Layer* get_output_layer();
+
     bool keep_going(std::vector<std::tuple<Signal, std::vector<Neuron *> *>> &t);
+
+    std::vector<Signal>& map_to_output(std::vector<std::tuple<
+            Neuron *, Signal>> &output_neurons, std::vector<Signal> &output);
+
+    bool neuron_is_output_neuron(const Neuron *n) const;
 };
 
 

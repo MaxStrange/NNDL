@@ -23,11 +23,17 @@ public:
     Neuron* operator[](const int index);
 
     void add_neuron(const Neuron &n);
+
     Neuron* at(int index);
+
+    bool contains(const Neuron *n) const;
+
     /*
      * Gets a copy of the Neuron at the given index.
      */
     Neuron copy_at(int index) const;
+
+    size_t size() const;
 
 private:
     std::vector<Neuron *> neurons;

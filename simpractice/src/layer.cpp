@@ -73,13 +73,28 @@ Neuron* Layer::at(const int index)
     return (*this)[index];
 }
 
+bool Layer::contains(const Neuron *n) const
+{
+    for (unsigned int i = 0; i < this->size(); i++)
+    {
+        const Neuron *m = this->at(i);
+        if (n == m)
+            return true;
+    }
+
+    return false;
+}
+
 Neuron Layer::copy_at(int index) const
 {
     Neuron copy(*this->neurons[index]);
     return copy;
 }
 
-
+size_t Layer::size() const
+{
+    return this->neurons.size();
+}
 
 
 
