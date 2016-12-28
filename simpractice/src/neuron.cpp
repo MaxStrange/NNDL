@@ -35,13 +35,13 @@ Neuron& Neuron::operator=(const Neuron &rhs)
     return *this;
 }
 
-Signal Neuron::fire_backward(std::vector<Signal> input_vector)
+Signal Neuron::fire_backward(Signal input_value)
 {
     //TODO
     return Signal();
 }
 
-Signal Neuron::fire_forward(std::vector<Signal> input_vector)
+Signal Neuron::fire_forward(Signal input_value)
 {
     //TODO
     return Signal();

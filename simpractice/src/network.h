@@ -15,7 +15,7 @@
 class Network
 {
 public:
-    Network(std::vector<Layer> *layers, std::vector<Synapse> *connections);
+    Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connections);
     ~Network();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Network &nw);
@@ -37,8 +37,8 @@ public:
 
 
 private:
-    std::vector<Layer> *layers;
-    std::vector<Synapse> *connections;
+    std::vector<Layer *> *layers;
+    std::vector<Synapse *> *connections;
 };
 
 

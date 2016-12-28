@@ -73,6 +73,28 @@ Neuron* Layer::at(const int index)
     return (*this)[index];
 }
 
+std::vector<Signal>& Layer::back(std::vector<Signal> &input)
+{
+    //take the input and plug it into the neurons backwards
+    for (unsigned int i = 0; i < this->neurons.size(); i++)
+    {
+        Neuron *n = this->neurons.at(i);
+        input.at(i) = n->fire_backward(input.at(i));
+    }
+    return input;
+}
+
+std::vector<Signal>& Layer::input(std::vector<Signal> &input)
+{
+    //take the input and plug it into the neurons forwards
+    for (unsigned int i = 0; i < this->neurons.size(); i++)
+    {
+        Neuron *n = this->neurons.at(i);
+        input.at(i) = n->fire_forward(input.at(i));
+    }
+    return input;
+}
+
 Neuron Layer::copy_at(int index) const
 {
     Neuron copy(*this->neurons[index]);

@@ -9,7 +9,7 @@
 #include "network.h"
 
 
-Network::Network(std::vector<Layer> *layers, std::vector<Synapse> *connections)
+Network::Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connections)
 {
     this->layers = layers;
     this->connections = connections;
@@ -25,14 +25,14 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
     outstream << "Layers: " << std::endl;
     for (unsigned int i = 0; i < nw.layers->size(); i++)
     {
-        Layer l = nw.layers->at(i);
-        outstream << l << std::endl;
+        Layer *l = nw.layers->at(i);
+        outstream << *l << std::endl;
     }
     outstream << "Synapses: " << std::endl;
     for (unsigned int i = 0; i < nw.connections->size(); i++)
     {
-        Synapse s = nw.connections->at(i);
-        outstream << s << std::endl;
+        Synapse *s = nw.connections->at(i);
+        outstream << *s << std::endl;
     }
     outstream << debug_print_closing("Network") << std::endl;
 
@@ -41,15 +41,31 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
 
 std::vector<Signal> Network::fire_backward(std::vector<Signal> input)
 {
-    //TODO
-    return std::vector<Signal>();
+    for (int i = input.size() - 1; i >= 0; i--)
+    {
+        Layer *l = this->layers->at(i);
+        input = l->back(input);
+    }
+
+    return input;
 }
 
 std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
 {
-    //TODO
-    return std::vector<Signal>();
+    for (unsigned int i = 0; i < this->layers->size(); i++)
+    {
+        Layer *l = this->layers->at(i);
+        input = l->input(input);
+    }
+
+    return input;
 }
+
+
+
+
+
+
 
 
 

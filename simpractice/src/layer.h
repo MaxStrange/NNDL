@@ -25,6 +25,16 @@ public:
     void add_neuron(const Neuron &n);
     Neuron* at(int index);
     /*
+     * Places the given input vector into the neurons and has them execute
+     * their fire_backwards functions.
+     */
+    std::vector<Signal>& back(std::vector<Signal> &input);
+    /*
+     * Places the given input vector into the neurons and has them execute
+     * their fire_forwards functions.
+     */
+    std::vector<Signal>& input(std::vector<Signal> &input);
+    /*
      * Gets a copy of the Neuron at the given index.
      */
     Neuron copy_at(int index) const;
