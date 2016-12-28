@@ -38,7 +38,12 @@ public:
 
 private:
     std::vector<Layer *> *layers;
-    std::vector<Synapse *> *connections;
+    ConnectionMap connection_map;
+
+    std::tuple<Signal, std::vector<Neuron *> *> fire_neuron(
+            Neuron *n_i, const Signal &s_i,
+            std::set<Neuron *> &already_fired, bool forward);
+    bool keep_going(std::vector<std::tuple<Signal, std::vector<Neuron *> *>> &t);
 };
 
 

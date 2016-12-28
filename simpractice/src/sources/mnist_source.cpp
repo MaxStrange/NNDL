@@ -62,7 +62,8 @@ void MnistSource::load_dataset()
      * https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
      */
 
-    auto reverse_int = [](int i) {
+    auto reverse_int = [](int i)
+    {
         unsigned char c1, c2, c3, c4;
         c1 = i & 0xFF;
         c2 = (i >> 8) & 0xFF;
