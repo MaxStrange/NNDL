@@ -41,25 +41,52 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
 
 std::vector<Signal> Network::fire_backward(std::vector<Signal> input)
 {
-    for (int i = input.size() - 1; i >= 0; i--)
-    {
-        Layer *l = this->layers->at(i);
-        input = l->back(input);
-    }
-
+    //TODO
+    //Do fire_forward's algorithm, but backwards
     return input;
 }
 
 std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
 {
-    for (unsigned int i = 0; i < this->layers->size(); i++)
+    //TODO
+    //For each neuron in the input layer,
+    Layer *input_layer = this->layers->at(0);
+    for (unsigned int i = 0; i < input_layer->size(); i++)
     {
-        Layer *l = this->layers->at(i);
-        input = l->input(input);
+        Neuron *n_i = input_layer->at(i);
+        //get that neuron's output
+        Signal n_i_output = n_i->fire_forward(input.at(i));
+
+        //TODO
+        //Pair up that neuron's output with each of its output neuron indexes
     }
+
+    //Now you should have a vector of tuples of each neuron's result paired
+    //with the neurons that that result is going to
+
+    //For each neuron that the results are going to, get that neuron's output
+    //Pair up that neuron's output with each of its output neuron indexes
+    //Unless a neuron is in the output layer, if it doesn't have any output
+    //neurons to connect to, just discard its result
+
+    //repeat until you have a vector of values that are not paired with
+    //neurons - these are your output values
+
+    //It is very important to remember to check each neuron for whether or
+    //not we have already fired it in this method. If we have, don't fire
+    //it again - this is a recurrency, and it will result in an infinite loop
 
     return input;
 }
+
+
+
+
+
+
+
+
+
 
 
 
