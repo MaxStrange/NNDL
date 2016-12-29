@@ -20,7 +20,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const Sink &s);
 
-    std::vector<Signal> take(std::vector<Signal> outputs);
+    std::vector<Signal> take(uint64_t time, std::vector<Signal> outputs);
 
 private:
 };

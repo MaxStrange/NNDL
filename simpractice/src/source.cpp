@@ -25,14 +25,13 @@ std::ostream& operator<<(std::ostream &outstream, const Source &s)
     return outstream;
 }
 
-std::vector<Signal> Source::get()
+std::vector<Signal> Source::get(uint64_t time)
 {
-    //TODO
     this->ntimes_given++;
     return std::vector<Signal>();
 }
 
-bool Source::has_more(void)
+bool Source::has_more(uint64_t time)
 {
     if (this->ntimes_given > 1)
         return false;

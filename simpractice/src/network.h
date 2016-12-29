@@ -30,13 +30,13 @@ public:
      *
      * The result is a vector of Signals coming from the input layer.
      */
-    std::vector<Signal> fire_backward(std::vector<Signal> input);
+    std::vector<Signal> fire_backward(uint64_t time, std::vector<Signal> input);
 
     /*
      * This is the standard mechanism for computing a result from the network.
      * The input must be of size equal to the number of input neurons.
      */
-    std::vector<Signal> fire_forward(std::vector<Signal> input);
+    std::vector<Signal> fire_forward(uint64_t time, std::vector<Signal> input);
 
 
 private:
@@ -51,7 +51,7 @@ private:
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<std::tuple<Neuron *, Signal>> &output_neurons) const;
 
-    std::vector<Signal>& get_node_inputs(const Neuron *n,
+    std::vector<Signal>& get_node_inputs(uint64_t time, const Neuron *n,
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<Signal> &inputs);
 

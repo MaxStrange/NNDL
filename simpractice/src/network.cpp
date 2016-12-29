@@ -11,7 +11,8 @@
 #include "network.h"
 
 
-Network::Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connections)
+Network::Network(std::vector<Layer *> *layers,
+        std::vector<Synapse *> *connections)
 {
     this->layers = layers;
     std::vector<Neuron *> neurons;
@@ -48,14 +49,14 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
     return outstream;
 }
 
-std::vector<Signal> Network::fire_backward(std::vector<Signal> input)
+std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input)
 {
     //TODO
     //Do fire_forward's algorithm, but backwards
     return input;
 }
 
-std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
+std::vector<Signal> Network::fire_forward(uint64_t t, std::vector<Signal> input)
 {
     std::vector<std::tuple<Neuron *, Signal>> outputs;
 
@@ -66,10 +67,10 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
 
         //get that node's inputs (which includes firing the synapses)
         std::vector<Signal> inputs;
-        inputs = this->get_node_inputs(n, outputs, inputs);
+        inputs = this->get_node_inputs(t, n, outputs, inputs);
 
         //put those values into the node to get its outputs
-        Signal output = n->fire_forward(inputs);
+        Signal output = n->fire_forward(t, inputs);
 
         outputs.push_back(std::make_tuple(n, output));
     }
@@ -120,7 +121,7 @@ std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_output_neurons(
  * Also fires any Signals it retrieves through the appropriate Synapses
  * before adding them to the list to return.
  */
-std::vector<Signal>& Network::get_node_inputs(const Neuron *n,
+std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
         std::vector<std::tuple<Neuron *, Signal>> &outputs,
         std::vector<Signal> &inputs)
 {
@@ -133,7 +134,7 @@ std::vector<Signal>& Network::get_node_inputs(const Neuron *n,
         {
             Synapse syn;
             this->connection_map.get_synapse(m, n, syn);
-            s = syn.fire_forward(0, s);//TODO: add timesteps
+            s = syn.fire_forward(t, s);
             inputs.push_back(s);
         }
     }

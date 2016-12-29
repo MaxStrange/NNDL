@@ -22,9 +22,9 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const MnistSource &ms);
 
-    std::vector<Signal> get();
+    std::vector<Signal> get(uint64_t time);
 
-    bool has_more();
+    bool has_more(uint64_t time);
 
 private:
     unsigned char **dataset;

@@ -36,14 +36,15 @@ void Simulator::run()
 {
     std::cout << "Running simulator..." << std::endl;
 
-    unsigned int times_so_far = 0;
-    while (this->source->has_more())
+    uint64_t t = 0;
+    while (this->source->has_more(t))
     {
-        std::vector<Signal> inputs = this->source->get();
-        std::vector<Signal> outputs = this->network->fire_forward(inputs);
-        std::vector<Signal> back_inputs = this->sink->take(outputs);
+        std::vector<Signal> inputs = this->source->get(t);
+        std::vector<Signal> outputs = this->network->fire_forward(t, inputs);
+        std::vector<Signal> back_inputs = this->sink->take(t, outputs);
         std::vector<Signal> back_outputs =
-                this->network->fire_backward(back_inputs);
+                this->network->fire_backward(t, back_inputs);
+        t++;
     }
 }
 

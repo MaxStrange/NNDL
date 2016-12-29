@@ -34,7 +34,7 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSource &ms)
     return outstream;
 }
 
-std::vector<Signal> MnistSource::get()
+std::vector<Signal> MnistSource::get(uint64_t time)
 {
     std::vector<Signal> data_vector;
     unsigned char *img = this->dataset[this->ntimes_given++];
@@ -48,7 +48,7 @@ std::vector<Signal> MnistSource::get()
     return data_vector;
 }
 
-bool MnistSource::has_more()
+bool MnistSource::has_more(uint64_t time)
 {
     return this->ntimes_given < this->nimages;
 }
