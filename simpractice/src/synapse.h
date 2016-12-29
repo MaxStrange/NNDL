@@ -34,6 +34,9 @@ public:
 
     Synapse& operator=(const Synapse &other);
 
+    const Neuron* get_from() const;
+    const Neuron* get_to() const;
+
     Signal fire_backward(float t, const Signal &incoming);
     Signal fire_forward(float t, const Signal &incoming);
 

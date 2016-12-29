@@ -49,6 +49,16 @@ Synapse& Synapse::operator=(const Synapse &rhs)
     return *this;
 }
 
+const Neuron* Synapse::get_from() const
+{
+    return this->from;
+}
+
+const Neuron* Synapse::get_to() const
+{
+    return this->to;
+}
+
 Signal Synapse::fire_backward(float t, const Signal &incoming)
 {
     //TODO

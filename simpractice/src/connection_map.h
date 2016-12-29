@@ -25,6 +25,23 @@ public:
     friend std::ostream& operator<<(std::ostream &outstream,
             const ConnectionMap &cm);
 
+    void create_const_map(std::vector<Neuron *> &neurons);
+
+    void create_forward_map(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+
+    void create_reverse_map(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+
+    void create_forward_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+
+    void create_forward_map_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+
+    void create_reverse_map_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+
     /*
      * Gets all the Neurons that the given one synapses FROM.
      * That is, gets all the Neurons that synapse onto this one.
@@ -55,8 +72,9 @@ private:
     std::map<const Neuron *, std::vector<Synapse *>> forward_map_synapses;
     //Neuron -> All incoming synapses going into it
     std::map<const Neuron *, std::vector<Synapse *>> reverse_map_synapses;
+    //Neuron to itself, but one is const and the other isn't
+    std::map<const Neuron*, Neuron *> const_map;
 
-    //This is where the Synapses live, so this is where they can be freed from
     std::vector<Synapse *> connections;
 };
 
