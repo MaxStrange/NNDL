@@ -12,16 +12,21 @@
 #include "layer.h"
 #include "neuron.h"
 #include "synapse.h"
+#include "unit_tests.h"
 
 
 
 class Network
 {
 public:
+    Network();
+    Network(const Network &to_copy);
     Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connections);
     ~Network();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Network &nw);
+
+    Network& operator=(const Network &rhs);
 
     /*
      * Loads the given vector of Signals (which must of size equal to
@@ -37,6 +42,8 @@ public:
      * The input must be of size equal to the number of input neurons.
      */
     std::vector<Signal> fire_forward(uint64_t time, std::vector<Signal> input);
+
+    static UnitTestResult run_tests();
 
 
 private:
@@ -55,6 +62,8 @@ private:
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<Signal> &inputs);
 
+    void initialize_connection_map(std::vector<Synapse *> *connections);
+
     bool is_all_synapses(const std::set<Synapse *> &G);
 
     std::vector<Signal>& map_to_output(std::vector<std::tuple<
@@ -63,6 +72,15 @@ private:
     bool neuron_is_output_neuron(const Neuron *n) const;
 
     std::vector<Neuron *> topological_sort();
+
+
+    static void test_filter_for_output_neurons(UnitTestResult &result);
+    static void test_get_node_inputs(UnitTestResult &result);
+    static void test_is_all_synapses(UnitTestResult &result);
+    static void test_map_to_output(UnitTestResult &result);
+    static void test_neuron_is_output_neuron(UnitTestResult &result);
+    static void test_topological_sort(UnitTestResult &result);
+    static void create_test_network(Network &test_network);
 };
 
 

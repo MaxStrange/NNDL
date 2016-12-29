@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "neuron.h"
+#include "unit_tests.h"
 
 class Layer
 {
@@ -33,10 +34,15 @@ public:
      */
     Neuron copy_at(int index) const;
 
+    static UnitTestResult run_tests();
+
     size_t size() const;
 
 private:
     std::vector<Neuron *> neurons;
+
+    static void test_add_neuron(UnitTestResult &result);
+    static void test_contains(UnitTestResult &result);
 };
 
 

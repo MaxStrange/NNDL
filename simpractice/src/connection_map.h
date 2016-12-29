@@ -44,7 +44,6 @@ public:
      * Gets whether or not n synapses onto m.
      */
     bool neuron_synapses_onto(const Neuron *n, const Neuron *m);
-
 private:
     //Neuron -> Neurons it is connected TO
     std::map<const Neuron *, std::vector<Neuron *>> forward_map;
@@ -56,6 +55,9 @@ private:
     std::map<const Neuron *, std::vector<Synapse *>> forward_map_synapses;
     //Neuron -> All incoming synapses going into it
     std::map<const Neuron *, std::vector<Synapse *>> reverse_map_synapses;
+
+    //This is where the Synapses live, so this is where they can be freed from
+    std::vector<Synapse *> connections;
 };
 
 

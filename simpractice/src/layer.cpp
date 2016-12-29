@@ -3,6 +3,7 @@
 
 #include "debug.h"
 #include "neuron.h"
+#include "unit_tests.h"
 
 #include "layer.h"
 
@@ -91,10 +92,77 @@ Neuron Layer::copy_at(int index) const
     return copy;
 }
 
+UnitTestResult Layer::run_tests()
+{
+    UnitTestResult result;
+    Layer::test_add_neuron(result);
+    Layer::test_contains(result);
+
+    return result;
+}
+
 size_t Layer::size() const
 {
     return this->neurons.size();
 }
+
+void Layer::test_add_neuron(UnitTestResult &result)
+{
+    std::string class_name = "Layer";
+    std::string test_name = "add_neuron";
+
+    Layer test_layer;
+    size_t sz = test_layer.size();
+    result.assert(sz == 0, class_name, test_name, "Size not equal to zero.");
+
+    Neuron n;
+    test_layer.add_neuron(n);
+    sz = test_layer.size();
+    result.assert(sz == 1, class_name, test_name, "Size not equal to one.");
+}
+
+void Layer::test_contains(UnitTestResult &result)
+{
+    std::string class_name = "Layer";
+    std::string test_name = "contains";
+
+    Layer test_layer;
+    Neuron n;
+    test_layer.add_neuron(n);
+
+    Neuron m;
+    test_layer.add_neuron(m);
+
+    Neuron *np = test_layer.at(0);
+    Neuron *mp = test_layer.at(1);
+
+    result.assert(test_layer.contains(np), class_name, test_name,
+            "Layer does not contain neuron n");
+    result.assert(test_layer.contains(mp), class_name, test_name,
+            "Layer does not contain neuron m");
+    Neuron o;
+    result.assert(! test_layer.contains(&o), class_name, test_name,
+            "Layer contains neuron o, and it shouldn't.");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

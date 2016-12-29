@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 
+#include "config.h"
 #include "layer.h"
 #include "network.h"
 #include "neuron.h"
@@ -8,6 +9,7 @@
 #include "sink.h"
 #include "source.h"
 #include "synapse.h"
+#include "unit_tests.h"
 
 #include SOURCE_HEADER
 
@@ -23,6 +25,29 @@ int main(int argv, char **argc)
         //Only bother making unit tests for the classes that are acting
         //up and for those that are data structures or have complicated
         //algorithms
+        UnitTestResult result;
+
+        result = Layer::run_tests();
+        result.print();
+
+        result = Network::run_tests();
+        result.print();
+/*
+        //result = NEURON::run_tests();
+        //result.print();
+
+        result = Simulator::run_tests();
+        result.print();
+
+        //result = SINK::run_tests();
+        //result.print();
+
+        result = SOURCE::run_tests();
+        result.print();
+
+        //result = SYNAPSE::run_tests();
+        //result.print();
+*/
     #else
         std::cout << "Initializing..." << std::endl;
 

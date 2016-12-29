@@ -29,7 +29,7 @@ WARNING               += -Wno-unused-local-typedefs
 WARNING               += -Wno-unused-variable
 WARNING               += -Wno-unused-function
 
-OPTIMIZATION          ?= -O1 -ggdb3
+OPTIMIZATION          ?= -O0 -ggdb3
 
 CXXFLAGS              += $(WARNING)
 CXXFLAGS              += $(OPTIMIZATION)

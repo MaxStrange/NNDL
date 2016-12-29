@@ -17,6 +17,7 @@ ConnectionMap::ConnectionMap()
 ConnectionMap::ConnectionMap(std::vector<Synapse *> &connections,
         std::vector<Neuron *> &neurons)
 {
+    this->connections = connections;
     //TODO -> must create each of the maps
     //this->create_forward_map(neurons, connections);
     //this->create_reverse_map(neurons, connections);
@@ -67,8 +68,6 @@ bool ConnectionMap::neuron_synapses_onto(const Neuron *n, const Neuron *m)
     auto tup = std::make_tuple(n, m);
     return (this->forward_synapses.find(tup) != this->forward_synapses.end());
 }
-
-
 
 
 

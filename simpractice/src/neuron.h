@@ -27,11 +27,14 @@ class Neuron
 public:
     Neuron();
     Neuron(const Neuron& to_copy);
+    Neuron(const std::string &id);
     virtual ~Neuron();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Neuron &n);
 
     Neuron& operator=(const Neuron &rhs);
+
+    virtual std::string get_id() const;
 
     virtual Signal fire_backward(uint64_t time,
             const std::vector<Signal> &input_vector);
@@ -39,6 +42,7 @@ public:
             const std::vector<Signal> &input_vector);
 
 private:
+    std::string id;
 };
 
 

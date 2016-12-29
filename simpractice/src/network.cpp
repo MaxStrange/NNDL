@@ -7,25 +7,25 @@
 #include "layer.h"
 #include "signal.h"
 #include "synapse.h"
+#include "unit_tests.h"
 
 #include "network.h"
 
+
+Network::Network()
+{
+}
+
+Network::Network(const Network &to_copy)
+{
+    *this = to_copy;
+}
 
 Network::Network(std::vector<Layer *> *layers,
         std::vector<Synapse *> *connections)
 {
     this->layers = layers;
-    std::vector<Neuron *> neurons;
-    for (unsigned int i = 0; i < layers->size(); i++)
-    {
-        Layer *layer = layers->at(i);
-        for (unsigned int j = 0; j < layer->size(); j++)
-        {
-            Neuron *n = layer->at(j);
-            neurons.push_back(n);
-        }
-    }
-    this->connection_map = ConnectionMap(*connections, neurons);
+    this->initialize_connection_map(connections);
     this->top_sorted_network = this->topological_sort();
 }
 
@@ -47,6 +47,19 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
     outstream << debug_print_closing("Network") << std::endl;
 
     return outstream;
+}
+
+Network& Network::operator=(const Network &rhs)
+{
+    std::cout << "Copying..." << std::endl;
+    if (this != &rhs)
+    {
+        this->layers = rhs.layers;
+        this->connection_map = rhs.connection_map;
+        this->top_sorted_network = this->topological_sort();
+    }
+
+    return *this;
 }
 
 std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input)
@@ -140,6 +153,21 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
     }
 
     return inputs;
+}
+
+void Network::initialize_connection_map(std::vector<Synapse *> *connections)
+{
+    std::vector<Neuron *> neurons;
+    for (unsigned int i = 0; i < this->layers->size(); i++)
+    {
+        Layer *layer = this->layers->at(i);
+        for (unsigned int j = 0; j < layer->size(); j++)
+        {
+            Neuron *n = layer->at(j);
+            neurons.push_back(n);
+        }
+    }
+    this->connection_map = ConnectionMap(*connections, neurons);
 }
 
 bool Network::is_all_synapses(const std::set<Synapse *> &G)
@@ -264,6 +292,97 @@ std::vector<Neuron *> Network::topological_sort()
         throw std::runtime_error("The network has a cycle in it.");
     }
 }
+
+UnitTestResult Network::run_tests()
+{
+    UnitTestResult result;
+    Network::test_filter_for_output_neurons(result);
+    Network::test_get_node_inputs(result);
+    Network::test_is_all_synapses(result);
+    Network::test_map_to_output(result);
+    Network::test_neuron_is_output_neuron(result);
+    Network::test_topological_sort(result);
+
+    return result;
+}
+
+void Network::test_filter_for_output_neurons(UnitTestResult &result)
+{
+}
+
+void Network::test_get_node_inputs(UnitTestResult &result)
+{
+}
+
+void Network::test_is_all_synapses(UnitTestResult &result)
+{
+}
+
+void Network::test_map_to_output(UnitTestResult &result)
+{
+}
+
+void Network::test_neuron_is_output_neuron(UnitTestResult &result)
+{
+}
+
+void Network::test_topological_sort(UnitTestResult &result)
+{
+    std::string class_name = "Network";
+    std::string test_name = "topological_sort";
+
+    Network test_network;
+    Network::create_test_network(test_network);
+    std::vector<Neuron *> top_sorted = test_network.top_sorted_network;
+
+    //Topologically sorted:
+    //b -> a -> d -> c -> e
+    bool ordered = top_sorted.at(0)->get_id() == "b" &&
+            top_sorted.at(1)->get_id() == "a" &&
+            top_sorted.at(2)->get_id() == "d" &&
+            top_sorted.at(3)->get_id() == "c" &&
+            top_sorted.at(4)->get_id() == "e";
+    result.assert(ordered, class_name, test_name, "Not sorted topologically");
+}
+
+void Network::create_test_network(Network &test_network)
+{
+    //Create a test network:
+    //a -> c -> e
+    //^ \  ^
+    //b -> d
+    //Including a synapse from a to d
+
+    Neuron a("a"), b("b"), c("c"), d("d"), e("e");
+
+    std::vector<Layer *> test_layers;
+    Layer input, hidden, output;
+    input.add_neuron(a); input.add_neuron(b);
+    hidden.add_neuron(c); hidden.add_neuron(d);
+    output.add_neuron(e);
+    test_layers.push_back(&input); test_layers.push_back(&hidden);
+            test_layers.push_back(&output);
+
+    Neuron *ap, *bp, *cp, *dp, *ep;
+    ap = input.at(0);
+    bp = input.at(1);
+    cp = hidden.at(0);
+    dp = hidden.at(1);
+    ep = output.at(0);
+
+    std::vector<Synapse *> test_connections;
+    Synapse *ba = new Synapse(bp, ap);
+    Synapse *ac = new Synapse(ap, cp);
+    Synapse *ad = new Synapse(ap, dp);
+    Synapse *dc = new Synapse(dp, cp);
+    Synapse *ce = new Synapse(cp, ep);
+    test_connections.push_back(ba); test_connections.push_back(ac);
+    test_connections.push_back(ad); test_connections.push_back(dc);
+    test_connections.push_back(dc); test_connections.push_back(ce);
+
+    test_network = Network(&test_layers, &test_connections);
+}
+
 
 
 

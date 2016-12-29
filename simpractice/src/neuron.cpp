@@ -16,6 +16,11 @@ Neuron::Neuron(const Neuron& to_copy)
     *this = to_copy;
 }
 
+Neuron::Neuron(const std::string &id)
+{
+    this->id = id;
+}
+
 Neuron::~Neuron()
 {
 }
@@ -33,6 +38,11 @@ Neuron& Neuron::operator=(const Neuron &rhs)
     }
 
     return *this;
+}
+
+std::string Neuron::get_id() const
+{
+    return this->id;
 }
 
 Signal Neuron::fire_backward(uint64_t t, const std::vector<Signal> &input_value)
