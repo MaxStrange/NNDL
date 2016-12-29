@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 
+#include "connection_map.h"
 #include "debug.h"
 #include "layer.h"
 #include "signal.h"
@@ -23,6 +24,7 @@ Network::Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connectio
         }
     }
     this->connection_map = ConnectionMap(*connections, neurons);
+    this->top_sorted_network = this->topological_sort();
 }
 
 Network::~Network()
@@ -54,159 +56,33 @@ std::vector<Signal> Network::fire_backward(std::vector<Signal> input)
 
 std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
 {
-    const bool forward = true;
+    std::vector<std::tuple<Neuron *, Signal>> outputs;
 
-    //a vector of tuples
-    //the tuples are of type: Signal, vector<Neuron *> *
-    //These tuples are going to be the list of outgoing signals paired
-    //with which Neurons they are going into
-    std::vector<std::tuple<Signal, std::vector<Neuron *> *>> tuples;
-
-    //Set of neurons that has already fired during this round of firing
-    std::set<Neuron *> already_fired;
-
-    //List of tuples of the form output Neuron to the signal it is sending
-    //but not necessarily in the right order
-    std::vector<std::tuple<Neuron *, Signal>> output_neurons;
-
-    //For each input neuron,
-    //fire that neuron and pair its signal with the neurons the signal will go to
-    tuples = this->fire_input_layer(tuples, already_fired, forward, output_neurons);
-
-    //Now you should have a vector of tuples of each neuron's result paired
-    //with the neurons that that result is going to
-
-
-    //As long as there are still non-output neurons that have signals being
-    //sent to them AND as long as those neurons haven't already fired once
-    //this time step,
-    while (this->keep_going(tuples))
+    //for each node in the topologically sorted network
+    for (unsigned int i = 0; i < this->top_sorted_network.size(); i++)
     {
-        //Fire the neurons who are indicated by the list of signal/neurons pairs
-        tuples = fire_neurons_in_list(tuples, already_fired,
-                forward, output_neurons);
+        Node *n = this->top_sorted_network.at(i);
 
-        //Again you are left with a vector of tuples of each neuron's result
-        //paired with the neurons that the result is going to
+        //get that node's inputs (which includes firing the synapses)
+        std::vector<Signal> inputs;
+        inputs = this->get_node_inputs(n, outputs, inputs);
 
-        //But there are a couple of differences this time:
-        //first, you also may have some output neurons paired with their outgoing
-        //signals
-        //second, the number of new neurons to fire has changed - and it will
-        //eventually go to zero, at which point the algorithm is complete for
-        //this timestep
+        //put those values into the node to get its outputs
+        Signal output = n->fire_forward(inputs);
+
+        outputs.push_back(std::make_tuple(n, output));
     }
 
-    //We now have a vector of tuples of the form: <Neuron *, Signal>
-    //We need to use the first values in these tuples to arrange the Signals
-    //to be in the right order for the network's output vector
+    //once you are done with the whole list,
+    //filter it to get only the nodes that are from the output layer
+    std::vector<std::tuple<Neuron *, Signal>> output_neurons;
+    output_neurons = this->filter_for_output_neurons(outputs, output_neurons);
+
+    //then organize that layer into a vector
     std::vector<Signal> output;
     output = this->map_to_output(output_neurons, output);
 
     return output;
-}
-
-/*
- * Fires each neuron in the input layer and returns the result as
- * a vector of signals paired with which neurons those signals need
- * to go to.
- */
-std::tuple<Signal, std::vector<Neuron *> *>& Network::fire_input_layer(
-        std::tuple<Signal, std::vector<Neuron *> *> &tuples,
-        std::set<Neuron *> &already_fired, bool forward,
-        std::vector<std::tuple<Neuron *, Signal>> &output_neurons)
-{
-    for (unsigned int i = 0; i < this->get_input_layer()->size(); i++)
-    {
-        Neuron *n_i = this->get_input_layer()->at(i);
-        Signal s_i = input.at(i);
-        std::vector<Signal> signals;
-        signals.push_back(s_i);
-        auto output_to_neurons =
-                this->fire_neuron(n_i, signals, already_fired, forward);
-        if (this->neuron_is_output_neuron(n_i))
-        {
-            auto tup = std::make_tuple(n_i, s_i);
-            output_neurons.push_back(tup);
-        }
-        tuples.push_back(output_to_neurons);
-    }
-
-    return tuples;
-}
-
-std::tuple<Signal, std::vector<Neuron *> *> Network::fire_neuron(
-        Neuron *n_i, const std::vector<Signal> &signals,
-        std::set<Neuron *> &already_fired, bool forward)
-{
-    Signal n_i_output;
-    if (forward)
-        n_i_output = n_i->fire_forward(s_i);
-    else
-        n_i_output = n_i->fire_backward(s_i);
-
-    std::vector<Neuron *> n_i_output_neurons;
-    std::vector<Synapse *> output_synapses;
-    if (forward)
-    {
-        this->connection_map->get_outputs(n_i, n_i_output_neurons);
-        this->connection_map->get_synapses_from_neuron(n_i, output_synapses);
-    }
-    else
-    {
-        this->connection_map->get_inputs(n_i, n_i_output_neurons);
-        this->connection_map->get_synapses_to_neuron(n_i, output_synapses);
-    }
-
-    //Now give each synapse a chance to do model-specific stuff
-    for (unsigned int i = 0; i < output_synapses.size(); i++)
-    {
-        if (forward)
-            n_i_output
-    }
-
-    auto output_to_neurons = std::make_tuple(n_i, n_i_output_neurons);
-
-    already_fired.insert(n_i);
-
-    return output_to_neurons;
-}
-
-std::tuple<Signal, std::vector<Neuron *> *>& Network::fire_neurons_in_list(
-        std::tuple<Signal, std::vector<Neuron *> *> &tuples,
-        std::set<Neuron *> &already_fired, bool forward,
-        std::vector<std::tuple<Neuron *, Signal>> &output_neurons)
-{
-    std::vector<std::tuple<Signal, std::vector<Neuron *> *>> tmp_tuples;
-
-    //Take the list of signals and the neurons those signals are going into
-    //and:
-    //for each signal,
-    for (unsigned int i = 0; i < tuples.size(); i++)
-    {
-        std::tuple<Signal, std::vector<Neuron *> *>> tup = tuples.at(i);
-        Signal outgoing = std::get<0>(tup);
-
-        //for each neuron that that signal is going into
-        std::vector<Neuron *> *into = std::get<1>(tup);
-        for (unsigned int j = 0; j < into->size(); j++)
-        {
-            Neuron *n_j = into->at(j);
-
-            //If that neuron hasn't already fired this round
-            if (already_fired.find(n_j) == already_fired.end())
-            {
-                //have that neuron fire, using the signal
-                auto this_neurons_output_tup = this->get_neuron_output(
-                        n_j, outgoing, already_fired, forward);
-
-                tmp_tuples.push_back(this_neurons_output_tup);
-            }
-        }
-    }
-
-    tuples.clear();
-    tuples = tmp_tuples;
 }
 
 Layer* Network::get_input_layer()
@@ -214,41 +90,78 @@ Layer* Network::get_input_layer()
     return this->layers->front();
 }
 
-std::tuple<Signal, std::vector<Neuron *> *>& get_neuron_output(
-        Neuron *n_j, const Signal &outgoing, std::set<Neuron *> &already_fired,
-        bool forward)
-{
-    auto this_neurons_output_tup = this->fire_neuron(
-            n_j, outgoing, already_fired, forward);
-
-    if (this->neuron_is_output_neuron(n_j))
-    {
-        //if this is an output neuron, we need it's output,
-        //and we need to know which particular neuron it is
-        Signal output_neuron_signal =
-                std::get<0>(this_neurons_output_tup);
-        auto output_neuron_with_signal = std::make_tuple(
-                n_j, output_neuron_signal);
-        output_neurons.push_back(output_neuron_with_signal);
-    }
-}
-
-
 Layer* Network::get_output_layer()
 {
     return this->layers->back();
 }
 
-bool Network::keep_going(std::vector<std::tuple<Signal, std::vector<Neuron *> *>> &t)
+/*
+ * Filters the output list so that it only contains output neurons.
+ */
+std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_output_neurons(
+        std::vector<std::tuple<Neuron *, Signal>> &outputs,
+        std::vector<std::tuple<Neuron *, Signal>> &output_neurons) const
 {
-    for (unsigned int i = 0; i < t.size(); i++)
+    for (unsigned int i = 0; i < outputs.size(); i++)
     {
-        auto tup = t.at(i);
-        std::vector<Neuron *> *vec = std::get<1>(tup);
-        if (vec->size() > 0)
-            return true;
+        auto t = outputs.at(i);
+        const Neuron *n = std::get<0>(t);
+        if (this->neuron_is_output_neuron(n))
+            output_neurons.push_back(t);
     }
-    return false;
+
+    return output_neurons;
+}
+
+/*
+ * Gets the given Neuron's input Signals and returns them.
+ * Gets these Signals from the so far calculated Signals found in outputs.
+ * Also fires any Signals it retrieves through the appropriate Synapses
+ * before adding them to the list to return.
+ */
+std::vector<Signal>& Network::get_node_inputs(const Neuron *n,
+        std::vector<std::tuple<Neuron *, Signal>> &outputs,
+        std::vector<Signal> &inputs)
+{
+    for (unsigned int i = 0; i < outputs.size(); i++)
+    {
+        Neuron *m;
+        Signal s;
+        std::tie(m, s) = outputs.at(i);
+        if (this->connection_map.neuron_synapses_onto(m, n))
+        {
+            Synapse syn;
+            this->connection_map.get_synapse(m, n, syn);
+            s = syn.fire_forward(s);
+            inputs.push_back(s);
+        }
+    }
+
+    return inputs;
+}
+
+bool Network::is_all_synapses(const std::set<Synapse *> &G) const
+{
+    //Get all the synapses in the network
+    std::set<Synapse *> all;
+    for (unsigned int i = 0; i < this->layers->size(); i++)
+    {
+        Layer *l = this->layers->at(i);
+        for (unsigned int j = 0; j < l->size(); j++)
+        {
+            Neuron *n = l->at(j);
+            std::vector<Synapse *> syns;
+            this->connection_map.get_output_synapses(n, syns);
+            for (unsigned int k = 0; k < syns.size(); k++)
+            {
+                Synapse *s = syns.at(k);
+                all.insert(s);
+            }
+        }
+    }
+
+    //Now check if the two sets G and all are the same
+    return G == all;
 }
 
 /*
@@ -290,7 +203,64 @@ bool Network::neuron_is_output_neuron(const Neuron *n) const
     return layer->contains(n);
 }
 
+/*
+ * Topologically sorts the network into a vector, so that
+ * the first item in the vector is a Neuron that requires no
+ * inputs but outside inputs, etc. Ties are decided arbitrarily.
+ */
+std::vector<Neuron *> Network::topological_sort() const
+{
+    //Kahn's algorithm, see Wikipedia
 
+    std::vector<Neuron *> L;
+    std::set<Neuron *> S;
+    std::set<Synapse *> G;
+
+    while (S.size() > 0)
+    {
+        Node *n = S.at(0);
+        L.push_back(n);
+
+        std::vector<Neuron *> to;
+        this->connection_map.get_outputs(n, to);
+        for (unsigned int i = 0; i < to.size(); i++)
+        {
+            Node *m = to.at(i);
+            Synapse e;
+            this->connection_map.get_synapse(n, m, e);
+            G.insert(&e);
+
+            //if each of m's outgoing synapses are in G,
+            //add m to S
+            std::vector<Neuron *> m_outgoing;
+            this->connection_map.get_outputs(m, m_outgoing);
+            bool m_has_no_more_edges = true;
+            for (unsigned int j = 0; j < m_outgoing.size(); j++)
+            {
+                Neuron *p = m_outgoing.at(j);
+                Synapse m_syn;
+                this->connection_map.get_synapse(m, p, m_syn);
+                if (G.find(&m_syn) == G.end())
+                    m_has_no_more_edges = false;
+            }
+
+            if (m_has_no_more_edges)
+                S.insert(m);
+        }
+    }
+
+    //if G does not contain all the synapses,
+    //then there is at least one cycle in the network, and our algorithm
+    //cannot handle that
+    if (this->is_all_synapses(G))
+    {
+        return L;
+    }
+    else
+    {
+        throw runtime_error("The network has a cycle in it.");
+    }
+}
 
 
 
