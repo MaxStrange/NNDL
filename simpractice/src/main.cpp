@@ -17,20 +17,28 @@ std::vector<Synapse *> connect_layers(std::vector<Layer *> &layers);
 
 int main(int argv, char **argc)
 {
-    std::cout << "Initializing..." << std::endl;
+    #if RUN_UNIT_TESTS
+        //TODO:
+        //Run each class's unit tests
+        //Only bother making unit tests for the classes that are acting
+        //up and for those that are data structures or have complicated
+        //algorithms
+    #else
+        std::cout << "Initializing..." << std::endl;
 
-    std::vector<Layer *> layers = create_layers();
-    std::vector<Synapse *> connections = connect_layers(layers);
-    Network network(&layers, &connections);
-    //std::cout << "Created network: " << network << std::endl;
-    SOURCE source;
-    Sink sink;
-    Simulator simulator(&network, &source, &sink);
-    //std::cout << "Created simulator: " << simulator << std::endl;
+        std::vector<Layer *> layers = create_layers();
+        std::vector<Synapse *> connections = connect_layers(layers);
+        Network network(&layers, &connections);
+        //std::cout << "Created network: " << network << std::endl;
+        SOURCE source;
+        Sink sink;
+        Simulator simulator(&network, &source, &sink);
+        //std::cout << "Created simulator: " << simulator << std::endl;
 
-    simulator.run();
+        simulator.run();
 
-    std::cout << "Simulator has been run!" << std::endl;
+        std::cout << "Simulator has been run!" << std::endl;
+    #endif
 }
 
 std::vector<Layer *> create_layers(void)
