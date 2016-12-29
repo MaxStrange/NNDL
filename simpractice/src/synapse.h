@@ -25,6 +25,7 @@
 class Synapse
 {
 public:
+    Synapse();
     Synapse(const Neuron *from, const Neuron *to);
     Synapse(const Synapse &other);
     ~Synapse();

@@ -6,6 +6,7 @@
 #define __NETWORK_H__
 
 #include <iostream>
+#include <set>
 
 #include "connection_map.h"
 #include "layer.h"
@@ -43,8 +44,8 @@ private:
     ConnectionMap connection_map;
     std::vector<Neuron *> top_sorted_network;
 
-    Layer* get_input_layer();
-    Layer* get_output_layer();
+    Layer* get_input_layer() const;
+    Layer* get_output_layer() const;
 
     std::vector<std::tuple<Neuron *, Signal>>& filter_for_output_neurons(
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
@@ -54,14 +55,14 @@ private:
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<Signal> &inputs);
 
-    bool is_all_synapses(const std::set<Synapse *> &G) const;
+    bool is_all_synapses(const std::set<Synapse *> &G);
 
     std::vector<Signal>& map_to_output(std::vector<std::tuple<
             Neuron *, Signal>> &output_neurons, std::vector<Signal> &output);
 
     bool neuron_is_output_neuron(const Neuron *n) const;
 
-    std::vector<Neuron *> topological_sort() const;
+    std::vector<Neuron *> topological_sort();
 };
 
 

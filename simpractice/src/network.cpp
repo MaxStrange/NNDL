@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #include "connection_map.h"
@@ -41,7 +42,7 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
         outstream << *l << std::endl;
     }
     outstream << "ConnectionMap: " << std::endl;
-    outstream << this->connection_map << std::endl;
+    outstream << nw.connection_map << std::endl;
     outstream << debug_print_closing("Network") << std::endl;
 
     return outstream;
@@ -61,7 +62,7 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
     //for each node in the topologically sorted network
     for (unsigned int i = 0; i < this->top_sorted_network.size(); i++)
     {
-        Node *n = this->top_sorted_network.at(i);
+        Neuron *n = this->top_sorted_network.at(i);
 
         //get that node's inputs (which includes firing the synapses)
         std::vector<Signal> inputs;
@@ -85,12 +86,12 @@ std::vector<Signal> Network::fire_forward(std::vector<Signal> input)
     return output;
 }
 
-Layer* Network::get_input_layer()
+Layer* Network::get_input_layer() const
 {
     return this->layers->front();
 }
 
-Layer* Network::get_output_layer()
+Layer* Network::get_output_layer() const
 {
     return this->layers->back();
 }
@@ -132,7 +133,7 @@ std::vector<Signal>& Network::get_node_inputs(const Neuron *n,
         {
             Synapse syn;
             this->connection_map.get_synapse(m, n, syn);
-            s = syn.fire_forward(s);
+            s = syn.fire_forward(0, s);//TODO: add timesteps
             inputs.push_back(s);
         }
     }
@@ -140,7 +141,7 @@ std::vector<Signal>& Network::get_node_inputs(const Neuron *n,
     return inputs;
 }
 
-bool Network::is_all_synapses(const std::set<Synapse *> &G) const
+bool Network::is_all_synapses(const std::set<Synapse *> &G)
 {
     //Get all the synapses in the network
     std::set<Synapse *> all;
@@ -168,13 +169,14 @@ bool Network::is_all_synapses(const std::set<Synapse *> &G) const
  * Takes the output vector and populates it in order of output neuron 0 to
  * output neuron layer.size() - 1.
  */
-std::vector<Signal>& map_to_output(std::vector<std::tuple<
+std::vector<Signal>& Network::map_to_output(std::vector<std::tuple<
         Neuron *, Signal>> &output_neurons, std::vector<Signal> &output)
 {
     for (unsigned int i = 0; i < this->get_output_layer()->size(); i++)
     {
         //Figure out which neuron in the output_neurons list is
         //the ith one in the output layer and get its signal
+        Neuron *n_i = this->get_output_layer()->at(i);
         int index = -1;
         for (unsigned int j = 0; j < output_neurons.size(); j++)
         {
@@ -187,7 +189,7 @@ std::vector<Signal>& map_to_output(std::vector<std::tuple<
             }
         }
         if (index == -1)
-            throw runtime_error("Could not find neuron.");
+            throw std::runtime_error("Could not find neuron.");
 
         auto output_neuron_and_signal = output_neurons.at(index);
         Signal s_i = std::get<1>(output_neuron_and_signal);
@@ -208,7 +210,7 @@ bool Network::neuron_is_output_neuron(const Neuron *n) const
  * the first item in the vector is a Neuron that requires no
  * inputs but outside inputs, etc. Ties are decided arbitrarily.
  */
-std::vector<Neuron *> Network::topological_sort() const
+std::vector<Neuron *> Network::topological_sort()
 {
     //Kahn's algorithm, see Wikipedia
 
@@ -218,14 +220,14 @@ std::vector<Neuron *> Network::topological_sort() const
 
     while (S.size() > 0)
     {
-        Node *n = S.at(0);
+        Neuron *n = *S.begin();
         L.push_back(n);
 
         std::vector<Neuron *> to;
         this->connection_map.get_outputs(n, to);
         for (unsigned int i = 0; i < to.size(); i++)
         {
-            Node *m = to.at(i);
+            Neuron *m = to.at(i);
             Synapse e;
             this->connection_map.get_synapse(n, m, e);
             G.insert(&e);
@@ -258,7 +260,7 @@ std::vector<Neuron *> Network::topological_sort() const
     }
     else
     {
-        throw runtime_error("The network has a cycle in it.");
+        throw std::runtime_error("The network has a cycle in it.");
     }
 }
 

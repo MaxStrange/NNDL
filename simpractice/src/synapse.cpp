@@ -7,6 +7,10 @@
 #include "synapse.h"
 
 
+Synapse::Synapse()
+{
+}
+
 Synapse::Synapse(const Neuron *from, const Neuron *to)
 {
     this->from = from;

@@ -6,6 +6,8 @@
 #define __CONNECTION_MAP_H__
 
 #include <iostream>
+#include <map>
+#include <tuple>
 #include <vector>
 
 #include "neuron.h"
@@ -27,21 +29,21 @@ public:
      * Gets all the Neurons that the given one synapses FROM.
      * That is, gets all the Neurons that synapse onto this one.
      */
-    void get_inputs(const Neuron *n, std::vector<Neuron *> &inputs) const;
+    void get_inputs(const Neuron *n, std::vector<Neuron *> &inputs);
 
     /*
      * Gets all the Neurons that the given one synapses ONTO.
      */
-    void get_outputs(const Neuron *n, std::vector<Neuron *> &outputs) const;
+    void get_outputs(const Neuron *n, std::vector<Neuron *> &outputs);
 
-    void get_output_synapses(const Neuron *n, std::vector<Synapse *> &syns) const;
+    void get_output_synapses(const Neuron *n, std::vector<Synapse *> &syns);
 
-    void get_synapse(const Neuron *from, const Neuron *to, Synapse &syn) const;
+    void get_synapse(const Neuron *from, const Neuron *to, Synapse &syn);
 
     /*
      * Gets whether or not n synapses onto m.
      */
-    bool neuron_synapses_onto(const Neuron *n, const Neuron *m) const;
+    bool neuron_synapses_onto(const Neuron *n, const Neuron *m);
 
 private:
     //Neuron -> Neurons it is connected TO
@@ -50,8 +52,6 @@ private:
     std::map<const Neuron *, std::vector<Neuron *>> reverse_map;
     //Neuron a, Neuron b -> Synapse that connects FROM a TO b
     std::map<std::tuple<const Neuron *, const Neuron *>, Synapse *> forward_synapses;
-    //Neuron a, Neuron b -> Synapse that connects TO a FROM b
-    std::map<std::tuple<const Neuron *, const Neuron *>, Synapse *> reverse_synapses;
     //Neuron -> All outgoing synapses from it
     std::map<const Neuron *, std::vector<Synapse *>> forward_map_synapses;
     //Neuron -> All incoming synapses going into it

@@ -68,7 +68,7 @@ void Layer::add_neuron(const Neuron &n)
     this->neurons.push_back(heap_n_pointer);
 }
 
-Neuron* Layer::at(const int index) const
+Neuron* Layer::at(int index) const
 {
     return (*this)[index];
 }
