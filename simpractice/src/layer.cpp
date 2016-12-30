@@ -92,6 +92,21 @@ Neuron Layer::copy_at(int index) const
     return copy;
 }
 
+bool Layer::get_by_id(Neuron *&to_ret, std::string id) const
+{
+    for (unsigned int i = 0; i < this->size(); i++)
+    {
+        Neuron *n = this->at(i);
+        if (n->get_id() == id)
+        {
+            to_ret = n;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 UnitTestResult Layer::run_tests()
 {
     UnitTestResult result;

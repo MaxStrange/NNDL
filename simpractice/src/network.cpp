@@ -51,7 +51,6 @@ std::ostream& operator<<(std::ostream &outstream, const Network &nw)
 
 Network& Network::operator=(const Network &rhs)
 {
-    std::cout << "Copying..." << std::endl;
     if (this != &rhs)
     {
         this->layers = rhs.layers;
@@ -339,34 +338,24 @@ std::vector<Neuron *> Network::topological_sort()
 UnitTestResult Network::run_tests()
 {
     UnitTestResult result;
-    Network::test_filter_for_output_neurons(result);
-    Network::test_get_node_inputs(result);
-    Network::test_is_all_synapses(result);
-    Network::test_map_to_output(result);
     Network::test_neuron_is_output_neuron(result);
     Network::test_topological_sort(result);
 
     return result;
 }
 
-void Network::test_filter_for_output_neurons(UnitTestResult &result)
-{
-}
-
-void Network::test_get_node_inputs(UnitTestResult &result)
-{
-}
-
-void Network::test_is_all_synapses(UnitTestResult &result)
-{
-}
-
-void Network::test_map_to_output(UnitTestResult &result)
-{
-}
-
 void Network::test_neuron_is_output_neuron(UnitTestResult &result)
 {
+    std::string class_name = "Network";
+    std::string test_name = "neuron_is_output_neuron";
+
+    Network test_network;
+    Network::create_test_network(test_network);
+
+    Neuron *n = *test_network.top_sorted_network.end();
+    bool is_output_neuron = test_network.neuron_is_output_neuron(n);
+    result.assert(is_output_neuron, class_name, test_name,
+            "The last Neuron in the topological list must be an output neuron");
 }
 
 void Network::test_topological_sort(UnitTestResult &result)

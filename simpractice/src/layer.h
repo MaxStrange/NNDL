@@ -34,6 +34,8 @@ public:
      */
     Neuron copy_at(int index) const;
 
+    bool get_by_id(Neuron *&to_ret, std::string id) const;
+
     static UnitTestResult run_tests();
 
     size_t size() const;

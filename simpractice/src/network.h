@@ -76,10 +76,6 @@ private:
     std::vector<Neuron *> topological_sort();
 
 
-    static void test_filter_for_output_neurons(UnitTestResult &result);
-    static void test_get_node_inputs(UnitTestResult &result);
-    static void test_is_all_synapses(UnitTestResult &result);
-    static void test_map_to_output(UnitTestResult &result);
     static void test_neuron_is_output_neuron(UnitTestResult &result);
     static void test_topological_sort(UnitTestResult &result);
     static void create_test_network(Network &test_network);
