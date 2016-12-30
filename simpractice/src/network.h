@@ -54,6 +54,10 @@ private:
     Layer* get_input_layer() const;
     Layer* get_output_layer() const;
 
+    std::vector<std::tuple<Neuron *, Signal>>& filter_for_input_neurons(
+            std::vector<std::tuple<Neuron *, Signal>> &outputs,
+            std::vector<std::tuple<Neuron *, Signal>> &input_neurons) const;
+
     std::vector<std::tuple<Neuron *, Signal>>& filter_for_output_neurons(
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<std::tuple<Neuron *, Signal>> &output_neurons) const;
@@ -62,15 +66,25 @@ private:
 
     std::vector<Signal>& get_node_inputs(uint64_t time, const Neuron *n,
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
-            std::vector<Signal> &inputs);
+            std::vector<Signal> &inputs,
+            const std::vector<Signal> &network_input);
+
+    std::vector<Signal>& get_node_inputs_backward(uint64_t time, const Neuron *n,
+            std::vector<std::tuple<Neuron *, Signal>> &outputs,
+            std::vector<Signal> &inputs,
+            const std::vector<Signal> &network_input);
 
     void initialize_connection_map(std::vector<Synapse *> *connections);
 
     bool is_all_synapses(const std::set<Synapse *> &graph);
 
+    std::vector<Signal>& map_to_input(std::vector<std::tuple<
+            Neuron *, Signal>> &input_neurons, std::vector<Signal> &output);
+
     std::vector<Signal>& map_to_output(std::vector<std::tuple<
             Neuron *, Signal>> &output_neurons, std::vector<Signal> &output);
 
+    bool neuron_is_input_neuron(const Neuron *n) const;
     bool neuron_is_output_neuron(const Neuron *n) const;
 
     std::vector<Neuron *> topological_sort();

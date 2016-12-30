@@ -107,6 +107,17 @@ bool Layer::get_by_id(Neuron *&to_ret, std::string id) const
     return false;
 }
 
+int Layer::get_neuron_index(const Neuron *n) const
+{
+    for (unsigned int i = 0; i < this->size(); i++)
+    {
+        Neuron *m = this->at(i);
+        if (n == m)
+            return i;
+    }
+    return -1;
+}
+
 UnitTestResult Layer::run_tests()
 {
     UnitTestResult result;

@@ -15,18 +15,17 @@
 /*
  * Just hard-coded for testing
  */
-#define NUM_LAYERS              3
-
-/*
- * Just hard-coded for testing
- */
-#define NUM_NEURONS             3
+#define NUM_NEURONS_INPUT       784
+#define NUM_NEURONS_HIDDEN      125
+#define NUM_NEURONS_OUTPUT      10
 
 /*
  * Defines for what example to use.
  */
 #define SOURCE_HEADER           "mnist_source.h"
 #define SOURCE                  MnistSource
+#define NEURON_HEADER           "simple_neuron.h"
+#define NEURON                  SimpleNeuron
 
 
 /*

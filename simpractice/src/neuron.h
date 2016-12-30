@@ -41,7 +41,7 @@ public:
     virtual Signal fire_forward(uint64_t time,
             const std::vector<Signal> &input_vector);
 
-private:
+protected:
     std::string id;
 };
 

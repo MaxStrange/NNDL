@@ -36,6 +36,11 @@ public:
 
     bool get_by_id(Neuron *&to_ret, std::string id) const;
 
+    /*
+     * Gets the index of the Neuron in the layer or -1 if not found.
+     */
+    int get_neuron_index(const Neuron *n) const;
+
     static UnitTestResult run_tests();
 
     size_t size() const;
