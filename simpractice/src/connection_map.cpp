@@ -141,7 +141,7 @@ void ConnectionMap::create_reverse_map_synapses(std::vector<Neuron *> &neurons,
             if (n == to)
                 ns_synapses.push_back(s);
         }
-        this->forward_map_synapses[n] = ns_synapses;
+        this->reverse_map_synapses[n] = ns_synapses;
     }
 }
 
