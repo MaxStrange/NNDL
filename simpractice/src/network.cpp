@@ -381,9 +381,10 @@ void Network::create_test_network(Network &test_network)
     Synapse *ad = new Synapse(ap, dp);
     Synapse *dc = new Synapse(dp, cp);
     Synapse *ce = new Synapse(cp, ep);
+    Synapse *bd = new Synapse(bp, dp);
     test_connections.push_back(ba); test_connections.push_back(ac);
     test_connections.push_back(ad); test_connections.push_back(dc);
-    test_connections.push_back(dc); test_connections.push_back(ce);
+    test_connections.push_back(bd); test_connections.push_back(ce);
 
     test_network = Network(&test_layers, &test_connections);
 }

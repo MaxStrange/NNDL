@@ -27,7 +27,7 @@ Neuron::~Neuron()
 
 std::ostream& operator<<(std::ostream &outstream, const Neuron &n)
 {
-    outstream << "Neuron here";
+    outstream << "Neuron " << n.get_id();
     return outstream;
 }
 
