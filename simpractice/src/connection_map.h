@@ -26,37 +26,27 @@ public:
     friend std::ostream& operator<<(std::ostream &outstream,
             const ConnectionMap &cm);
 
-    void create_const_map(std::vector<Neuron *> &neurons);
-
-    void create_forward_map(std::vector<Neuron *> &neurons,
-            std::vector<Synapse *> &connections);
-
-    void create_reverse_map(std::vector<Neuron *> &neurons,
-            std::vector<Synapse *> &connections);
-
-    void create_forward_synapses(std::vector<Neuron *> &neurons,
-            std::vector<Synapse *> &connections);
-
-    void create_forward_map_synapses(std::vector<Neuron *> &neurons,
-            std::vector<Synapse *> &connections);
-
-    void create_reverse_map_synapses(std::vector<Neuron *> &neurons,
-            std::vector<Synapse *> &connections);
-
     /*
-     * Gets all the Neurons that the given one synapses FROM.
-     * That is, gets all the Neurons that synapse onto this one.
+     * Gets all the Neurons that synapse onto this one.
      */
     void get_inputs(const Neuron *n, std::vector<Neuron *> &inputs);
+
+    /*
+     * Gets all the Synapses that the given Neuron has coming into it.
+     */
+    void get_input_synapses(const Neuron *n, std::vector<Synapse *> &syns);
 
     /*
      * Gets all the Neurons that the given one synapses ONTO.
      */
     void get_outputs(const Neuron *n, std::vector<Neuron *> &outputs);
 
+    /*
+     * Gets all the Synapses that the given Neuron has leaving it.
+     */
     void get_output_synapses(const Neuron *n, std::vector<Synapse *> &syns);
 
-    void get_synapse(const Neuron *from, const Neuron *to, Synapse &syn);
+    void get_synapse(const Neuron *from, const Neuron *to, Synapse *&syn);
 
     /*
      * Gets whether or not n synapses onto m.
@@ -82,7 +72,17 @@ private:
     std::vector<Synapse *> connections;
     std::vector<Neuron *> neurons;
 
-
+    void create_const_map(std::vector<Neuron *> &neurons);
+    void create_forward_map(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+    void create_reverse_map(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+    void create_forward_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+    void create_forward_map_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
+    void create_reverse_map_synapses(std::vector<Neuron *> &neurons,
+            std::vector<Synapse *> &connections);
     static void test_forward_map(UnitTestResult &result);
     static void test_reverse_map(UnitTestResult &result);
     static void test_forward_synapses(UnitTestResult &result);

@@ -151,6 +151,12 @@ void ConnectionMap::get_inputs(const Neuron *n,
     inputs = this->reverse_map[n];
 }
 
+void ConnectionMap::get_input_synapses(const Neuron *n,
+        std::vector<Synapse *> &syns)
+{
+    syns = this->reverse_map_synapses[n];
+}
+
 void ConnectionMap::get_outputs(const Neuron *n,
         std::vector<Neuron *> &outputs)
 {
@@ -164,10 +170,10 @@ void ConnectionMap::get_output_synapses(const Neuron *n,
 }
 
 void ConnectionMap::get_synapse(const Neuron *from, const Neuron *to,
-        Synapse &syn)
+        Synapse *&syn)
 {
     auto tup = std::make_tuple(from, to);
-    syn = *this->forward_synapses[tup];
+    syn = this->forward_synapses[tup];
 }
 
 bool ConnectionMap::neuron_synapses_onto(const Neuron *n, const Neuron *m)
@@ -180,12 +186,12 @@ UnitTestResult ConnectionMap::run_tests()
 {
     UnitTestResult result;
 
-    test_forward_map(result);
-    test_reverse_map(result);
-    test_forward_synapses(result);
-    test_forward_map_synapses(result);
-    test_reverse_map_synapses(result);
-    test_const_map(result);
+    ConnectionMap::test_forward_map(result);
+    ConnectionMap::test_reverse_map(result);
+    ConnectionMap::test_forward_synapses(result);
+    ConnectionMap::test_forward_map_synapses(result);
+    ConnectionMap::test_reverse_map_synapses(result);
+    ConnectionMap::test_const_map(result);
 
     return result;
 }

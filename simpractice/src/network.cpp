@@ -129,6 +129,30 @@ std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_output_neurons(
 }
 
 /*
+ * Gets all the Neurons in this network that have no incoming
+ * Synapses.
+ */
+std::set<Neuron *> Network::get_all_nodes_no_incoming()
+{
+    std::set<Neuron *> ret;
+
+    for (unsigned int i = 0; i < this->layers->size(); i++)
+    {
+        Layer *l = this->layers->at(i);
+        for (unsigned int j = 0; j < l->size(); j++)
+        {
+            Neuron *n = l->at(j);
+            std::vector<Neuron *> input_neurons;
+            this->connection_map.get_inputs(n, input_neurons);
+            if (input_neurons.size() == 0)
+                ret.insert(n);
+        }
+    }
+
+    return ret;
+}
+
+/*
  * Gets the given Neuron's input Signals and returns them.
  * Gets these Signals from the so far calculated Signals found in outputs.
  * Also fires any Signals it retrieves through the appropriate Synapses
@@ -145,9 +169,9 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
         std::tie(m, s) = outputs.at(i);
         if (this->connection_map.neuron_synapses_onto(m, n))
         {
-            Synapse syn;
+            Synapse *syn;
             this->connection_map.get_synapse(m, n, syn);
-            s = syn.fire_forward(t, s);
+            s = syn->fire_forward(t, s);
             inputs.push_back(s);
         }
     }
@@ -170,7 +194,7 @@ void Network::initialize_connection_map(std::vector<Synapse *> *connections)
     this->connection_map = ConnectionMap(*connections, neurons);
 }
 
-bool Network::is_all_synapses(const std::set<Synapse *> &G)
+bool Network::is_all_synapses(const std::set<Synapse *> &graph)
 {
     //Get all the synapses in the network
     std::set<Synapse *> all;
@@ -191,7 +215,7 @@ bool Network::is_all_synapses(const std::set<Synapse *> &G)
     }
 
     //Now check if the two sets G and all are the same
-    return G == all;
+    return graph == all;
 }
 
 /*
@@ -243,49 +267,68 @@ std::vector<Neuron *> Network::topological_sort()
 {
     //Kahn's algorithm, see Wikipedia
 
-    std::vector<Neuron *> L;
-    std::set<Neuron *> S;
-    std::set<Synapse *> G;
+    std::vector<Neuron *> top_sorted;
+    std::set<Neuron *> nodes_no_incoming = this->get_all_nodes_no_incoming();
+    //Graph is a set of edges, which should eventually contain all of the edges
+    //in the network
+    std::set<Synapse *> graph;
 
-    while (S.size() > 0)
+    //While nodes_no_incoming is not empty
+    while (nodes_no_incoming.size() > 0)
     {
-        Neuron *n = *S.begin();
-        L.push_back(n);
+        //remove a node form nodes_no_incoming
+        Neuron *n = *nodes_no_incoming.begin();
+        nodes_no_incoming.erase(n);
 
+        //Add that node to the end of top_sorted
+        top_sorted.push_back(n);
+
+        //For each edge e from n to m
         std::vector<Neuron *> to;
         this->connection_map.get_outputs(n, to);
         for (unsigned int i = 0; i < to.size(); i++)
         {
             Neuron *m = to.at(i);
-            Synapse e;
+
+            //Remove edge e from the graph
+            //(we don't remove anything - instead, we add the edges that
+            //we should remove to a set and check the set before attempting to
+            //use an edge that should have been removed)
+            Synapse *e;
             this->connection_map.get_synapse(n, m, e);
-            G.insert(&e);
 
-            //if each of m's outgoing synapses are in G,
-            //add m to S
-            std::vector<Neuron *> m_outgoing;
-            this->connection_map.get_outputs(m, m_outgoing);
-            bool m_has_no_more_edges = true;
-            for (unsigned int j = 0; j < m_outgoing.size(); j++)
+            //If e has not been removed from the network
+            if (graph.find(e) == graph.end())
             {
-                Neuron *p = m_outgoing.at(j);
-                Synapse m_syn;
-                this->connection_map.get_synapse(m, p, m_syn);
-                if (G.find(&m_syn) == G.end())
-                    m_has_no_more_edges = false;
-            }
+                //remove it from the network
+                graph.insert(e);
 
-            if (m_has_no_more_edges)
-                S.insert(m);
+                //if m has no other incoming edges
+                std::vector<Synapse *> incoming_edges;
+                this->connection_map.get_input_synapses(m, incoming_edges);
+                bool m_has_no_other_incoming_edges = true;
+                //If all incoming_edges have been added to graph,
+                //then m has no other incoming edges
+                for (unsigned int j = 0; j < incoming_edges.size(); j++)
+                {
+                    Synapse *incoming_edge = incoming_edges.at(j);
+                    if (graph.find(incoming_edge) == graph.end())
+                        m_has_no_other_incoming_edges = false;
+                }
+
+                //insert m into nodes_no_incoming
+                if (m_has_no_other_incoming_edges)
+                    nodes_no_incoming.insert(m);
+            }
         }
     }
 
-    //if G does not contain all the synapses,
+    //if graph does not contain all the synapses,
     //then there is at least one cycle in the network, and our algorithm
     //cannot handle that
-    if (this->is_all_synapses(G))
+    if (this->is_all_synapses(graph))
     {
-        return L;
+        return top_sorted;
     }
     else
     {

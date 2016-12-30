@@ -58,13 +58,15 @@ private:
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<std::tuple<Neuron *, Signal>> &output_neurons) const;
 
+    std::set<Neuron *> get_all_nodes_no_incoming();
+
     std::vector<Signal>& get_node_inputs(uint64_t time, const Neuron *n,
             std::vector<std::tuple<Neuron *, Signal>> &outputs,
             std::vector<Signal> &inputs);
 
     void initialize_connection_map(std::vector<Synapse *> *connections);
 
-    bool is_all_synapses(const std::set<Synapse *> &G);
+    bool is_all_synapses(const std::set<Synapse *> &graph);
 
     std::vector<Signal>& map_to_output(std::vector<std::tuple<
             Neuron *, Signal>> &output_neurons, std::vector<Signal> &output);
