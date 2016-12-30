@@ -12,6 +12,7 @@
 
 #include "neuron.h"
 #include "synapse.h"
+#include "unit_tests.h"
 
 
 class ConnectionMap
@@ -61,6 +62,9 @@ public:
      * Gets whether or not n synapses onto m.
      */
     bool neuron_synapses_onto(const Neuron *n, const Neuron *m);
+
+    static UnitTestResult run_tests();
+
 private:
     //Neuron -> Neurons it is connected TO
     std::map<const Neuron *, std::vector<Neuron *>> forward_map;
@@ -76,6 +80,16 @@ private:
     std::map<const Neuron*, Neuron *> const_map;
 
     std::vector<Synapse *> connections;
+    std::vector<Neuron *> neurons;
+
+
+    static void test_forward_map(UnitTestResult &result);
+    static void test_reverse_map(UnitTestResult &result);
+    static void test_forward_synapses(UnitTestResult &result);
+    static void test_forward_map_synapses(UnitTestResult &result);
+    static void test_reverse_map_synapses(UnitTestResult &result);
+    static void test_const_map(UnitTestResult &result);
+    static void create_test_connection_map(ConnectionMap &cm);
 };
 
 

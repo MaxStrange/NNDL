@@ -356,19 +356,24 @@ void Network::create_test_network(Network &test_network)
     Neuron a("a"), b("b"), c("c"), d("d"), e("e");
 
     std::vector<Layer *> test_layers;
-    Layer input, hidden, output;
-    input.add_neuron(a); input.add_neuron(b);
-    hidden.add_neuron(c); hidden.add_neuron(d);
-    output.add_neuron(e);
-    test_layers.push_back(&input); test_layers.push_back(&hidden);
-            test_layers.push_back(&output);
+    Layer *input = new Layer();
+    Layer *hidden = new Layer();
+    Layer *output = new Layer();
+    input->add_neuron(a);
+    input->add_neuron(b);
+    hidden->add_neuron(c);
+    hidden->add_neuron(d);
+    output->add_neuron(e);
+    test_layers.push_back(input);
+    test_layers.push_back(hidden);
+    test_layers.push_back(output);
 
     Neuron *ap, *bp, *cp, *dp, *ep;
-    ap = input.at(0);
-    bp = input.at(1);
-    cp = hidden.at(0);
-    dp = hidden.at(1);
-    ep = output.at(0);
+    ap = input->at(0);
+    bp = input->at(1);
+    cp = hidden->at(0);
+    dp = hidden->at(1);
+    ep = output->at(0);
 
     std::vector<Synapse *> test_connections;
     Synapse *ba = new Synapse(bp, ap);

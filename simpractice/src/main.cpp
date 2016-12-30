@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "config.h"
+#include "connection_map.h"
 #include "layer.h"
 #include "network.h"
 #include "neuron.h"
@@ -28,6 +29,9 @@ int main(int argv, char **argc)
         UnitTestResult result;
 
         result = Layer::run_tests();
+        result.print();
+
+        result = ConnectionMap::run_tests();
         result.print();
 
         result = Network::run_tests();
