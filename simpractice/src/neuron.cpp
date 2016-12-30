@@ -35,6 +35,7 @@ Neuron& Neuron::operator=(const Neuron &rhs)
 {
     if (this != &rhs)
     {
+        this->id = rhs.id;
     }
 
     return *this;

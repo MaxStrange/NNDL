@@ -197,12 +197,19 @@ void ConnectionMap::test_forward_map(UnitTestResult &result)
 
     ConnectionMap mp;
     create_test_connection_map(mp);
-
-    auto fmap = mp.forward_map;
-    auto connections = mp.connections;
-    for (unsigned int i = 0; i < connections.size(); i++)
+    auto map = mp.forward_map;
+    auto neurons = mp.neurons;
+    for (unsigned int i = 0; i < neurons.size(); i++)
     {
-        Synapse *s = connections.at(i);
+        Neuron *n = neurons.at(i);
+        if (n->get_id() == "a")
+        {
+            auto from_n = map[n];
+            bool has_size_two = from_n.size() == 2;
+            result.assert(has_size_two, class_name, test_name,
+                    "A does not have two synapses leaving it, and should.");
+            return;
+        }
     }
 }
 
@@ -213,11 +220,20 @@ void ConnectionMap::test_reverse_map(UnitTestResult &result)
 
     ConnectionMap mp;
     create_test_connection_map(mp);
-    auto fmap = mp.forward_map;
-    auto connections = mp.connections;
-    for (unsigned int i = 0; i < connections.size(); i++)
+    auto rmap = mp.reverse_map;
+    auto neurons = mp.neurons;
+    for (unsigned int i = 0; i < neurons.size(); i++)
     {
-        Synapse *s = connections.at(i);
+        Neuron *n = neurons.at(i);
+        if (n->get_id() == "c")
+        {
+            auto into_n = rmap[n];
+            //Should have size two
+            bool has_size_two = into_n.size() == 2;
+            result.assert(has_size_two, class_name, test_name,
+                    "C does not have two synapses into it, and should.");
+            return;
+        }
     }
 }
 
@@ -233,13 +249,14 @@ void ConnectionMap::test_forward_synapses(UnitTestResult &result)
     std::vector<Synapse *> found;
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
-        Neuron *n = neurons.at(n);
+        Neuron *n = neurons.at(i);
         for (unsigned int j = 0; j < neurons.size(); j++)
         {
-            Neuron *m = neurons.at(m);
+            Neuron *m = neurons.at(j);
             auto tup = std::make_tuple(n, m);
             auto itr = fsyns.find(tup);
-            found.push_back(*itr);
+            if (itr != fsyns.end())
+                found.push_back(itr->second);
         }
     }
     bool passed = result.assert(found.size() >= 6, class_name, test_name,
