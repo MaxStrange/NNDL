@@ -62,13 +62,13 @@ const NEURON* Synapse::get_to() const
 Signal Synapse::fire_backward(float t, const Signal &incoming)
 {
     //TODO
-    return Signal();
+    return Signal(incoming);
 }
 
 Signal Synapse::fire_forward(float t, const Signal &incoming)
 {
     //TODO
-    return Signal();
+    return Signal(incoming);
 }
 
 

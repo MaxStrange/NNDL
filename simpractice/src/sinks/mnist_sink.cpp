@@ -38,6 +38,8 @@ std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs)
 
         Signal dif = label - s;
         diffs.push_back(dif);
+
+        std::cout << "Difference: " << dif << std::endl;
     }
 
     return diffs;
