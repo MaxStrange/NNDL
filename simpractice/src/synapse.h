@@ -11,7 +11,7 @@
  * The network uses the Synapses to figure out which neurons are connected
  * to which other ones, and then it sends Signals into them from the from
  * neurons and sends them to the to neurons. The Synapse objects don't
- * ask the Neurons for Signals and they don't update the Neurons with
+ * ask the NEURONs for Signals and they don't update the NEURONs with
  * new Signals.
  */
 
@@ -20,13 +20,13 @@
 
 #include <iostream>
 
-#include "neuron.h"
+#include NEURON_HEADER
 
 class Synapse
 {
 public:
     Synapse();
-    Synapse(const Neuron *from, const Neuron *to);
+    Synapse(const NEURON *from, const NEURON *to);
     Synapse(const Synapse &other);
     ~Synapse();
 
@@ -34,15 +34,15 @@ public:
 
     Synapse& operator=(const Synapse &other);
 
-    const Neuron* get_from() const;
-    const Neuron* get_to() const;
+    const NEURON* get_from() const;
+    const NEURON* get_to() const;
 
     Signal fire_backward(float t, const Signal &incoming);
     Signal fire_forward(float t, const Signal &incoming);
 
 private:
-    const Neuron *from;
-    const Neuron *to;
+    const NEURON *from;
+    const NEURON *to;
 };
 
 

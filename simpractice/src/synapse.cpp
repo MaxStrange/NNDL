@@ -11,7 +11,7 @@ Synapse::Synapse()
 {
 }
 
-Synapse::Synapse(const Neuron *from, const Neuron *to)
+Synapse::Synapse(const NEURON *from, const NEURON *to)
 {
     this->from = from;
     this->to = to;
@@ -49,12 +49,12 @@ Synapse& Synapse::operator=(const Synapse &rhs)
     return *this;
 }
 
-const Neuron* Synapse::get_from() const
+const NEURON* Synapse::get_from() const
 {
     return this->from;
 }
 
-const Neuron* Synapse::get_to() const
+const NEURON* Synapse::get_to() const
 {
     return this->to;
 }
@@ -62,13 +62,13 @@ const Neuron* Synapse::get_to() const
 Signal Synapse::fire_backward(float t, const Signal &incoming)
 {
     //TODO
-    return Signal();
+    return Signal(incoming);
 }
 
 Signal Synapse::fire_forward(float t, const Signal &incoming)
 {
     //TODO
-    return Signal();
+    return Signal(incoming);
 }
 
 

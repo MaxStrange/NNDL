@@ -19,6 +19,89 @@ Signal::~Signal()
 {
 }
 
+
+std::ostream& operator<<(std::ostream &outstream, const Signal &s)
+{
+    outstream << s.value;
+    return outstream;
+}
+
+Signal& Signal::operator+=(const Signal &rhs)
+{
+    this->value += rhs.value;
+    return *this;
+}
+
+Signal Signal::operator+(const Signal &rhs) const
+{
+    return Signal(this->value + rhs.value);
+}
+
+Signal& Signal::operator-=(const Signal &rhs)
+{
+    this->value -= rhs.value;
+    return *this;
+}
+
+Signal Signal::operator-(const Signal &rhs) const
+{
+    return Signal(this->value - rhs.value);
+}
+
+Signal& Signal::operator*=(const Signal &rhs)
+{
+    this->value *= rhs.value;
+    return *this;
+}
+
+Signal Signal::operator*(const Signal &rhs) const
+{
+    return Signal(this->value * rhs.value);
+}
+
+Signal& Signal::operator/=(const Signal &rhs)
+{
+    this->value /= rhs.value;
+    return *this;
+}
+
+Signal Signal::operator/(const Signal &rhs) const
+{
+    return this->value / rhs.value;
+}
+
+bool Signal::operator==(const Signal &rhs) const
+{
+    return this->value == rhs.value;
+}
+
+bool Signal::operator!=(const Signal &rhs) const
+{
+    return !(*this == rhs);
+}
+
+bool Signal::operator<(const Signal &rhs) const
+{
+    return this->value < rhs.value;
+}
+
+bool Signal::operator>(const Signal &rhs) const
+{
+    return this->value > rhs.value;
+}
+
+bool Signal::operator>=(const Signal &rhs) const
+{
+    Signal s = *this;
+    return s > rhs;
+}
+
+bool Signal::operator<=(const Signal &rhs) const
+{
+    Signal s = *this;
+    return s < rhs;
+}
+
 fpoint_t Signal::get_value() const
 {
     return this->value;

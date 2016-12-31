@@ -81,15 +81,15 @@ void MnistSource::load_dataset()
 
     if (file.is_open())
     {
-        int magic_number = 0;
-        int n_rows = 0;
-        int n_cols = 0;
+        int32_t magic_number = 0;
+        int32_t n_rows = 0;
+        int32_t n_cols = 0;
 
         //Read the first value into 'magic_number' to see if the file is valid
         file.read((char *)&magic_number, sizeof(magic_number));
         magic_number = reverse_int(magic_number);
 
-        bool magic_valid = (magic_number == 2051) || (magic_number == 2049);
+        bool magic_valid = (magic_number == 2051);
         if (!magic_valid)
             throw std::runtime_error("Invalid MNIST data file.");
 

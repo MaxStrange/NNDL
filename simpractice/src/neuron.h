@@ -10,7 +10,7 @@
  *
  * TODO:
  * Ultimately, this class should be made into an abstract base class
- * for all the different types of Neurons.
+ * for all the different types of Neuron.
  */
 
 #ifndef __NEURON_H__
@@ -41,7 +41,7 @@ public:
     virtual Signal fire_forward(uint64_t time,
             const std::vector<Signal> &input_vector);
 
-private:
+protected:
     std::string id;
 };
 
