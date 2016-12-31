@@ -25,6 +25,7 @@ SED                   := sed
 
 inc_path              := $(srcdir)
 inc_path              += $(source_examples_dir)
+inc_path              += $(neuron_examples_dir)
 
 WARNING               += -Wall
 WARNING               += -Werror

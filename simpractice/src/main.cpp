@@ -81,17 +81,17 @@ std::vector<Layer *> create_layers(void)
     Layer *output = new Layer();
     for (unsigned int i = 0; i < NUM_NEURONS_INPUT; i++)
     {
-        Neuron n("in_" + std::to_string(i));
+        NEURON n("in_" + std::to_string(i));
         input->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_HIDDEN; i++)
     {
-        Neuron n("h_" + std::to_string(i));
+        NEURON n("h_" + std::to_string(i));
         hidden->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_OUTPUT; i++)
     {
-        Neuron n("out_" + std::to_string(i));
+        NEURON n("out_" + std::to_string(i));
         hidden->add_neuron(n);
     }
 
@@ -115,12 +115,12 @@ std::vector<Synapse *> connect_layers(const std::vector<Layer *> &layers)
             Layer *layer_i = layers.at(i);
             for (int j = 0; j < layer_i->size(); j++)
             {
-                Neuron *neuron_j_pointer = layer_i->at(j);
+                NEURON *neuron_j_pointer = layer_i->at(j);
                 Layer *layer_next = layers.at(i + 1);
                 //Connect neuron_j to each neuron_l in layer i + 1
                 for (int l = 0; l < layer_next->size(); l++)
                 {
-                    Neuron *neuron_l_pointer = layer_next->at(l);
+                    NEURON *neuron_l_pointer = layer_next->at(l);
                     //Synapse from j to l
                     Synapse *s = new Synapse(neuron_j_pointer, neuron_l_pointer);
                     connections.push_back(s);

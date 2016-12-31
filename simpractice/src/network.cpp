@@ -63,12 +63,12 @@ Network& Network::operator=(const Network &rhs)
 
 std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input)
 {
-    std::vector<std::tuple<Neuron *, Signal>> outputs;
+    std::vector<std::tuple<NEURON *, Signal>> outputs;
 
     for (int i = this->top_sorted_network.size() - 1; i >= 0; i--)
     {
         //for each node in the sorted network, going backwards
-        Neuron *n = this->top_sorted_network.at(i);
+        NEURON *n = this->top_sorted_network.at(i);
 
         //get that node's inputs and fire synapses
         //this is going backwards though - so the output layer will take in
@@ -83,14 +83,14 @@ std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input
         Signal output = n->fire_backward(t, inputs);
 
         //Now pair that signal with n and put it into the list that we are using
-        //to figure out what values each Neuron gets as its backwards input
+        //to figure out what values each NEURON gets as its backwards input
         outputs.push_back(std::make_tuple(n, output));
     }
 
     //After each node in the list fires,
-    //filter the list of Neurons to Signals so that it only contains those
-    //Neurons which are in the input layer
-    std::vector<std::tuple<Neuron *, Signal>> input_neurons;
+    //filter the list of NEURONs to Signals so that it only contains those
+    //NEURONs which are in the input layer
+    std::vector<std::tuple<NEURON *, Signal>> input_neurons;
     input_neurons = this->filter_for_input_neurons(outputs, input_neurons);
 
     //Now organize that layer into a vector of Signals coming out of the input
@@ -103,12 +103,12 @@ std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input
 
 std::vector<Signal> Network::fire_forward(uint64_t t, std::vector<Signal> input)
 {
-    std::vector<std::tuple<Neuron *, Signal>> outputs;
+    std::vector<std::tuple<NEURON *, Signal>> outputs;
 
     for (unsigned int i = 0; i < this->top_sorted_network.size(); i++)
     {
         //for each node in the topologically sorted network
-        Neuron *n = this->top_sorted_network.at(i);
+        NEURON *n = this->top_sorted_network.at(i);
 
         //get that node's inputs (which includes firing the synapses)
         std::vector<Signal> inputs;
@@ -121,7 +121,7 @@ std::vector<Signal> Network::fire_forward(uint64_t t, std::vector<Signal> input)
 
     //once you are done with the whole list,
     //filter it to get only the nodes that are from the output layer
-    std::vector<std::tuple<Neuron *, Signal>> output_neurons;
+    std::vector<std::tuple<NEURON *, Signal>> output_neurons;
     output_neurons = this->filter_for_output_neurons(outputs, output_neurons);
 
     //then organize that layer into a vector
@@ -141,14 +141,14 @@ Layer* Network::get_output_layer() const
     return this->layers->back();
 }
 
-std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_input_neurons(
-        std::vector<std::tuple<Neuron *, Signal>> &outputs,
-        std::vector<std::tuple<Neuron *, Signal>> &input_neurons) const
+std::vector<std::tuple<NEURON *, Signal>>& Network::filter_for_input_neurons(
+        std::vector<std::tuple<NEURON *, Signal>> &outputs,
+        std::vector<std::tuple<NEURON *, Signal>> &input_neurons) const
 {
     for (unsigned int i = 0; i < outputs.size(); i++)
     {
         auto t = outputs.at(i);
-        const Neuron *n = std::get<0>(t);
+        const NEURON *n = std::get<0>(t);
         if (this->neuron_is_input_neuron(n))
             input_neurons.push_back(t);
     }
@@ -159,14 +159,14 @@ std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_input_neurons(
 /*
  * Filters the output list so that it only contains output neurons.
  */
-std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_output_neurons(
-        std::vector<std::tuple<Neuron *, Signal>> &outputs,
-        std::vector<std::tuple<Neuron *, Signal>> &output_neurons) const
+std::vector<std::tuple<NEURON *, Signal>>& Network::filter_for_output_neurons(
+        std::vector<std::tuple<NEURON *, Signal>> &outputs,
+        std::vector<std::tuple<NEURON *, Signal>> &output_neurons) const
 {
     for (unsigned int i = 0; i < outputs.size(); i++)
     {
         auto t = outputs.at(i);
-        const Neuron *n = std::get<0>(t);
+        const NEURON *n = std::get<0>(t);
         if (this->neuron_is_output_neuron(n))
             output_neurons.push_back(t);
     }
@@ -175,20 +175,20 @@ std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_output_neurons(
 }
 
 /*
- * Gets all the Neurons in this network that have no incoming
+ * Gets all the NEURONs in this network that have no incoming
  * Synapses.
  */
-std::set<Neuron *> Network::get_all_nodes_no_incoming()
+std::set<NEURON *> Network::get_all_nodes_no_incoming()
 {
-    std::set<Neuron *> ret;
+    std::set<NEURON *> ret;
 
     for (unsigned int i = 0; i < this->layers->size(); i++)
     {
         Layer *l = this->layers->at(i);
         for (unsigned int j = 0; j < l->size(); j++)
         {
-            Neuron *n = l->at(j);
-            std::vector<Neuron *> input_neurons;
+            NEURON *n = l->at(j);
+            std::vector<NEURON *> input_neurons;
             this->connection_map.get_inputs(n, input_neurons);
             if (input_neurons.size() == 0)
                 ret.insert(n);
@@ -199,15 +199,15 @@ std::set<Neuron *> Network::get_all_nodes_no_incoming()
 }
 
 /*
- * Gets the given Neuron's input Signals and returns them.
+ * Gets the given NEURON's input Signals and returns them.
  * Gets these Signals from the so far calculated Signals found in outputs.
  * Also fires any Signals it retrieves through the appropriate Synapses
  * before adding them to the list to return.
- * If the Neuron is in the input layer, it actually gets its Signal from
+ * If the NEURON is in the input layer, it actually gets its Signal from
  * the network_input vector.
  */
-std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
-        std::vector<std::tuple<Neuron *, Signal>> &outputs,
+std::vector<Signal>& Network::get_node_inputs(uint64_t t, const NEURON *n,
+        std::vector<std::tuple<NEURON *, Signal>> &outputs,
         std::vector<Signal> &inputs, const std::vector<Signal> &network_input)
 {
     if (this->neuron_is_input_neuron(n))
@@ -223,7 +223,7 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
     {
         for (unsigned int i = 0; i < outputs.size(); i++)
         {
-            Neuron *m;
+            NEURON *m;
             Signal s;
             std::tie(m, s) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(m, n))
@@ -239,8 +239,8 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
     return inputs;
 }
 
-std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron *n,
-        std::vector<std::tuple<Neuron *, Signal>> &outputs,
+std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const NEURON *n,
+        std::vector<std::tuple<NEURON *, Signal>> &outputs,
         std::vector<Signal> &inputs, const std::vector<Signal> &network_input)
 {
     if (this->neuron_is_output_neuron(n))
@@ -256,7 +256,7 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
     {
         for (unsigned int i = 0; i < outputs.size(); i++)
         {
-            Neuron *m;
+            NEURON *m;
             Signal s;
             std::tie(m, s) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(n, m))
@@ -274,13 +274,13 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
 
 void Network::initialize_connection_map(std::vector<Synapse *> *connections)
 {
-    std::vector<Neuron *> neurons;
+    std::vector<NEURON *> neurons;
     for (unsigned int i = 0; i < this->layers->size(); i++)
     {
         Layer *layer = this->layers->at(i);
         for (unsigned int j = 0; j < layer->size(); j++)
         {
-            Neuron *n = layer->at(j);
+            NEURON *n = layer->at(j);
             neurons.push_back(n);
         }
     }
@@ -296,7 +296,7 @@ bool Network::is_all_synapses(const std::set<Synapse *> &graph)
         Layer *l = this->layers->at(i);
         for (unsigned int j = 0; j < l->size(); j++)
         {
-            Neuron *n = l->at(j);
+            NEURON *n = l->at(j);
             std::vector<Synapse *> syns;
             this->connection_map.get_output_synapses(n, syns);
             for (unsigned int k = 0; k < syns.size(); k++)
@@ -312,18 +312,18 @@ bool Network::is_all_synapses(const std::set<Synapse *> &graph)
 }
 
 std::vector<Signal>& Network::map_to_input(std::vector<std::tuple<
-        Neuron *, Signal>> &input_neurons, std::vector<Signal> &output)
+        NEURON *, Signal>> &input_neurons, std::vector<Signal> &output)
 {
     for (unsigned int i = 0; i < this->get_input_layer()->size(); i++)
     {
-        //Figure out which Neuron in the input_neurons list is the
+        //Figure out which NEURON in the input_neurons list is the
         //ith one in the input layer and get its signal
-        Neuron *n_i = this->get_input_layer()->at(i);
+        NEURON *n_i = this->get_input_layer()->at(i);
         int index = -1;
         for (unsigned int j = 0; j < input_neurons.size(); j++)
         {
             auto input_neuron_and_signal = input_neurons.at(j);
-            Neuron *n_j = std::get<0>(input_neuron_and_signal);
+            NEURON *n_j = std::get<0>(input_neuron_and_signal);
             if (n_j == n_i)
             {
                 index = j;
@@ -346,18 +346,18 @@ std::vector<Signal>& Network::map_to_input(std::vector<std::tuple<
  * output neuron layer.size() - 1.
  */
 std::vector<Signal>& Network::map_to_output(std::vector<std::tuple<
-        Neuron *, Signal>> &output_neurons, std::vector<Signal> &output)
+        NEURON *, Signal>> &output_neurons, std::vector<Signal> &output)
 {
     for (unsigned int i = 0; i < this->get_output_layer()->size(); i++)
     {
         //Figure out which neuron in the output_neurons list is
         //the ith one in the output layer and get its signal
-        Neuron *n_i = this->get_output_layer()->at(i);
+        NEURON *n_i = this->get_output_layer()->at(i);
         int index = -1;
         for (unsigned int j = 0; j < output_neurons.size(); j++)
         {
             auto output_neuron_and_signal = output_neurons.at(j);
-            Neuron *n_j = std::get<0>(output_neuron_and_signal);
+            NEURON *n_j = std::get<0>(output_neuron_and_signal);
             if (n_j == n_i)
             {
                 index = j;
@@ -375,13 +375,13 @@ std::vector<Signal>& Network::map_to_output(std::vector<std::tuple<
     return output;
 }
 
-bool Network::neuron_is_input_neuron(const Neuron *n) const
+bool Network::neuron_is_input_neuron(const NEURON *n) const
 {
     const Layer *layer = this->get_input_layer();
     return layer->contains(n);
 }
 
-bool Network::neuron_is_output_neuron(const Neuron *n) const
+bool Network::neuron_is_output_neuron(const NEURON *n) const
 {
     const Layer *layer = this->get_output_layer();
     return layer->contains(n);
@@ -389,15 +389,15 @@ bool Network::neuron_is_output_neuron(const Neuron *n) const
 
 /*
  * Topologically sorts the network into a vector, so that
- * the first item in the vector is a Neuron that requires no
+ * the first item in the vector is a NEURON that requires no
  * inputs but outside inputs, etc. Ties are decided arbitrarily.
  */
-std::vector<Neuron *> Network::topological_sort()
+std::vector<NEURON *> Network::topological_sort()
 {
     //Kahn's algorithm, see Wikipedia
 
-    std::vector<Neuron *> top_sorted;
-    std::set<Neuron *> nodes_no_incoming = this->get_all_nodes_no_incoming();
+    std::vector<NEURON *> top_sorted;
+    std::set<NEURON *> nodes_no_incoming = this->get_all_nodes_no_incoming();
     //Graph is a set of edges, which should eventually contain all of the edges
     //in the network
     std::set<Synapse *> graph;
@@ -406,18 +406,18 @@ std::vector<Neuron *> Network::topological_sort()
     while (nodes_no_incoming.size() > 0)
     {
         //remove a node form nodes_no_incoming
-        Neuron *n = *nodes_no_incoming.begin();
+        NEURON *n = *nodes_no_incoming.begin();
         nodes_no_incoming.erase(n);
 
         //Add that node to the end of top_sorted
         top_sorted.push_back(n);
 
         //For each edge e from n to m
-        std::vector<Neuron *> to;
+        std::vector<NEURON *> to;
         this->connection_map.get_outputs(n, to);
         for (unsigned int i = 0; i < to.size(); i++)
         {
-            Neuron *m = to.at(i);
+            NEURON *m = to.at(i);
 
             //Remove edge e from the graph
             //(we don't remove anything - instead, we add the edges that
@@ -482,10 +482,10 @@ void Network::test_neuron_is_output_neuron(UnitTestResult &result)
     Network test_network;
     Network::create_test_network(test_network);
 
-    Neuron *n = *test_network.top_sorted_network.end();
+    NEURON *n = *test_network.top_sorted_network.end();
     bool is_output_neuron = test_network.neuron_is_output_neuron(n);
     result.assert(is_output_neuron, class_name, test_name,
-            "The last Neuron in the topological list must be an output neuron");
+            "The last NEURON in the topological list must be an output neuron");
 }
 
 void Network::test_topological_sort(UnitTestResult &result)
@@ -495,7 +495,7 @@ void Network::test_topological_sort(UnitTestResult &result)
 
     Network test_network;
     Network::create_test_network(test_network);
-    std::vector<Neuron *> top_sorted = test_network.top_sorted_network;
+    std::vector<NEURON *> top_sorted = test_network.top_sorted_network;
 
     //Topologically sorted:
     //b -> a -> d -> c -> e
@@ -515,7 +515,7 @@ void Network::create_test_network(Network &test_network)
     //b -> d
     //Including a synapse from a to d
 
-    Neuron a("a"), b("b"), c("c"), d("d"), e("e");
+    NEURON a("a"), b("b"), c("c"), d("d"), e("e");
 
     std::vector<Layer *> test_layers;
     Layer *input = new Layer();
@@ -530,7 +530,7 @@ void Network::create_test_network(Network &test_network)
     test_layers.push_back(hidden);
     test_layers.push_back(output);
 
-    Neuron *ap, *bp, *cp, *dp, *ep;
+    NEURON *ap, *bp, *cp, *dp, *ep;
     ap = input->at(0);
     bp = input->at(1);
     cp = hidden->at(0);

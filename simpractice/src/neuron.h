@@ -10,7 +10,7 @@
  *
  * TODO:
  * Ultimately, this class should be made into an abstract base class
- * for all the different types of Neurons.
+ * for all the different types of Neuron.
  */
 
 #ifndef __NEURON_H__

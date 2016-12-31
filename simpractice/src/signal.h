@@ -1,10 +1,10 @@
 /*
  * This is the Signal abstract data type. It represents a value that
- * is passed into or out of a single Neuron (or Synapse).
+ * is passed into or out of a single NEURON (or Synapse).
  * So that it looks like this:
- * Neuron -> Synapse -> Neuron
- * Where the first Neuron sends a Signal and the Synapse receives that Signal,
- * then (potentially) modifies it and sends it to the next Neuron, which takes
+ * NEURON -> Synapse -> NEURON
+ * Where the first NEURON sends a Signal and the Synapse receives that Signal,
+ * then (potentially) modifies it and sends it to the next NEURON, which takes
  * it as its input along with all of its other Signal inputs.
  */
 
