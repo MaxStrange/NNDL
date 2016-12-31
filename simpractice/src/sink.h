@@ -16,11 +16,11 @@ class Sink
 {
 public:
     Sink();
-    ~Sink();
+    virtual ~Sink();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Sink &s);
 
-    std::vector<Signal> take(uint64_t time, std::vector<Signal> outputs);
+    virtual std::vector<Signal> take(uint64_t time, std::vector<Signal> &outputs);
 
 private:
 };

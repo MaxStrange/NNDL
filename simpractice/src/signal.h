@@ -22,6 +22,23 @@ public:
     Signal(fpoint_t val);
     ~Signal();
 
+    friend std::ostream& operator<<(std::ostream &outstream, const Signal &s);
+
+    Signal& operator+=(const Signal &rhs);
+    Signal operator+(const Signal &rhs) const;
+    Signal& operator-=(const Signal &rhs);
+    Signal operator-(const Signal &rhs) const;
+    Signal& operator*=(const Signal &rhs);
+    Signal operator*(const Signal &rhs) const;
+    Signal& operator/=(const Signal &rhs);
+    Signal operator/(const Signal &rhs) const;
+    bool operator==(const Signal &rhs) const;
+    bool operator!=(const Signal &rhs) const;
+    bool operator<(const Signal &rhs) const;
+    bool operator>(const Signal &rhs) const;
+    bool operator>=(const Signal &rhs) const;
+    bool operator<=(const Signal &rhs) const;
+
     fpoint_t get_value() const;
     void set_value(fpoint_t val);
 private:

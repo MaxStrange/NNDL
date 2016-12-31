@@ -25,7 +25,9 @@ Network::Network(std::vector<Layer *> *layers,
         std::vector<Synapse *> *connections)
 {
     this->layers = layers;
+    std::cout << "Setting up hashes for the network..." << std::endl;
     this->initialize_connection_map(connections);
+    std::cout << "Doing a topological sort of the whole network..." << std::endl;
     this->top_sorted_network = this->topological_sort();
 }
 

@@ -26,6 +26,8 @@
 #define SOURCE                  MnistSource
 #define NEURON_HEADER           "simple_neuron.h"
 #define NEURON                  SimpleNeuron
+#define SINK_HEADER             "mnist_sink.h"
+#define SINK                    MnistSink
 
 
 /*

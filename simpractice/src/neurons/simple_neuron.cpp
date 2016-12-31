@@ -54,8 +54,16 @@ Signal SimpleNeuron::fire_backward(uint64_t t, const std::vector<Signal> &input)
 
 Signal SimpleNeuron::fire_forward(uint64_t t, const std::vector<Signal> &input)
 {
-    //TODO
-    return Signal();
+    Signal sum;
+    for (unsigned int i = 0; i < input.size(); i++)
+    {
+        Signal s = input.at(i);
+        sum += s;
+    }
+
+    Signal relu = Signal(0) > sum ? Signal(0) : Signal(sum);
+
+    return relu;
 }
 
 
