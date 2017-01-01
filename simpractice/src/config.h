@@ -28,6 +28,10 @@
 #define NEURON                  SimpleNeuron
 #define SINK_HEADER             "mnist_sink.h"
 #define SINK                    MnistSink
+#define SYNAPSE_HEADER          "simple_synapse.h"
+#define SYNAPSE                 SimpleSynapse
+
+#define LEARNING_RATE           1
 
 
 /*

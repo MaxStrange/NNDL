@@ -17,6 +17,7 @@
 std::vector<Layer *> create_layers(void);
 std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
         std::vector<Synapse *> &connections);
+Signal generate_random_weight();
 
 int main(int argv, char **argc)
 {
@@ -125,15 +126,23 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
                 //Connect neuron_j to each neuron_l in layer i + 1
                 for (unsigned int l = 0; l < layer_next->size(); l++)
                 {
+                    Signal w = generate_random_weight();
                     NEURON *neuron_l_pointer = layer_next->at(l);
                     //Synapse from j to l
-                    Synapse *s = new Synapse(neuron_j_pointer, neuron_l_pointer);
+                    Synapse *s = new Synapse(neuron_j_pointer, neuron_l_pointer, w);
                     connections.push_back(s);
                 }
             }
         }
     }
     return connections;
+}
+
+Signal generate_random_weight()
+{
+    //generate a weight between -1 and +1
+    //TODO
+    return Signal(1);
 }
 
 

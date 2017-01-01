@@ -464,13 +464,15 @@ void ConnectionMap::create_test_connection_map(ConnectionMap &cm)
     dp = hidden->at(1);
     ep = output->at(0);
 
+    Signal w(1);
+
     std::vector<Synapse *> test_connections;
-    Synapse *ba = new Synapse(bp, ap);
-    Synapse *ac = new Synapse(ap, cp);
-    Synapse *ad = new Synapse(ap, dp);
-    Synapse *dc = new Synapse(dp, cp);
-    Synapse *ce = new Synapse(cp, ep);
-    Synapse *bd = new Synapse(bp, dp);
+    Synapse *ba = new Synapse(bp, ap, w);
+    Synapse *ac = new Synapse(ap, cp, w);
+    Synapse *ad = new Synapse(ap, dp, w);
+    Synapse *dc = new Synapse(dp, cp, w);
+    Synapse *ce = new Synapse(cp, ep, w);
+    Synapse *bd = new Synapse(bp, dp, w);
     test_connections.push_back(ba); test_connections.push_back(ac);
     test_connections.push_back(ad); test_connections.push_back(dc);
     test_connections.push_back(bd); test_connections.push_back(ce);

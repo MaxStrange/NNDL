@@ -26,23 +26,22 @@ class Synapse
 {
 public:
     Synapse();
-    Synapse(const NEURON *from, const NEURON *to);
-    Synapse(const Synapse &other);
-    ~Synapse();
+    Synapse(const NEURON *from, const NEURON *to, const Signal &w);
+    virtual ~Synapse();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Synapse &s);
-
-    Synapse& operator=(const Synapse &other);
 
     const NEURON* get_from() const;
     const NEURON* get_to() const;
 
-    Signal fire_backward(float t, const Signal &incoming);
-    Signal fire_forward(float t, const Signal &incoming);
+    virtual Signal fire_backward(float t, const Signal &incoming);
+    virtual Signal fire_forward(float t, const Signal &incoming);
 
-private:
+protected:
     const NEURON *from;
     const NEURON *to;
+    Signal last_fired;
+    Signal weight;
 };
 
 
