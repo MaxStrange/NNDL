@@ -1,3 +1,4 @@
+#include <cassert>
 #include <fstream>
 #include <ios>
 #include <iostream>
@@ -28,22 +29,42 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSink &s)
 
 std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs)
 {
+    std::vector<Signal> one_hot_label = this->get_next_label();
     std::vector<Signal> diffs;
 
-    //take the next sz (should be 10) labels and compare them to the outputs
+    assert((outputs.size() == NUM_NEURONS_OUTPUT));
+    assert((one_hot_label.size() == NUM_NEURONS_OUTPUT));
     for (unsigned int i = 0; i < outputs.size(); i++)
     {
         Signal s = outputs.at(i);
-        Signal label = Signal(this->labels.at(this->index));
-        this->index++;
+        Signal label = one_hot_label.at(i);
 
         Signal dif = label - s;
         diffs.push_back(dif);
 
+        std::cout << "Got: " << s << " should be " << label << std::endl;
         std::cout << "Difference: " << dif << std::endl;
     }
 
     return diffs;
+}
+
+std::vector<Signal> MnistSink::get_next_label()
+{
+    uint8_t label = this->labels.at(this->index);
+    this->index++;
+
+    //convert to one-hot
+    std::vector<Signal> onehot;
+    for (unsigned int i = 0; i < 10; i++)
+    {
+        if (label == i)
+            onehot.push_back(Signal(1));
+        else
+            onehot.push_back(Signal(0));
+    }
+
+    return onehot;
 }
 
 void MnistSink::load_labels()

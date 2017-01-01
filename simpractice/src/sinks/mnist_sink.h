@@ -23,6 +23,7 @@ private:
     uint64_t index;
     std::vector<uint8_t> labels;
 
+    std::vector<Signal> get_next_label();
     void load_labels();
 };
 
