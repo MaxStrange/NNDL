@@ -16,7 +16,7 @@ ConnectionMap::ConnectionMap()
 {
 }
 
-ConnectionMap::ConnectionMap(std::vector<Synapse *> &connections,
+ConnectionMap::ConnectionMap(std::vector<SYNAPSE *> &connections,
         std::vector<NEURON *> &neurons)
 {
     this->neurons = neurons;
@@ -52,17 +52,17 @@ void ConnectionMap::create_const_map(std::vector<NEURON *> &neurons)
 }
 
 void ConnectionMap::create_forward_map(std::vector<NEURON *> &neurons,
-        std::vector<Synapse *> &connections)
+        std::vector<SYNAPSE *> &connections)
 {
     //NEURON -> NEURONs it is connected TO
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *a = neurons.at(i);
-        std::vector<Synapse *> synapses = this->forward_map_synapses[a];
+        std::vector<SYNAPSE *> synapses = this->forward_map_synapses[a];
         std::vector<NEURON *> neurons_from_a;
         for (unsigned int j = 0; j < synapses.size(); j++)
         {
-            Synapse *s = synapses.at(j);
+            SYNAPSE *s = synapses.at(j);
             const NEURON *to = s->get_to();
             neurons_from_a.push_back(this->const_map[to]);
         }
@@ -71,17 +71,17 @@ void ConnectionMap::create_forward_map(std::vector<NEURON *> &neurons,
 }
 
 void ConnectionMap::create_reverse_map(std::vector<NEURON *> &neurons,
-        std::vector<Synapse *> &connections)
+        std::vector<SYNAPSE *> &connections)
 {
     //NEURON -> NEURONs that connect TO IT
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *a = neurons.at(i);
-        std::vector<Synapse *> synapses = this->reverse_map_synapses[a];
+        std::vector<SYNAPSE *> synapses = this->reverse_map_synapses[a];
         std::vector<NEURON *> neurons_to_a;
         for (unsigned int j = 0; j < synapses.size(); j++)
         {
-            Synapse *s = synapses.at(j);
+            SYNAPSE *s = synapses.at(j);
             const NEURON *from = s->get_from();
             neurons_to_a.push_back(this->const_map[from]);
         }
@@ -90,12 +90,12 @@ void ConnectionMap::create_reverse_map(std::vector<NEURON *> &neurons,
 }
 
 void ConnectionMap::create_forward_synapses(std::vector<NEURON *> &neurons,
-        std::vector<Synapse *> &connections)
+        std::vector<SYNAPSE *> &connections)
 {
-    //NEURON a, NEURON b -> Synapse that connects FROM a TO b
+    //NEURON a, NEURON b -> SYNAPSE that connects FROM a TO b
     for (unsigned int i = 0; i < connections.size(); i++)
     {
-        Synapse *s = connections.at(i);
+        SYNAPSE *s = connections.at(i);
         const NEURON *a = s->get_from();
         const NEURON *b = s->get_to();
         std::tuple<const NEURON *, const NEURON *> ab = std::make_tuple(a, b);
@@ -104,16 +104,16 @@ void ConnectionMap::create_forward_synapses(std::vector<NEURON *> &neurons,
 }
 
 void ConnectionMap::create_forward_map_synapses(std::vector<NEURON *> &neurons,
-        std::vector<Synapse *> &connections)
+        std::vector<SYNAPSE *> &connections)
 {
-    //NEURON -> All outgoing Synapses from it
+    //NEURON -> All outgoing SYNAPSEs from it
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *n = neurons.at(i);
-        std::vector<Synapse *> ns_synapses;
+        std::vector<SYNAPSE *> ns_synapses;
         for (unsigned int j = 0; j < connections.size(); j++)
         {
-            Synapse *s = connections.at(j);
+            SYNAPSE *s = connections.at(j);
             const NEURON *from = s->get_from();
             const NEURON *to = s->get_to();
 
@@ -125,16 +125,16 @@ void ConnectionMap::create_forward_map_synapses(std::vector<NEURON *> &neurons,
 }
 
 void ConnectionMap::create_reverse_map_synapses(std::vector<NEURON *> &neurons,
-        std::vector<Synapse *> &connections)
+        std::vector<SYNAPSE *> &connections)
 {
-    //NEURON -> All incoming Synapses going into it
+    //NEURON -> All incoming SYNAPSEs going into it
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *n = neurons.at(i);
-        std::vector<Synapse *> ns_synapses;
+        std::vector<SYNAPSE *> ns_synapses;
         for (unsigned int j = 0; j < connections.size(); j++)
         {
-            Synapse *s = connections.at(j);
+            SYNAPSE *s = connections.at(j);
             const NEURON *from = s->get_from();
             const NEURON *to = s->get_to();
 
@@ -152,7 +152,7 @@ void ConnectionMap::get_inputs(const NEURON *n,
 }
 
 void ConnectionMap::get_input_synapses(const NEURON *n,
-        std::vector<Synapse *> &syns)
+        std::vector<SYNAPSE *> &syns)
 {
     syns = this->reverse_map_synapses[n];
 }
@@ -164,13 +164,13 @@ void ConnectionMap::get_outputs(const NEURON *n,
 }
 
 void ConnectionMap::get_output_synapses(const NEURON *n,
-        std::vector<Synapse *> &syns)
+        std::vector<SYNAPSE *> &syns)
 {
     syns = this->forward_map_synapses[n];
 }
 
 void ConnectionMap::get_synapse(const NEURON *from, const NEURON *to,
-        Synapse *&syn)
+        SYNAPSE *&syn)
 {
     auto tup = std::make_tuple(from, to);
     syn = this->forward_synapses[tup];
@@ -252,7 +252,7 @@ void ConnectionMap::test_forward_synapses(UnitTestResult &result)
     create_test_connection_map(mp);
     auto fsyns = mp.forward_synapses;
     auto neurons = mp.neurons;
-    std::vector<Synapse *> found;
+    std::vector<SYNAPSE *> found;
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *n = neurons.at(i);
@@ -273,7 +273,7 @@ void ConnectionMap::test_forward_synapses(UnitTestResult &result)
         bool has_all_combos = false;
         for (unsigned int i = 0; i < found.size(); i++)
         {
-            Synapse *s = found.at(i);
+            SYNAPSE *s = found.at(i);
             //Check that at least one of these makes sense
             const NEURON *from = s->get_from();
             const NEURON *to = s->get_to();
@@ -285,7 +285,7 @@ void ConnectionMap::test_forward_synapses(UnitTestResult &result)
                 has_all_combos = true;
         }
         result.assert(makes_sense, class_name, test_name,
-                "The Synapses don't actually make sense.");
+                "The SYNAPSEs don't actually make sense.");
         result.assert(! has_all_combos, class_name, test_name,
                 "The map contains all possible combinations.");
     }
@@ -305,7 +305,7 @@ void ConnectionMap::test_forward_map_synapses(UnitTestResult &result)
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *n = neurons.at(i);
-        std::vector<Synapse *> from_n = fmap_synapses[n];
+        std::vector<SYNAPSE *> from_n = fmap_synapses[n];
         std::string id = n->get_id();
         if (id == "a" && !done_a)
         {
@@ -365,7 +365,7 @@ void ConnectionMap::test_reverse_map_synapses(UnitTestResult &result)
     for (unsigned int i = 0; i < neurons.size(); i++)
     {
         NEURON *n = neurons.at(i);
-        std::vector<Synapse *> into_n = rmap_synapses[n];
+        std::vector<SYNAPSE *> into_n = rmap_synapses[n];
         std::string id = n->get_id();
         if (id == "a" && !done_a)
         {
@@ -466,13 +466,13 @@ void ConnectionMap::create_test_connection_map(ConnectionMap &cm)
 
     Signal w(1);
 
-    std::vector<Synapse *> test_connections;
-    Synapse *ba = new Synapse(bp, ap, w);
-    Synapse *ac = new Synapse(ap, cp, w);
-    Synapse *ad = new Synapse(ap, dp, w);
-    Synapse *dc = new Synapse(dp, cp, w);
-    Synapse *ce = new Synapse(cp, ep, w);
-    Synapse *bd = new Synapse(bp, dp, w);
+    std::vector<SYNAPSE *> test_connections;
+    SYNAPSE *ba = new SYNAPSE(bp, ap, w);
+    SYNAPSE *ac = new SYNAPSE(ap, cp, w);
+    SYNAPSE *ad = new SYNAPSE(ap, dp, w);
+    SYNAPSE *dc = new SYNAPSE(dp, cp, w);
+    SYNAPSE *ce = new SYNAPSE(cp, ep, w);
+    SYNAPSE *bd = new SYNAPSE(bp, dp, w);
     test_connections.push_back(ba); test_connections.push_back(ac);
     test_connections.push_back(ad); test_connections.push_back(dc);
     test_connections.push_back(bd); test_connections.push_back(ce);

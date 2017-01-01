@@ -10,7 +10,7 @@
  *
  * The network uses the Synapses to figure out which neurons are connected
  * to which other ones, and then it sends Signals into them from the from
- * neurons and sends them to the to neurons. The Synapse objects don't
+ * neurons and sends them to the to neurons. The Synapses objects don't
  * ask the NEURONs for Signals and they don't update the NEURONs with
  * new Signals.
  */
@@ -33,6 +33,7 @@ public:
 
     const NEURON* get_from() const;
     const NEURON* get_to() const;
+    Signal get_weight() const;
 
     virtual Signal fire_backward(float t, const Signal &incoming);
     virtual Signal fire_forward(float t, const Signal &incoming);

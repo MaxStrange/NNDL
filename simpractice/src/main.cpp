@@ -15,8 +15,8 @@
 
 
 std::vector<Layer *> create_layers(void);
-std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
-        std::vector<Synapse *> &connections);
+std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<SYNAPSE *> &connections);
 Signal generate_random_weight();
 
 int main(int argv, char **argc)
@@ -58,7 +58,7 @@ int main(int argv, char **argc)
         std::cout << "Initializing..." << std::endl;
 
         std::vector<Layer *> layers = create_layers();
-        std::vector<Synapse *> connections;
+        std::vector<SYNAPSE *> connections;
         connections = connect_layers(layers, connections);
         std::cout << "Creating network..." << std::endl;
         Network network(&layers, &connections);
@@ -105,8 +105,8 @@ std::vector<Layer *> create_layers(void)
     return layers;
 }
 
-std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
-        std::vector<Synapse *> &connections)
+std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<SYNAPSE *> &connections)
 {
     std::cout << "Connecting layers..." << std::endl;
 
@@ -128,8 +128,8 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
                 {
                     Signal w = generate_random_weight();
                     NEURON *neuron_l_pointer = layer_next->at(l);
-                    //Synapse from j to l
-                    Synapse *s = new Synapse(neuron_j_pointer, neuron_l_pointer, w);
+                    //SYNAPSE from j to l
+                    SYNAPSE *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
                     connections.push_back(s);
                 }
             }

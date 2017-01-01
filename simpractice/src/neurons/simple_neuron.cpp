@@ -61,9 +61,7 @@ Signal SimpleNeuron::fire_forward(uint64_t t, const std::vector<Signal> &input)
         sum += s;
     }
 
-    Signal relu = Signal(0) > sum ? Signal(0) : Signal(sum);
-
-    return relu;
+    return (sum > Signal(1) ? Signal(1) : Signal(0));
 }
 
 

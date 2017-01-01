@@ -46,6 +46,11 @@ const NEURON* Synapse::get_to() const
     return this->to;
 }
 
+Signal Synapse::get_weight() const
+{
+    return this->weight;
+}
+
 Signal Synapse::fire_backward(float t, const Signal &incoming)
 {
     //TODO

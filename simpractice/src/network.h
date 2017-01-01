@@ -21,7 +21,7 @@ class Network
 public:
     Network();
     Network(const Network &to_copy);
-    Network(std::vector<Layer *> *layers, std::vector<Synapse *> *connections);
+    Network(std::vector<Layer *> *layers, std::vector<SYNAPSE *> *connections);
     ~Network();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Network &nw);
@@ -31,7 +31,7 @@ public:
     /*
      * Loads the given vector of Signals (which must of size equal to
      * to the output layer of the network) into the output layer
-     * and triggers each Synapse backwards.
+     * and triggers each SYNAPSE backwards.
      *
      * The result is a vector of Signals coming from the input layer.
      */
@@ -74,9 +74,9 @@ private:
             std::vector<Signal> &inputs,
             const std::vector<Signal> &network_input);
 
-    void initialize_connection_map(std::vector<Synapse *> *connections);
+    void initialize_connection_map(std::vector<SYNAPSE *> *connections);
 
-    bool is_all_synapses(const std::set<Synapse *> &graph);
+    bool is_all_synapses(const std::set<SYNAPSE *> &graph);
 
     std::vector<Signal>& map_to_input(std::vector<std::tuple<
             NEURON *, Signal>> &input_neurons, std::vector<Signal> &output);

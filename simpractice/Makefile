@@ -9,6 +9,7 @@ srcdir                := $(rootdir)/src
 source_examples_dir   := $(srcdir)/sources
 neuron_examples_dir   := $(srcdir)/neurons
 sink_examples_dir     := $(srcdir)/sinks
+synapse_examples_dir  := $(srcdir)/synapses
 
 src                   := $(wildcard $(srcdir)/*.cpp)
 src                   += $(wildcard $(srcdir)/*.cu)
@@ -18,7 +19,8 @@ src                   += $(wildcard $(neuron_examples_dir)/*.cpp)
 src                   += $(wildcard $(neuron_examples_dir)/*.cu)
 src                   += $(wildcard $(sink_examples_dir)/*.cpp)
 src                   += $(wildcard $(sink_examples_dir)/*.cu)
-
+src                   += $(wildcard $(synapse_examples_dir)/*.cpp)
+src                   += $(wildcard $(synapse_examples_dir)/*.cu)
 
 CXX                   := g++
 
@@ -30,6 +32,7 @@ inc_path              := $(srcdir)
 inc_path              += $(source_examples_dir)
 inc_path              += $(neuron_examples_dir)
 inc_path              += $(sink_examples_dir)
+inc_path              += $(synapse_examples_dir)
 
 WARNING               += -Wall
 WARNING               += -Werror
