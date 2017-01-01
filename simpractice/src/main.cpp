@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <vector>
 
 #include "config.h"
@@ -141,8 +142,16 @@ std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
 Signal generate_random_weight()
 {
     //generate a weight between -1 and +1
-    //TODO
-    return Signal(1);
+    static std::random_device rand;
+    std::mt19937 rng(rand());
+    double min = -1.0f;
+    double max = 1.0f;
+    std::uniform_real_distribution<double> uni(min, max);
+
+    double rn = uni(rng);
+    std::cout << rn << std::endl;
+
+    return Signal(rn);
 }
 
 
