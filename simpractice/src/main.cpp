@@ -109,7 +109,7 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
 {
     std::cout << "Connecting layers..." << std::endl;
 
-    for (int i = 0; i < layers.size(); i++)
+    for (unsigned int i = 0; i < layers.size(); i++)
     {
         std::cout << "Connecting layer " << std::to_string(i) << std::endl;
         std::cout << "Number of neurons in this layer: " <<
@@ -118,12 +118,12 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
         {
             //We are not the last layer, so add forward connections
             Layer *layer_i = layers.at(i);
-            for (int j = 0; j < layer_i->size(); j++)
+            for (unsigned int j = 0; j < layer_i->size(); j++)
             {
                 NEURON *neuron_j_pointer = layer_i->at(j);
                 Layer *layer_next = layers.at(i + 1);
                 //Connect neuron_j to each neuron_l in layer i + 1
-                for (int l = 0; l < layer_next->size(); l++)
+                for (unsigned int l = 0; l < layer_next->size(); l++)
                 {
                     NEURON *neuron_l_pointer = layer_next->at(l);
                     //Synapse from j to l
