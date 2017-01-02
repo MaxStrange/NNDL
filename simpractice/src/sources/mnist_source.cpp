@@ -38,6 +38,14 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSource &ms)
 
 std::vector<Signal> MnistSource::get(uint64_t time)
 {
+    if (this->ntimes_given >= this->dataset.size())
+    {
+        std::default_random_engine random_gen(this->seed++);
+        shuffle(this->dataset.begin(), this->dataset.end(), random_gen);
+
+        this->ntimes_given = 0;
+    }
+
     std::vector<Signal> data_vector;
     image img = this->dataset.at(this->ntimes_given++);
     for (unsigned int i = 0; i < this->imgsz; i++)
@@ -52,7 +60,8 @@ std::vector<Signal> MnistSource::get(uint64_t time)
 
 bool MnistSource::has_more(uint64_t time)
 {
-    return this->ntimes_given < this->nimages;
+    static const auto num_epochs = 1;
+    return this->ntimes_given / this->nimages < num_epochs;
 }
 
 

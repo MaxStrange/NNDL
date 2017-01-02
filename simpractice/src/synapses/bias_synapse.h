@@ -21,7 +21,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const BiasSynapse &s);
 
-    Signal fire_forward(float t, const Signal &incoming);
+    Signal fire_forward(uint64_t t, const Signal &incoming);
 };
 
 

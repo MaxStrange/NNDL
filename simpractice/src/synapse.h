@@ -37,8 +37,8 @@ public:
     const Neuron* get_to() const;
     Signal get_weight() const;
 
-    virtual Signal fire_backward(float t, const Signal &incoming);
-    virtual Signal fire_forward(float t, const Signal &incoming);
+    virtual Signal fire_backward(uint64_t t, const Signal &incoming);
+    virtual Signal fire_forward(uint64_t t, const Signal &incoming);
 
 protected:
     const Neuron *from;

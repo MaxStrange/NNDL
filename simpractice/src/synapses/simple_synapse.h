@@ -20,8 +20,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s);
 
-    virtual Signal fire_backward(float t, const Signal &incoming);
-    virtual Signal fire_forward(float t, const Signal &incoming);
+    virtual Signal fire_backward(uint64_t t, const Signal &incoming);
+    virtual Signal fire_forward(uint64_t t, const Signal &incoming);
 };
 
 

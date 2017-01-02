@@ -49,13 +49,13 @@ Signal Synapse::get_weight() const
     return this->weight;
 }
 
-Signal Synapse::fire_backward(float t, const Signal &incoming)
+Signal Synapse::fire_backward(uint64_t t, const Signal &incoming)
 {
     //TODO
     return Signal(incoming);
 }
 
-Signal Synapse::fire_forward(float t, const Signal &incoming)
+Signal Synapse::fire_forward(uint64_t t, const Signal &incoming)
 {
     //TODO
     return incoming * this->weight;

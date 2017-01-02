@@ -29,7 +29,7 @@ std::ostream& operator<<(std::ostream &outstream, const BiasSynapse &s)
     return outstream;
 }
 
-Signal BiasSynapse::fire_forward(float t, const Signal &incoming)
+Signal BiasSynapse::fire_forward(uint64_t t, const Signal &incoming)
 {
     static const Signal bias(-1);
     this->last_input = incoming;

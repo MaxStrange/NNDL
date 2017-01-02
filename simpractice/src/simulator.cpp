@@ -38,25 +38,16 @@ void Simulator::run()
 
     uint64_t t = 0;
     bool debug_not_done = true;
-    uint64_t debug_time_step_limit = 30;
+    uint64_t debug_time_step_limit = 3000;
     while (this->source->has_more(t) && debug_not_done)
     {
         std::cout << "Running timestep " << t << "..." << std::endl;
 
-        std::cout << "Getting the input vector for this timestep..." << std::endl;
         std::vector<Signal> inputs = this->source->get(t);
-
-        std::cout << "Running the input vector through the network..." << std::endl;
         std::vector<Signal> outputs = this->network->fire_forward(t, inputs);
-
-        std::cout << "Getting the backprop input..." << std::endl;
         std::vector<Signal> back_inputs = this->sink->take(t, outputs);
-
-        std::cout << "Running the backprop..." << std::endl;
         std::vector<Signal> back_outputs =
                 this->network->fire_backward(t, back_inputs);
-
-        std::cout << "Done with this timestep." << std::endl;
         t++;
 
         if (t > debug_time_step_limit)
