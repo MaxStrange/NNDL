@@ -145,8 +145,8 @@ Signal generate_random_weight()
     //generate a weight between -1 and +1
     static std::random_device rand;
     std::mt19937 rng(rand());
-    double min = -1.0f;
-    double max = 1.0f;
+    double min = -0.2;
+    double max = 0.2;
     std::uniform_real_distribution<double> uni(min, max);
 
     double rn = uni(rng);

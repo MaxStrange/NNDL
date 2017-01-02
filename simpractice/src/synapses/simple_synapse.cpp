@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s)
 
 Signal SimpleSynapse::fire_backward(float t, const Signal &incoming)
 {
-    static const Signal learning_rate(0.05);
+    static const Signal learning_rate(0.3);
     this->weight -= learning_rate * incoming * this->last_input;
     return incoming * this->weight;
 }
