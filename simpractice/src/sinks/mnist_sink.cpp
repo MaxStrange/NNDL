@@ -42,11 +42,19 @@ std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs)
         Signal dif = label - s;
         diffs.push_back(dif);
 
-        std::cout << "Got: " << s << " should be " << label << std::endl;
-        std::cout << "Difference: " << dif << std::endl;
+        //std::cout << "Got: " << s << " should be " << label << std::endl;
+        //std::cout << "Difference: " << dif << std::endl;
     }
 
-    return diffs;
+    Signal err;
+    for (unsigned int i = 0; i < diffs.size(); i++)
+    {
+        err += diffs.at(i) * diffs.at(i);
+    }
+
+    std::cout << "======ERROR for this iteration: " << err << "=========" << std::endl;
+
+    return one_hot_label;
 }
 
 std::vector<Signal> MnistSink::get_next_label()

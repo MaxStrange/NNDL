@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -12,14 +13,11 @@ SimpleNeuron::SimpleNeuron()
 {
 }
 
-SimpleNeuron::SimpleNeuron(const SimpleNeuron &to_copy)
-{
-    *this = to_copy;
-}
-
-SimpleNeuron::SimpleNeuron(const std::string &id)
+SimpleNeuron::SimpleNeuron(const std::string &id, bool is_input, bool is_output)
 {
     this->id = id;
+    this->is_input = is_input;
+    this->is_output = is_output;
 }
 
 SimpleNeuron::~SimpleNeuron()
@@ -30,16 +28,6 @@ std::ostream& operator<<(std::ostream &outstream, const SimpleNeuron &n)
 {
     outstream << "Neuron " << n.get_id();
     return outstream;
-}
-
-SimpleNeuron& SimpleNeuron::operator=(const SimpleNeuron &rhs)
-{
-    if (this != &rhs)
-    {
-        this->id = rhs.id;
-    }
-
-    return *this;
 }
 
 std::string SimpleNeuron::get_id() const
@@ -81,6 +69,7 @@ Signal SimpleNeuron::fire_forward(uint64_t t, const std::vector<Signal> &input)
         sum += s;
     }
 
+    const fpoint_t BETA = 1.0;
     Signal exponent = -Signal(BETA) * sum;
     Signal denom = Signal(1) + Signal(exp((fpoint_t)exponent));
     Signal activation = Signal(1) / denom;

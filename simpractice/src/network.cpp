@@ -517,7 +517,8 @@ void Network::create_test_network(Network &test_network)
     //b -> d
     //Including a synapse from a to d
 
-    NEURON a("a"), b("b"), c("c"), d("d"), e("e");
+    NEURON a("a", true, false), b("b", true, false), c("c", false, false),
+            d("d", false, false), e("e", false, true);
 
     std::vector<Layer *> test_layers;
     Layer *input = new Layer();

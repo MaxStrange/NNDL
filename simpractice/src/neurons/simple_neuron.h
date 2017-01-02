@@ -10,13 +10,10 @@ class SimpleNeuron :
 {
 public:
     SimpleNeuron();
-    SimpleNeuron(const SimpleNeuron &to_copy);
-    SimpleNeuron(const std::string &id);
+    SimpleNeuron(const std::string &id, bool is_input, bool is_output);
     virtual ~SimpleNeuron();
 
     friend std::ostream& operator<<(std::ostream &outstream, const SimpleNeuron &n);
-
-    SimpleNeuron& operator=(const SimpleNeuron &rhs);
 
     std::string get_id() const;
 

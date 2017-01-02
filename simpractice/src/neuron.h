@@ -26,8 +26,7 @@ class Neuron
 {
 public:
     Neuron();
-    Neuron(const Neuron& to_copy);
-    Neuron(const std::string &id);
+    Neuron(const std::string &id, bool is_input, bool is_output);
     virtual ~Neuron();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Neuron &n);
@@ -35,6 +34,8 @@ public:
     Neuron& operator=(const Neuron &rhs);
 
     virtual std::string get_id() const;
+    virtual bool is_input_neuron() const;
+    virtual bool is_output_neuron() const;
 
     virtual Signal fire_backward(uint64_t time,
             const std::vector<Signal> &input_vector);
@@ -43,6 +44,9 @@ public:
 
 protected:
     std::string id;
+    bool is_input;
+    bool is_output;
+    Signal last_fired;
 };
 
 

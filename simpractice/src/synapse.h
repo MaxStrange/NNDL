@@ -42,6 +42,7 @@ protected:
     const NEURON *from;
     const NEURON *to;
     Signal last_fired;
+    Signal last_input;
     Signal weight;
 };
 

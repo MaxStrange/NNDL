@@ -431,7 +431,8 @@ void ConnectionMap::test_const_map(UnitTestResult &result)
 
 void ConnectionMap::create_test_connection_map(ConnectionMap &cm)
 {
-    NEURON a("a"), b("b"), c("c"), d("d"), e("e");
+    NEURON a("a", true, false), b("b", true, false), c("c", false, false),
+            d("d", false, false), e("e", false, true);
 
     std::vector<Layer *> test_layers;
 

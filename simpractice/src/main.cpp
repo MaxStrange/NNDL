@@ -85,17 +85,17 @@ std::vector<Layer *> create_layers(void)
     Layer *output = new Layer();
     for (unsigned int i = 0; i < NUM_NEURONS_INPUT; i++)
     {
-        NEURON n("in_" + std::to_string(i));
+        NEURON n("in_" + std::to_string(i), true, false);
         input->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_HIDDEN; i++)
     {
-        NEURON n("h_" + std::to_string(i));
+        NEURON n("h_" + std::to_string(i), false, false);
         hidden->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_OUTPUT; i++)
     {
-        NEURON n("out_" + std::to_string(i));
+        NEURON n("out_" + std::to_string(i), false, true);
         output->add_neuron(n);
     }
 
