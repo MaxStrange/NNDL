@@ -502,7 +502,7 @@ void Network::test_neuron_is_output_neuron(UnitTestResult &result)
     Network test_network;
     Network::create_test_network(test_network);
 
-    Neuron *n = *test_network.top_sorted_network.end();
+    Neuron *n = test_network.top_sorted_network.back();
     bool is_output_neuron = test_network.neuron_is_output_neuron(n);
     result.assert(is_output_neuron, class_name, test_name,
             "The last Neuron in the topological list must be an output neuron");
@@ -538,7 +538,7 @@ void Network::create_test_network(Network &test_network)
     Neuron a("a", true, false), b("b", true, false), c("c", false, false),
             d("d", false, false), e("e", false, true);
 
-    std::vector<Layer *> test_layers;
+    std::vector<Layer *> *test_layers = new std::vector<Layer *>();
     Layer *input = new Layer();
     Layer *hidden = new Layer();
     Layer *output = new Layer();
@@ -547,9 +547,9 @@ void Network::create_test_network(Network &test_network)
     hidden->add_neuron(c);
     hidden->add_neuron(d);
     output->add_neuron(e);
-    test_layers.push_back(input);
-    test_layers.push_back(hidden);
-    test_layers.push_back(output);
+    test_layers->push_back(input);
+    test_layers->push_back(hidden);
+    test_layers->push_back(output);
 
     Neuron *ap, *bp, *cp, *dp, *ep;
     ap = input->at(0);
@@ -560,18 +560,18 @@ void Network::create_test_network(Network &test_network)
 
     Signal w(1);
 
-    std::vector<Synapse *> test_connections;
+    std::vector<Synapse *> *test_connections = new std::vector<Synapse *>();
     Synapse *ba = new Synapse(bp, ap, w);
     Synapse *ac = new Synapse(ap, cp, w);
     Synapse *ad = new Synapse(ap, dp, w);
     Synapse *dc = new Synapse(dp, cp, w);
     Synapse *ce = new Synapse(cp, ep, w);
     Synapse *bd = new Synapse(bp, dp, w);
-    test_connections.push_back(ba); test_connections.push_back(ac);
-    test_connections.push_back(ad); test_connections.push_back(dc);
-    test_connections.push_back(bd); test_connections.push_back(ce);
+    test_connections->push_back(ba); test_connections->push_back(ac);
+    test_connections->push_back(ad); test_connections->push_back(dc);
+    test_connections->push_back(bd); test_connections->push_back(ce);
 
-    test_network = Network(&test_layers, &test_connections);
+    test_network = Network(test_layers, test_connections);
 }
 
 

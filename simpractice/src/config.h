@@ -10,7 +10,7 @@
  * True if you want to run the unit tests rather than running the
  * simulator normally. False for normal operation.
  */
-#define RUN_UNIT_TESTS          false
+#define RUN_UNIT_TESTS          true
 
 /*
  * Just hard-coded for testing
