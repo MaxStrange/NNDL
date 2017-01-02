@@ -64,11 +64,9 @@ int main(int argv, char **argc)
         connections = connect_layers(layers, connections);
         std::cout << "Creating network..." << std::endl;
         Network network(&layers, &connections);
-        //std::cout << "Created network: " << network << std::endl;
         SOURCE source;
         SINK sink;
         Simulator simulator(&network, &source, &sink);
-        //std::cout << "Created simulator: " << simulator << std::endl;
 
         simulator.run();
 

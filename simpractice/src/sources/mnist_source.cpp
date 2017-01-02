@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include <random>
 #include <stdexcept>
 #include <vector>
 
@@ -13,15 +15,14 @@
 
 MnistSource::MnistSource()
 {
+    this->seed = 5;
     this->load_dataset();
+    std::default_random_engine rnd(this->seed++);
+    shuffle(this->dataset.begin(), this->dataset.end(), rnd);
 }
 
 MnistSource::~MnistSource()
 {
-    for (unsigned int i = 0; i < this->nimages; i++)
-    {
-            delete this->dataset[i];
-    }
 }
 
 std::ostream& operator<<(std::ostream &outstream, const MnistSource &ms)
@@ -38,10 +39,10 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSource &ms)
 std::vector<Signal> MnistSource::get(uint64_t time)
 {
     std::vector<Signal> data_vector;
-    unsigned char *img = this->dataset[this->ntimes_given++];
+    image img = this->dataset.at(this->ntimes_given++);
     for (unsigned int i = 0; i < this->imgsz; i++)
     {
-        unsigned char val = img[i];
+        uint8_t val = img.at(i);
         Signal s((fpoint_t)val);
         data_vector.push_back(s);
     }
@@ -115,8 +116,11 @@ void MnistSource::load_dataset()
         {
             dataset[i] = new unsigned char[image_size];
             file.read((char *)dataset[i], image_size);
+
+            image img(dataset[i], image_size);
+            this->dataset.push_back(img);
+            delete dataset[i];
         }
-        this->dataset = dataset;
         this->nimages = number_of_images;
         this->imgsz = image_size;
     }

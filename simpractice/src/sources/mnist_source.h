@@ -27,9 +27,23 @@ public:
     bool has_more(uint64_t time);
 
 private:
-    unsigned char **dataset;
+    struct image
+    {
+        image(unsigned char *img_pointer, unsigned int imgsz)
+        {
+            for (unsigned int i = 0; i < imgsz; i++)
+            {
+                bytes.push_back(img_pointer[i]);
+            }
+        };
+        uint8_t at(size_t index) { return bytes.at(index); };
+        std::vector<uint8_t> bytes;
+    };
+
+    std::vector<image> dataset;
     unsigned int nimages;
     unsigned int imgsz;
+    unsigned int seed;
 
     void load_dataset();
 };
