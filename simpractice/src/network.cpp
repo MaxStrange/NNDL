@@ -236,16 +236,20 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
             std::tie(m, s) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(m, n))
             {
-                Synapse *syn;
-                this->connection_map.get_synapse(m, n, syn);
+                std::vector<Synapse *> syns;
+                this->connection_map.get_synapses(m, n, syns);
+                for (unsigned int i = 0; i < syns.size(); i++)
+                {
+                    Synapse *syn = syns.at(i);
 
-                if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
-                    syn = dynamic_cast<SYNAPSE *>(syn);
-                else
-                    syn = dynamic_cast<BIAS *>(syn);
+                    if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
+                        syn = dynamic_cast<SYNAPSE *>(syn);
+                    else
+                        syn = dynamic_cast<BIAS *>(syn);
 
-                s = syn->fire_forward(t, s);
-                inputs.push_back(s);
+                    s = syn->fire_forward(t, s);
+                    inputs.push_back(s);
+                }
             }
         }
     }
@@ -275,16 +279,20 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
             std::tie(m, s) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(n, m))
             {
-                Synapse *syn;
-                this->connection_map.get_synapse(n, m, syn);
+                std::vector<Synapse *> syns;
+                this->connection_map.get_synapses(m, n, syns);
+                for (unsigned int i = 0; i < syns.size(); i++)
+                {
+                    Synapse *syn = syns.at(i);
 
-                if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
-                    syn = dynamic_cast<SYNAPSE *>(syn);
-                else
-                    syn = dynamic_cast<BIAS *>(syn);
+                    if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
+                        syn = dynamic_cast<SYNAPSE *>(syn);
+                    else
+                        syn = dynamic_cast<BIAS *>(syn);
 
-                s = syn->fire_backward(t, s);
-                inputs.push_back(s);
+                    s = syn->fire_forward(t, s);
+                    inputs.push_back(s);
+                }
             }
         }
     }
@@ -443,14 +451,18 @@ std::vector<Neuron *> Network::topological_sort()
             //(we don't remove anything - instead, we add the edges that
             //we should remove to a set and check the set before attempting to
             //use an edge that should have been removed)
-            Synapse *e;
-            this->connection_map.get_synapse(n, m, e);
+            std::vector<Synapse *> edges;
+            this->connection_map.get_synapses(n, m, edges);
+            auto e = edges.at(0);
 
             //If e has not been removed from the network
             if (graph.find(e) == graph.end())
             {
                 //remove it from the network
-                graph.insert(e);
+                //and remove any edges that are the same (duplicate synapses are allowed
+                //in NNDL, but Kahn's algorithm does not handle them gracefully)
+                for (unsigned int i = 0; i < edges.size(); i++)
+                    graph.insert(edges.at(i));
 
                 //if m has no other incoming edges
                 std::vector<Synapse *> incoming_edges;
@@ -567,9 +579,11 @@ void Network::create_test_network(Network &test_network)
     Synapse *dc = new Synapse(dp, cp, w);
     Synapse *ce = new Synapse(cp, ep, w);
     Synapse *bd = new Synapse(bp, dp, w);
+    Synapse *ba_again = new Synapse(bp, ap, w);
     test_connections->push_back(ba); test_connections->push_back(ac);
     test_connections->push_back(ad); test_connections->push_back(dc);
     test_connections->push_back(bd); test_connections->push_back(ce);
+    test_connections->push_back(ba_again);
 
     test_network = Network(test_layers, test_connections);
 }

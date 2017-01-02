@@ -92,14 +92,19 @@ void ConnectionMap::create_reverse_map(std::vector<Neuron *> &neurons,
 void ConnectionMap::create_forward_synapses(std::vector<Neuron *> &neurons,
         std::vector<Synapse *> &connections)
 {
-    //Neuron a, Neuron b -> Synapse that connects FROM a TO b
+    //Neuron a, Neuron b -> Synapses that connect FROM a TO b
     for (unsigned int i = 0; i < connections.size(); i++)
     {
         Synapse *s = connections.at(i);
         const Neuron *a = s->get_from();
         const Neuron *b = s->get_to();
         std::tuple<const Neuron *, const Neuron *> ab = std::make_tuple(a, b);
-        this->forward_synapses[ab] = s;
+        std::vector<Synapse *> vec;
+        vec.push_back(s);
+        if (this->forward_synapses.find(ab) == this->forward_synapses.end())
+            this->forward_synapses[ab] = vec;
+        else
+            this->forward_synapses[ab].push_back(s);
     }
 }
 
@@ -169,8 +174,8 @@ void ConnectionMap::get_output_synapses(const Neuron *n,
     syns = this->forward_map_synapses[n];
 }
 
-void ConnectionMap::get_synapse(const Neuron *from, const Neuron *to,
-        Synapse *&syn)
+void ConnectionMap::get_synapses(const Neuron *from, const Neuron *to,
+        std::vector<Synapse *> &syn)
 {
     auto tup = std::make_tuple(from, to);
     syn = this->forward_synapses[tup];
@@ -262,7 +267,10 @@ void ConnectionMap::test_forward_synapses(UnitTestResult &result)
             auto tup = std::make_tuple(n, m);
             auto itr = fsyns.find(tup);
             if (itr != fsyns.end())
-                found.push_back(itr->second);
+            {
+                for (unsigned int k = 0; k < itr->second.size(); k++)
+                    found.push_back(itr->second.at(k));
+            }
         }
     }
     bool passed = result.assert(found.size() >= 6, class_name, test_name,

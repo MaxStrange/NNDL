@@ -46,7 +46,7 @@ public:
      */
     void get_output_synapses(const Neuron *n, std::vector<Synapse *> &syns);
 
-    void get_synapse(const Neuron *from, const Neuron *to, Synapse *&syn);
+    void get_synapses(const Neuron *from, const Neuron *to, std::vector<Synapse *> &syn);
 
     /*
      * Gets whether or not n synapses onto m.
@@ -60,8 +60,8 @@ private:
     std::map<const Neuron *, std::vector<Neuron *>> forward_map;
     //Neuron -> Neurons that connect TO IT
     std::map<const Neuron *, std::vector<Neuron *>> reverse_map;
-    //Neuron a, Neuron b -> Synapse that connects FROM a TO b
-    std::map<std::tuple<const Neuron *, const Neuron *>, Synapse *> forward_synapses;
+    //Neuron a, Neuron b -> Synapses that connects FROM a TO b
+    std::map<std::tuple<const Neuron *, const Neuron *>, std::vector<Synapse *>> forward_synapses;
     //Neuron -> All outgoing synapses from it
     std::map<const Neuron *, std::vector<Synapse *>> forward_map_synapses;
     //Neuron -> All incoming synapses going into it
