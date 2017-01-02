@@ -11,36 +11,38 @@
  * The network uses the Synapses to figure out which neurons are connected
  * to which other ones, and then it sends Signals into them from the from
  * neurons and sends them to the to neurons. The Synapses objects don't
- * ask the NEURONs for Signals and they don't update the NEURONs with
+ * ask the Neurons for Signals and they don't update the Neurons with
  * new Signals.
  */
 
-#ifndef __SYNAPSE_H__
-#define __SYNAPSE_H__
+#ifndef __Synapse_H__
+#define __Synapse_H__
 
 #include <iostream>
 
-#include NEURON_HEADER
+#include "neuron.h"
+
+#include "synapse.h"
 
 class Synapse
 {
 public:
     Synapse();
-    Synapse(const NEURON *from, const NEURON *to, const Signal &w);
+    Synapse(const Neuron *from, const Neuron *to, const Signal &w);
     virtual ~Synapse();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Synapse &s);
 
-    const NEURON* get_from() const;
-    const NEURON* get_to() const;
+    const Neuron* get_from() const;
+    const Neuron* get_to() const;
     Signal get_weight() const;
 
     virtual Signal fire_backward(float t, const Signal &incoming);
     virtual Signal fire_forward(float t, const Signal &incoming);
 
 protected:
-    const NEURON *from;
-    const NEURON *to;
+    const Neuron *from;
+    const Neuron *to;
     Signal last_fired;
     Signal last_input;
     Signal weight;

@@ -11,6 +11,7 @@ class SimpleNeuron :
 public:
     SimpleNeuron();
     SimpleNeuron(const std::string &id, bool is_input, bool is_output);
+    SimpleNeuron(const Neuron &n);
     virtual ~SimpleNeuron();
 
     friend std::ostream& operator<<(std::ostream &outstream, const SimpleNeuron &n);

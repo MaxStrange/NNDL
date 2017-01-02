@@ -20,6 +20,11 @@ SimpleNeuron::SimpleNeuron(const std::string &id, bool is_input, bool is_output)
     this->is_output = is_output;
 }
 
+SimpleNeuron::SimpleNeuron(const Neuron &n)
+    : Neuron(n)
+{
+}
+
 SimpleNeuron::~SimpleNeuron()
 {
 }

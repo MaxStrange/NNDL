@@ -10,14 +10,14 @@
 #include "synapse.h"
 #include "unit_tests.h"
 
-#include NEURON_HEADER
 #include SINK_HEADER
 #include SOURCE_HEADER
+#include SYNAPSE_HEADER
 
 
 std::vector<Layer *> create_layers(void);
-std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
-        std::vector<SYNAPSE *> &connections);
+std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<Synapse *> &connections);
 Signal generate_random_weight();
 
 int main(int argv, char **argc)
@@ -40,7 +40,7 @@ int main(int argv, char **argc)
 /*
         //TODO: Implement any or all of these if you want
 
-        //result = NEURON::run_tests();
+        //result = Neuron::run_tests();
         //result.print();
 
         result = Simulator::run_tests();
@@ -52,14 +52,14 @@ int main(int argv, char **argc)
         result = SOURCE::run_tests();
         result.print();
 
-        //result = SYNAPSE::run_tests();
+        //result = Synapse::run_tests();
         //result.print();
 */
     #else
         std::cout << "Initializing..." << std::endl;
 
         std::vector<Layer *> layers = create_layers();
-        std::vector<SYNAPSE *> connections;
+        std::vector<Synapse *> connections;
         connections = connect_layers(layers, connections);
         std::cout << "Creating network..." << std::endl;
         Network network(&layers, &connections);
@@ -85,17 +85,17 @@ std::vector<Layer *> create_layers(void)
     Layer *output = new Layer();
     for (unsigned int i = 0; i < NUM_NEURONS_INPUT; i++)
     {
-        NEURON n("in_" + std::to_string(i), true, false);
+        Neuron n("in_" + std::to_string(i), true, false);
         input->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_HIDDEN; i++)
     {
-        NEURON n("h_" + std::to_string(i), false, false);
+        Neuron n("h_" + std::to_string(i), false, false);
         hidden->add_neuron(n);
     }
     for (unsigned int i = 0; i < NUM_NEURONS_OUTPUT; i++)
     {
-        NEURON n("out_" + std::to_string(i), false, true);
+        Neuron n("out_" + std::to_string(i), false, true);
         output->add_neuron(n);
     }
 
@@ -106,8 +106,8 @@ std::vector<Layer *> create_layers(void)
     return layers;
 }
 
-std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
-        std::vector<SYNAPSE *> &connections)
+std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<Synapse *> &connections)
 {
     std::cout << "Connecting layers..." << std::endl;
 
@@ -122,15 +122,15 @@ std::vector<SYNAPSE *>& connect_layers(const std::vector<Layer *> &layers,
             Layer *layer_i = layers.at(i);
             for (unsigned int j = 0; j < layer_i->size(); j++)
             {
-                NEURON *neuron_j_pointer = layer_i->at(j);
+                Neuron *neuron_j_pointer = layer_i->at(j);
                 Layer *layer_next = layers.at(i + 1);
                 //Connect neuron_j to each neuron_l in layer i + 1
                 for (unsigned int l = 0; l < layer_next->size(); l++)
                 {
                     Signal w = generate_random_weight();
-                    NEURON *neuron_l_pointer = layer_next->at(l);
-                    //SYNAPSE from j to l
-                    SYNAPSE *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
+                    Neuron *neuron_l_pointer = layer_next->at(l);
+                    //Synapse from j to l
+                    Synapse *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
                     connections.push_back(s);
                 }
             }

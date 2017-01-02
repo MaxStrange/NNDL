@@ -13,8 +13,8 @@
  * for all the different types of Neuron.
  */
 
-#ifndef __NEURON_H__
-#define __NEURON_H__
+#ifndef __Neuron_H__
+#define __Neuron_H__
 
 #include <iostream>
 #include <vector>

@@ -9,14 +9,12 @@
 
 #include "synapse.h"
 
-#include NEURON_HEADER
-
 class SimpleSynapse
     : public Synapse
 {
 public:
     SimpleSynapse();
-    SimpleSynapse(const NEURON *from, const NEURON *to, const Signal &w);
+    SimpleSynapse(const Neuron *from, const Neuron *to, const Signal &w);
     ~SimpleSynapse();
 
     friend std::ostream& operator<<(std::ostream &outstream, const Synapse &s);

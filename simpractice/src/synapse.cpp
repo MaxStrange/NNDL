@@ -5,14 +5,12 @@
 
 #include "synapse.h"
 
-#include NEURON_HEADER
-
 
 Synapse::Synapse()
 {
 }
 
-Synapse::Synapse(const NEURON *from, const NEURON *to, const Signal &w)
+Synapse::Synapse(const Neuron *from, const Neuron *to, const Signal &w)
 {
     this->from = from;
     this->to = to;
@@ -36,12 +34,12 @@ std::ostream& operator<<(std::ostream &outstream, const Synapse &s)
     return outstream;
 }
 
-const NEURON* Synapse::get_from() const
+const Neuron* Synapse::get_from() const
 {
     return this->from;
 }
 
-const NEURON* Synapse::get_to() const
+const Neuron* Synapse::get_to() const
 {
     return this->to;
 }

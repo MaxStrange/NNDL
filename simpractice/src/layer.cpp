@@ -7,6 +7,7 @@
 
 #include "layer.h"
 
+#include NEURON_HEADER
 
 
 Layer::Layer()
@@ -29,10 +30,10 @@ Layer::~Layer()
 std::ostream& operator<<(std::ostream &outstream, const Layer &l)
 {
     outstream << debug_print_header("Layer") << std::endl;
-    outstream << "NEURONs: " << std::endl;
+    outstream << "Neurons: " << std::endl;
     for (unsigned int i = 0; i < l.neurons.size(); i++)
     {
-        NEURON *n = l.neurons.at(i);
+        Neuron *n = l.neurons.at(i);
         outstream << *n << std::endl;
     }
     outstream << debug_print_closing("Layer") << std::endl;
@@ -46,7 +47,7 @@ Layer& Layer::operator=(const Layer &rhs)
     {
         for (unsigned int i = 0; i < rhs.neurons.size(); i++)
         {
-            NEURON n = rhs.copy_at(i);
+            Neuron n = rhs.copy_at(i);
             this->add_neuron(n);
         }
     }
@@ -54,31 +55,31 @@ Layer& Layer::operator=(const Layer &rhs)
     return *this;
 }
 
-NEURON* Layer::operator[](const int index) const
+Neuron* Layer::operator[](const int index) const
 {
-    NEURON *n = this->neurons[index];
+    Neuron *n = this->neurons[index];
     return n;
 }
 
-void Layer::add_neuron(const NEURON &n)
+void Layer::add_neuron(const Neuron &n)
 {
     //This class is responsible for holding on to and doling
     //out references or pointers to neurons. It allocates the heap
     //memory for them and frees that memory as well.
-    NEURON *heap_n_pointer = new NEURON(n);
+    Neuron *heap_n_pointer = new NEURON(n);
     this->neurons.push_back(heap_n_pointer);
 }
 
-NEURON* Layer::at(int index) const
+Neuron* Layer::at(int index) const
 {
     return (*this)[index];
 }
 
-bool Layer::contains(const NEURON *n) const
+bool Layer::contains(const Neuron *n) const
 {
     for (unsigned int i = 0; i < this->size(); i++)
     {
-        const NEURON *m = this->at(i);
+        const Neuron *m = this->at(i);
         if (n == m)
             return true;
     }
@@ -86,17 +87,17 @@ bool Layer::contains(const NEURON *n) const
     return false;
 }
 
-NEURON Layer::copy_at(int index) const
+Neuron Layer::copy_at(int index) const
 {
-    NEURON copy(*this->neurons[index]);
+    Neuron copy(*this->neurons[index]);
     return copy;
 }
 
-bool Layer::get_by_id(NEURON *&to_ret, std::string id) const
+bool Layer::get_by_id(Neuron *&to_ret, std::string id) const
 {
     for (unsigned int i = 0; i < this->size(); i++)
     {
-        NEURON *n = this->at(i);
+        Neuron *n = this->at(i);
         if (n->get_id() == id)
         {
             to_ret = n;
@@ -107,11 +108,11 @@ bool Layer::get_by_id(NEURON *&to_ret, std::string id) const
     return false;
 }
 
-int Layer::get_neuron_index(const NEURON *n) const
+int Layer::get_neuron_index(const Neuron *n) const
 {
     for (unsigned int i = 0; i < this->size(); i++)
     {
-        NEURON *m = this->at(i);
+        Neuron *m = this->at(i);
         if (n == m)
             return i;
     }
@@ -141,7 +142,7 @@ void Layer::test_add_neuron(UnitTestResult &result)
     size_t sz = test_layer.size();
     result.assert(sz == 0, class_name, test_name, "Size not equal to zero.");
 
-    NEURON n;
+    Neuron n;
     test_layer.add_neuron(n);
     sz = test_layer.size();
     result.assert(sz == 1, class_name, test_name, "Size not equal to one.");
@@ -153,20 +154,20 @@ void Layer::test_contains(UnitTestResult &result)
     std::string test_name = "contains";
 
     Layer test_layer;
-    NEURON n;
+    Neuron n;
     test_layer.add_neuron(n);
 
-    NEURON m;
+    Neuron m;
     test_layer.add_neuron(m);
 
-    NEURON *np = test_layer.at(0);
-    NEURON *mp = test_layer.at(1);
+    Neuron *np = test_layer.at(0);
+    Neuron *mp = test_layer.at(1);
 
     result.assert(test_layer.contains(np), class_name, test_name,
             "Layer does not contain neuron n");
     result.assert(test_layer.contains(mp), class_name, test_name,
             "Layer does not contain neuron m");
-    NEURON o;
+    Neuron o;
     result.assert(! test_layer.contains(&o), class_name, test_name,
             "Layer contains neuron o, and it shouldn't.");
 }

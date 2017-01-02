@@ -1,6 +1,6 @@
 /*
  * Header for a Layer ADT.
- * A Layer is essentially a vector of NEURONs.
+ * A Layer is essentially a vector of Neurons.
  */
 
 #ifndef __LAYER_H__
@@ -9,9 +9,8 @@
 #include <iostream>
 
 #include "config.h"
+#include "neuron.h"
 #include "unit_tests.h"
-
-#include NEURON_HEADER
 
 class Layer
 {
@@ -23,32 +22,32 @@ public:
     friend std::ostream& operator<<(std::ostream &outstream, const Layer &l);
 
     Layer& operator=(const Layer &rhs);
-    NEURON* operator[](const int index) const;
+    Neuron* operator[](const int index) const;
 
-    void add_neuron(const NEURON &n);
+    void add_neuron(const Neuron &n);
 
-    NEURON* at(int index) const;
+    Neuron* at(int index) const;
 
-    bool contains(const NEURON *n) const;
-
-    /*
-     * Gets a copy of the NEURON at the given index.
-     */
-    NEURON copy_at(int index) const;
-
-    bool get_by_id(NEURON *&to_ret, std::string id) const;
+    bool contains(const Neuron *n) const;
 
     /*
-     * Gets the index of the NEURON in the layer or -1 if not found.
+     * Gets a copy of the Neuron at the given index.
      */
-    int get_neuron_index(const NEURON *n) const;
+    Neuron copy_at(int index) const;
+
+    bool get_by_id(Neuron *&to_ret, std::string id) const;
+
+    /*
+     * Gets the index of the Neuron in the layer or -1 if not found.
+     */
+    int get_neuron_index(const Neuron *n) const;
 
     static UnitTestResult run_tests();
 
     size_t size() const;
 
 private:
-    std::vector<NEURON *> neurons;
+    std::vector<Neuron *> neurons;
 
     static void test_add_neuron(UnitTestResult &result);
     static void test_contains(UnitTestResult &result);
