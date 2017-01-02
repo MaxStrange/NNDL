@@ -24,6 +24,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const Signal &s);
 
+    Signal& operator-();
     Signal& operator+=(const Signal &rhs);
     Signal operator+(const Signal &rhs) const;
     Signal& operator-=(const Signal &rhs);
@@ -38,6 +39,9 @@ public:
     bool operator>(const Signal &rhs) const;
     bool operator>=(const Signal &rhs) const;
     bool operator<=(const Signal &rhs) const;
+    explicit operator int() const;
+    explicit operator float() const;
+    explicit operator double() const;
 
     fpoint_t get_value() const;
     void set_value(fpoint_t val);

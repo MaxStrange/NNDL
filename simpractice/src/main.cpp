@@ -149,7 +149,6 @@ Signal generate_random_weight()
     std::uniform_real_distribution<double> uni(min, max);
 
     double rn = uni(rng);
-    std::cout << rn << std::endl;
 
     return Signal(rn);
 }

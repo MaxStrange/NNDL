@@ -26,6 +26,12 @@ std::ostream& operator<<(std::ostream &outstream, const Signal &s)
     return outstream;
 }
 
+Signal& Signal::operator-()
+{
+    this->value *= (fpoint_t)(-1.0);
+    return *this;
+}
+
 Signal& Signal::operator+=(const Signal &rhs)
 {
     this->value += rhs.value;
@@ -100,6 +106,21 @@ bool Signal::operator<=(const Signal &rhs) const
 {
     Signal s = *this;
     return s < rhs;
+}
+
+Signal::operator int() const
+{
+    return (int)this->value;
+}
+
+Signal::operator float() const
+{
+    return (float)this->value;
+}
+
+Signal::operator double() const
+{
+    return (double)this->value;
 }
 
 fpoint_t Signal::get_value() const

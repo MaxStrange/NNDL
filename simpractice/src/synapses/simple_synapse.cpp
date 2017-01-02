@@ -33,17 +33,13 @@ std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s)
 
 Signal SimpleSynapse::fire_backward(float t, const Signal &incoming)
 {
-    Signal delta = incoming - Signal(t);
-    Signal new_w = this->weight -
-            (Signal(LEARNING_RATE) * delta * this->last_fired);
-    this->weight = new_w;
-
-    //TODO Figure out how back prop works exactly
-    return incoming;
+    this->weight -= Signal(LEARNING_RATE) * incoming * this->last_input;
+    return incoming * this->weight;
 }
 
 Signal SimpleSynapse::fire_forward(float t, const Signal &incoming)
 {
+    this->last_input = incoming;
     this->last_fired = incoming * this->weight;
     return this->last_fired;
 }
