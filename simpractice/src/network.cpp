@@ -11,6 +11,7 @@
 
 #include "network.h"
 
+#include BIAS_HEADER
 #include NEURON_HEADER
 #include SYNAPSE_HEADER
 
@@ -237,7 +238,12 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
             {
                 Synapse *syn;
                 this->connection_map.get_synapse(m, n, syn);
-                syn = dynamic_cast<SYNAPSE *>(syn);
+
+                if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
+                    syn = dynamic_cast<SYNAPSE *>(syn);
+                else
+                    syn = dynamic_cast<BIAS *>(syn);
+
                 s = syn->fire_forward(t, s);
                 inputs.push_back(s);
             }
@@ -271,7 +277,12 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
             {
                 Synapse *syn;
                 this->connection_map.get_synapse(n, m, syn);
-                syn = dynamic_cast<SYNAPSE *>(syn);
+
+                if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
+                    syn = dynamic_cast<SYNAPSE *>(syn);
+                else
+                    syn = dynamic_cast<BIAS *>(syn);
+
                 s = syn->fire_backward(t, s);
                 inputs.push_back(s);
             }

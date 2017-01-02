@@ -38,9 +38,9 @@ public:
     virtual bool is_output_neuron() const;
 
     virtual Signal fire_backward(uint64_t time,
-            const std::vector<Signal> &input_vector);
+            const std::vector<Signal> &input_vector) {return Signal();};
     virtual Signal fire_forward(uint64_t time,
-            const std::vector<Signal> &input_vector);
+            const std::vector<Signal> &input_vector) {return Signal();};
 
 protected:
     std::string id;

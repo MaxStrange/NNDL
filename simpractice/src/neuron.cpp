@@ -43,21 +43,5 @@ bool Neuron::is_output_neuron() const
     return this->is_output;
 }
 
-Signal Neuron::fire_backward(uint64_t t, const std::vector<Signal> &input_value)
-{
-    //TODO
-    return Signal();
-}
-
-Signal Neuron::fire_forward(uint64_t t, const std::vector<Signal> &input_value)
-{
-    //TODO
-    return Signal();
-}
-
-
-
-
-
 
 

@@ -12,6 +12,7 @@
 
 #include SINK_HEADER
 #include SOURCE_HEADER
+#include BIAS_HEADER
 #include SYNAPSE_HEADER
 
 
@@ -131,7 +132,9 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
                     Neuron *neuron_l_pointer = layer_next->at(l);
                     //Synapse from j to l
                     Synapse *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
+                    Synapse *b = new BIAS(neuron_j_pointer, neuron_l_pointer, w);
                     connections.push_back(s);
+                    connections.push_back(b);
                 }
             }
         }

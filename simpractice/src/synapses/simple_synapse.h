@@ -9,6 +9,7 @@
 
 #include "synapse.h"
 
+
 class SimpleSynapse
     : public Synapse
 {
@@ -17,10 +18,10 @@ public:
     SimpleSynapse(const Neuron *from, const Neuron *to, const Signal &w);
     ~SimpleSynapse();
 
-    friend std::ostream& operator<<(std::ostream &outstream, const Synapse &s);
+    friend std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s);
 
-    Signal fire_backward(float t, const Signal &incoming);
-    Signal fire_forward(float t, const Signal &incoming);
+    virtual Signal fire_backward(float t, const Signal &incoming);
+    virtual Signal fire_forward(float t, const Signal &incoming);
 };
 
 
