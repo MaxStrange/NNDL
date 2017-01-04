@@ -5,6 +5,11 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+/*
+ * The example to use.
+ */
+#define MNIST_EXAMPLE           false
+#define XOR_EXAMPLE             true
 
 /*
  * True if you want to run the unit tests rather than running the
@@ -18,21 +23,27 @@
  * the NNDL compiler.
  * TODO
  */
-#define NUM_NEURONS_INPUT       784
-#define NUM_NEURONS_HIDDEN      125
-#define NUM_NEURONS_OUTPUT      10
+#if MNIST_EXAMPLE
+    #define NUM_NEURONS_INPUT       784
+    #define NUM_NEURONS_HIDDEN      125
+    #define NUM_NEURONS_OUTPUT      10
+#elif XOR_EXAMPLE
+    #define NUM_NEURONS_INPUT       2
+    #define NUM_NEURONS_HIDDEN      4
+    #define NUM_NEURONS_OUTPUT      1
+#endif
 
 /*
  * Defines for what example to use.
  * This will be replaced with polymorphism soon.
  * TODO
  */
-#define SOURCE_HEADER           "mnist_source.h"
-#define SOURCE                  MnistSource
+#define SOURCE_HEADER           "xor_source.h"//"mnist_source.h"
+#define SOURCE                  XorSource//MnistSource
 #define NEURON_HEADER           "simple_neuron.h"
 #define NEURON                  SimpleNeuron
-#define SINK_HEADER             "mnist_sink.h"
-#define SINK                    MnistSink
+#define SINK_HEADER             "xor_sink.h"//"mnist_sink.h"
+#define SINK                    XorSink//MnistSink
 #define SYNAPSE_HEADER          "simple_synapse.h"
 #define SYNAPSE                 SimpleSynapse
 #define BIAS_HEADER             "bias_synapse.h"
