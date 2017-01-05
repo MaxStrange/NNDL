@@ -80,18 +80,22 @@ std::vector<Layer *> create_layers(void)
 
     std::vector<Layer *> layers;
     Layer *input = new Layer();
+#if ! AND_EXAMPLE
     Layer *hidden = new Layer();
+#endif
     Layer *output = new Layer();
     for (unsigned int i = 0; i < NUM_NEURONS_INPUT; i++)
     {
         Neuron n("in_" + std::to_string(i), true, false);
         input->add_neuron(n);
     }
+#if ! AND_EXAMPLE
     for (unsigned int i = 0; i < NUM_NEURONS_HIDDEN; i++)
     {
         Neuron n("h_" + std::to_string(i), false, false);
         hidden->add_neuron(n);
     }
+#endif
     for (unsigned int i = 0; i < NUM_NEURONS_OUTPUT; i++)
     {
         Neuron n("out_" + std::to_string(i), false, true);
@@ -99,7 +103,9 @@ std::vector<Layer *> create_layers(void)
     }
 
     layers.push_back(input);
+#if ! AND_EXAMPLE
     layers.push_back(hidden);
+#endif
     layers.push_back(output);
 
     return layers;

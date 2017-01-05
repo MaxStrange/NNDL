@@ -54,7 +54,6 @@ Signal SimpleNeuron::fire_backward(uint64_t t, const std::vector<Signal> &input)
     }
     else
     {
-        std::cout << "Input size for neuron " << this->get_id() << ": " << input.size() << std::endl;
         assert((input.size() > 0));
         Signal sum;
         for (unsigned int i = 0; i < input.size(); i++)

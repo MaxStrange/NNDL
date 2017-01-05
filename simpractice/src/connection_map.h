@@ -53,6 +53,8 @@ public:
      */
     bool neuron_synapses_onto(const Neuron *n, const Neuron *m);
 
+    void print_weights() const;
+
     static UnitTestResult run_tests();
 
 private:

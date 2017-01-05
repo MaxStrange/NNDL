@@ -1,33 +1,27 @@
 #include <cassert>
 #include <vector>
 
-#include "xor_sink.h"
+#include "and_sink.h"
 
-XorSink::XorSink()
+AndSink::AndSink()
 {
     this->index = 0;
-
     this->labels = std::vector<Signal> {
-        Signal(0), Signal(1), Signal(1), Signal(0)
+        Signal(0), Signal(0), Signal(0), Signal(1)
     };
-    //results in labels that look like this:
-    //0
-    //1
-    //1
-    //0
 }
 
-XorSink::~XorSink()
+AndSink::~AndSink()
 {
 }
 
-std::ostream& operator<<(std::ostream &outstream, const XorSink &s)
+std::ostream& operator<<(std::ostream &outstream, const AndSink &s)
 {
-    outstream << "Sink: XOR";
+    outstream << "Sink: AND";
     return outstream;
 }
 
-std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs)
+std::vector<Signal> AndSink::take(uint64_t time, std::vector<Signal> &outputs)
 {
     assert((outputs.size() == NUM_NEURONS_OUTPUT));
     assert((outputs.size() == 1));
@@ -49,10 +43,6 @@ std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs)
     std::vector<Signal> label_as_vec = { label };
     return label_as_vec;
 }
-
-
-
-
 
 
 

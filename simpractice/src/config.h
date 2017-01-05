@@ -9,7 +9,8 @@
  * The example to use.
  */
 #define MNIST_EXAMPLE           false
-#define XOR_EXAMPLE             true
+#define XOR_EXAMPLE             false
+#define AND_EXAMPLE             true
 
 /*
  * True if you want to run the unit tests rather than running the
@@ -31,6 +32,10 @@
     #define NUM_NEURONS_INPUT       2
     #define NUM_NEURONS_HIDDEN      2
     #define NUM_NEURONS_OUTPUT      1
+#elif AND_EXAMPLE
+    #define NUM_NEURONS_INPUT       2
+    #define NUM_NEURONS_HIDDEN      0
+    #define NUM_NEURONS_OUTPUT      1
 #endif
 
 /*
@@ -38,12 +43,12 @@
  * This will be replaced with polymorphism soon.
  * TODO
  */
-#define SOURCE_HEADER           "xor_source.h"//"mnist_source.h"
-#define SOURCE                  XorSource//MnistSource
+#define SOURCE_HEADER           "and_source.h"//"xor_source.h"//"mnist_source.h"
+#define SOURCE                  AndSource//XorSource//MnistSource
 #define NEURON_HEADER           "simple_neuron.h"
 #define NEURON                  SimpleNeuron
-#define SINK_HEADER             "xor_sink.h"//"mnist_sink.h"
-#define SINK                    XorSink//MnistSink
+#define SINK_HEADER             "and_sink.h"//"xor_sink.h"//"mnist_sink.h"
+#define SINK                    AndSink//XorSink//MnistSink
 #define SYNAPSE_HEADER          "simple_synapse.h"
 #define SYNAPSE                 SimpleSynapse
 #define BIAS_HEADER             "bias_synapse.h"

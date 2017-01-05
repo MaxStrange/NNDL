@@ -41,6 +41,8 @@ public:
      */
     std::vector<Signal> fire_forward(uint64_t time, std::vector<Signal> input);
 
+    void print_weights() const;
+
     static UnitTestResult run_tests();
 
 

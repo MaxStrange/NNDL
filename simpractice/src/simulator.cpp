@@ -38,7 +38,7 @@ void Simulator::run()
 
     uint64_t t = 0;
     bool debug_not_done = true;
-    uint64_t debug_time_step_limit = 10;
+    uint64_t debug_time_step_limit = 50;
     while (this->source->has_more(t) && debug_not_done)
     {
         std::cout << "Running timestep " << t << "..." << std::endl;
@@ -52,6 +52,8 @@ void Simulator::run()
 
         if (t > debug_time_step_limit)
             debug_not_done = false;
+
+        this->network->print_weights();
     }
 }
 
