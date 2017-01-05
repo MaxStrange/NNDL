@@ -81,6 +81,7 @@ std::vector<Signal> Network::fire_backward(uint64_t t, std::vector<Signal> input
         //the input vector, and then output tuples into outputs
         std::vector<Signal> inputs;
         inputs = this->get_node_inputs_backward(t, n, outputs, inputs, input);
+        //FIXME: This call doesn't seem to populate inputs with anything
 
         //inputs is now a vector of signals going into n (again, going from
         //output layer toward input layer)
@@ -280,7 +281,7 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
             if (this->connection_map.neuron_synapses_onto(n, m))
             {
                 std::vector<Synapse *> syns;
-                this->connection_map.get_synapses(m, n, syns);
+                this->connection_map.get_synapses(n, m, syns);
                 for (unsigned int i = 0; i < syns.size(); i++)
                 {
                     Synapse *syn = syns.at(i);
@@ -290,7 +291,7 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
                     else
                         syn = dynamic_cast<BIAS *>(syn);
 
-                    s = syn->fire_forward(t, s);
+                    s = syn->fire_backward(t, s);
                     inputs.push_back(s);
                 }
             }

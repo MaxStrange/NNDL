@@ -33,6 +33,7 @@ std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs)
     assert((outputs.size() == 1));
 
     Signal output = outputs.at(0);
+    output = output > Signal(0.5) ? Signal(1) : Signal(0);
 
     if (this->index >= this->labels.size())
         this->index = 0;

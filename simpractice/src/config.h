@@ -29,7 +29,7 @@
     #define NUM_NEURONS_OUTPUT      10
 #elif XOR_EXAMPLE
     #define NUM_NEURONS_INPUT       2
-    #define NUM_NEURONS_HIDDEN      4
+    #define NUM_NEURONS_HIDDEN      2
     #define NUM_NEURONS_OUTPUT      1
 #endif
 
