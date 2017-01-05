@@ -18,6 +18,8 @@
  */
 #define RUN_UNIT_TESTS          false
 
+#define BATCH_SIZE              1
+
 /*
  * Just hard-coded for testing
  * Will be removed when the simulator gets integrated with

@@ -15,6 +15,7 @@ SimpleSynapse::SimpleSynapse(const Neuron *from, const Neuron *to, const Signal 
     this->to = to;
     this->last_fired = Signal(0);
     this->weight = w;
+    this->batch_sum = Signal(0);
 }
 
 SimpleSynapse::~SimpleSynapse()
@@ -33,7 +34,9 @@ std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s)
 Signal SimpleSynapse::fire_backward(uint64_t t, const Signal &incoming)
 {
     static const Signal learning_rate(1);
-    this->weight -= learning_rate * incoming * this->last_input;
+    this->batch_sum += -learning_rate * incoming * this->last_input;
+    if (t % BATCH_SIZE == 0)
+        this->weight += this->batch_sum;
     return incoming * this->weight;
 }
 

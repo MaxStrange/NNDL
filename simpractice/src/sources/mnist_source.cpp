@@ -17,7 +17,7 @@ MnistSource::MnistSource()
 {
     this->seed = 5;
     this->load_dataset();
-    std::default_random_engine rnd(this->seed++);
+    std::default_random_engine rnd(this->seed);
     shuffle(this->dataset.begin(), this->dataset.end(), rnd);
 }
 
@@ -40,9 +40,6 @@ std::vector<Signal> MnistSource::get(uint64_t time)
 {
     if (this->ntimes_given >= this->dataset.size())
     {
-        std::default_random_engine random_gen(this->seed++);
-        shuffle(this->dataset.begin(), this->dataset.end(), random_gen);
-
         this->ntimes_given = 0;
     }
 

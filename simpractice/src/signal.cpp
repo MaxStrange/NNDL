@@ -26,10 +26,9 @@ std::ostream& operator<<(std::ostream &outstream, const Signal &s)
     return outstream;
 }
 
-Signal& Signal::operator-()
+Signal Signal::operator-() const
 {
-    this->value *= (fpoint_t)(-1.0);
-    return *this;
+    return Signal(this->value * (fpoint_t)(-1.0));
 }
 
 Signal& Signal::operator+=(const Signal &rhs)

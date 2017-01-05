@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <ios>
 #include <iostream>
 #include <stdexcept>
+#include <random>
 #include <vector>
 
 #include "signal.h"
@@ -15,6 +17,9 @@ MnistSink::MnistSink()
 {
     this->index = 0;
     this->load_labels();
+    this->seed = 5;
+    std::default_random_engine rnd(this->seed);
+    shuffle(this->labels.begin(), this->labels.end(), rnd);
 }
 
 MnistSink::~MnistSink()
@@ -27,7 +32,8 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSink &s)
     return outstream;
 }
 
-std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs)
+std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs,
+        const std::vector<Signal> &inputs)
 {
     std::vector<Signal> one_hot_label = this->get_next_label();
     std::vector<Signal> diffs;

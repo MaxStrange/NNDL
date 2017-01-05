@@ -138,6 +138,7 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
                     Synapse *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
                     if (j == 0)
                     {
+                        //TODO: get Biases working
                         Synapse *b = new BIAS(neuron_j_pointer, neuron_l_pointer, w);
                         connections.push_back(b);
                     }

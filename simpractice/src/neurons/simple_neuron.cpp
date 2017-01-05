@@ -68,17 +68,28 @@ Signal SimpleNeuron::fire_backward(uint64_t t, const std::vector<Signal> &input)
 
 Signal SimpleNeuron::fire_forward(uint64_t t, const std::vector<Signal> &input)
 {
-    Signal sum;
-    for (unsigned int i = 0; i < input.size(); i++)
+    Signal activation;
+    if (this->is_input)
     {
-        Signal s = input.at(i);
-        sum += s;
+        //If this is an input neuron, its input should be exactly one value
+        assert((input.size() == 1));
+        activation = input.at(0);
     }
+    else
+    {
+        Signal sum;
+        for (unsigned int i = 0; i < input.size(); i++)
+        {
+            Signal s = input.at(i);
+            sum += s;
+        }
 
-    const fpoint_t BETA = 1.0;
-    Signal exponent = -Signal(BETA) * sum;
-    Signal denom = Signal(1) + Signal(exp((fpoint_t)exponent));
-    Signal activation = Signal(1) / denom;
+        const fpoint_t BETA = 1.0;
+        Signal exponent = -Signal(BETA) * sum;
+        Signal denom = Signal(1) + Signal(exp((fpoint_t)exponent));
+
+        activation = Signal(1) / denom;
+    }
 
     this->last_fired = activation;
     return activation;

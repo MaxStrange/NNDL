@@ -17,11 +17,13 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const MnistSink &s);
 
-    std::vector<Signal> take(uint64_t time, std::vector<Signal> &outputs);
+    std::vector<Signal> take(uint64_t time, std::vector<Signal> &outputs,
+            const std::vector<Signal> &inputs);
 
 private:
     uint64_t index;
     std::vector<uint8_t> labels;
+    unsigned int seed;
 
     std::vector<Signal> get_next_label();
     void load_labels();

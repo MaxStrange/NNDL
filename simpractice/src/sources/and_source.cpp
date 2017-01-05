@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <iostream>
+#include <random>
 #include <vector>
 
 #include "signal.h"
@@ -41,7 +43,11 @@ std::ostream& operator<<(std::ostream &outstream, const AndSource &s)
 std::vector<Signal> AndSource::get(uint64_t time)
 {
     if (this->index >= this->dataset.size())
+    {
         this->index = 0;
+        static std::default_random_engine rnd(5);
+        shuffle(this->dataset.begin(), this->dataset.end(), rnd);
+    }
 
     std::cout << "Data for this iteration: ";
     for (unsigned int i = 0; i < this->dataset.at(this->index).size(); i++)
@@ -55,8 +61,7 @@ std::vector<Signal> AndSource::get(uint64_t time)
 
 bool AndSource::has_more(uint64_t time)
 {
-    static const unsigned int max_times = 1000;
-    return time < max_times;
+    return true;
 }
 
 

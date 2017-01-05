@@ -24,7 +24,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const Signal &s);
 
-    Signal& operator-();
+    Signal operator-() const;
     Signal& operator+=(const Signal &rhs);
     Signal operator+(const Signal &rhs) const;
     Signal& operator-=(const Signal &rhs);

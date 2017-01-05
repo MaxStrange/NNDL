@@ -5,16 +5,6 @@
 
 XorSink::XorSink()
 {
-    this->index = 0;
-
-    this->labels = std::vector<Signal> {
-        Signal(0), Signal(1), Signal(1), Signal(0)
-    };
-    //results in labels that look like this:
-    //0
-    //1
-    //1
-    //0
 }
 
 XorSink::~XorSink()
@@ -27,7 +17,8 @@ std::ostream& operator<<(std::ostream &outstream, const XorSink &s)
     return outstream;
 }
 
-std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs)
+std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs,
+        const std::vector<Signal> &inputs)
 {
     assert((outputs.size() == NUM_NEURONS_OUTPUT));
     assert((outputs.size() == 1));
@@ -36,10 +27,9 @@ std::vector<Signal> XorSink::take(uint64_t time, std::vector<Signal> &outputs)
     std::cout << "RAW: " << output << " ";
     output = output > Signal(0.5) ? Signal(1) : Signal(0);
 
-    if (this->index >= this->labels.size())
-        this->index = 0;
-
-    Signal label = this->labels.at(this->index++);
+    Signal sum = inputs.at(0) + inputs.at(1);
+    auto val = sum == Signal(1) ? 1 : 0;
+    Signal label(val);
     Signal diff = label - output;
 
     Signal err = diff * diff;

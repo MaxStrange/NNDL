@@ -17,11 +17,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream &outstream, const AndSink &s);
 
-    std::vector<Signal> take(uint64_t time, std::vector<Signal> &outputs);
-
-private:
-    std::vector<Signal> labels;
-    unsigned int index;
+    std::vector<Signal> take(uint64_t time, std::vector<Signal> &outputs,
+            const std::vector<Signal> &intputs);
 };
 
 

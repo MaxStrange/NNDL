@@ -23,7 +23,8 @@ std::ostream& operator<<(std::ostream &outstream, const Sink &s)
     return outstream;
 }
 
-std::vector<Signal> Sink::take(uint64_t time, std::vector<Signal> &outputs)
+std::vector<Signal> Sink::take(uint64_t time, std::vector<Signal> &outputs,
+        const std::vector<Signal> &inputs)
 {
     //TODO
     return std::vector<Signal>();

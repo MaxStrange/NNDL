@@ -45,7 +45,7 @@ void Simulator::run()
 
         std::vector<Signal> inputs = this->source->get(t);
         std::vector<Signal> outputs = this->network->fire_forward(t, inputs);
-        std::vector<Signal> back_inputs = this->sink->take(t, outputs);
+        std::vector<Signal> back_inputs = this->sink->take(t, outputs, inputs);
         std::vector<Signal> back_outputs =
                 this->network->fire_backward(t, back_inputs);
         t++;

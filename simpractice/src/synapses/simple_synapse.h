@@ -22,6 +22,9 @@ public:
 
     virtual Signal fire_backward(uint64_t t, const Signal &incoming);
     virtual Signal fire_forward(uint64_t t, const Signal &incoming);
+
+private:
+    Signal batch_sum;
 };
 
 
