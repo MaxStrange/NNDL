@@ -84,10 +84,10 @@ Signal SimpleNeuron::fire_forward(uint64_t t, const std::vector<Signal> &input)
             sum += s;
         }
 
+        //Activation function: 1 / (1 + e^(-beta * sum))
         const fpoint_t BETA = 1.0;
         Signal exponent = -Signal(BETA) * sum;
         Signal denom = Signal(1) + Signal(exp((fpoint_t)exponent));
-
         activation = Signal(1) / denom;
     }
 
