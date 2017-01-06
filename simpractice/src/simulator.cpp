@@ -63,9 +63,9 @@ void Simulator::run()
 
         std::cout << "LABEL: " << back_inputs.at(0) << std::endl;
         std::cout << "WEIGHTS: [";
-        std::cout << weights_before.at(0) << "   ";
+        std::cout << weights_before.at(1) << "   ";
         std::cout << weights_before.at(2) << "   ";
-        std::cout << weights_before.at(1) << "]" << std::endl;
+        std::cout << weights_before.at(0) << "]" << std::endl;
         std::cout << "DATA: [ ";
         for (unsigned int i = 0; i < inputs.size(); i++)
         {
@@ -78,9 +78,9 @@ void Simulator::run()
         std::vector<Signal> weights;
         this->network->get_weights(weights);
         std::cout << "WEIGHTS AFTER BACKPROP: [";
-        std::cout << weights.at(0) << "   ";
+        std::cout << weights.at(1) << "   ";
         std::cout << weights.at(2) << "   ";
-        std::cout << weights.at(1) << "]" << std::endl;
+        std::cout << weights.at(0) << "]" << std::endl;
         std::cout << "========================" << std::endl;
 
         if (clamped == back_inputs.at(0))

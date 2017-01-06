@@ -237,8 +237,8 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
         for (unsigned int i = 0; i < outputs.size(); i++)
         {
             Neuron *m;
-            Signal s;
-            std::tie(m, s) = outputs.at(i);
+            Signal input_to_synapse;
+            std::tie(m, input_to_synapse) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(m, n))
             {
                 std::vector<Synapse *> syns;
@@ -252,8 +252,8 @@ std::vector<Signal>& Network::get_node_inputs(uint64_t t, const Neuron *n,
                     else
                         syn = dynamic_cast<BIAS *>(syn);
 
-                    s = syn->fire_forward(t, s);
-                    inputs.push_back(s);
+                    Signal output_from_synapse = syn->fire_forward(t, input_to_synapse);
+                    inputs.push_back(output_from_synapse);
                 }
             }
         }
