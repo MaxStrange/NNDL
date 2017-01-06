@@ -49,13 +49,6 @@ std::vector<Signal> AndSource::get(uint64_t time)
         shuffle(this->dataset.begin(), this->dataset.end(), rnd);
     }
 
-    std::cout << "Data for this iteration: ";
-    for (unsigned int i = 0; i < this->dataset.at(this->index).size(); i++)
-    {
-        std::cout << " " << this->dataset.at(this->index).at(i);
-    }
-    std::cout << std::endl;
-
     return this->dataset.at(this->index++);
 }
 

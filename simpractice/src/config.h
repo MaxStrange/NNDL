@@ -20,6 +20,8 @@
 
 #define BATCH_SIZE              1
 
+#define DEBUG_NUM_RUNS          12
+
 /*
  * Just hard-coded for testing
  * Will be removed when the simulator gets integrated with
@@ -61,7 +63,7 @@
  * You can change this from a float to a double.
  * Using float should be faster, but not as precise.
  */
-typedef float fpoint_t;
+typedef double fpoint_t;
 
 
 

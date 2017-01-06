@@ -181,21 +181,19 @@ void ConnectionMap::get_synapses(const Neuron *from, const Neuron *to,
     syn = this->forward_synapses[tup];
 }
 
-bool ConnectionMap::neuron_synapses_onto(const Neuron *n, const Neuron *m)
-{
-    auto tup = std::make_tuple(n, m);
-    return (this->forward_synapses.find(tup) != this->forward_synapses.end());
-}
-
-void ConnectionMap::print_weights() const
+void ConnectionMap::get_weights(std::vector<Signal> &weights) const
 {
     for (unsigned int i = 0; i < this->connections.size(); i++)
     {
         Synapse *s = this->connections.at(i);
-        std::cout << "(" << s->get_from()->get_id() << ", ";
-        std::cout << s->get_to()->get_id() << "): ";
-        std::cout << s->get_weight() << std::endl;
+        weights.push_back(s->get_weight());
     }
+}
+
+bool ConnectionMap::neuron_synapses_onto(const Neuron *n, const Neuron *m)
+{
+    auto tup = std::make_tuple(n, m);
+    return (this->forward_synapses.find(tup) != this->forward_synapses.end());
 }
 
 UnitTestResult ConnectionMap::run_tests()

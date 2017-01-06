@@ -149,6 +149,11 @@ Layer* Network::get_output_layer() const
     return this->layers->back();
 }
 
+void Network::get_weights(std::vector<Signal> &weights) const
+{
+    this->connection_map.get_weights(weights);
+}
+
 std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_input_neurons(
         std::vector<std::tuple<Neuron *, Signal>> &outputs,
         std::vector<std::tuple<Neuron *, Signal>> &input_neurons) const
@@ -162,11 +167,6 @@ std::vector<std::tuple<Neuron *, Signal>>& Network::filter_for_input_neurons(
     }
 
     return input_neurons;
-}
-
-void Network::print_weights() const
-{
-    this->connection_map.print_weights();
 }
 
 /*

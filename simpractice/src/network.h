@@ -41,7 +41,11 @@ public:
      */
     std::vector<Signal> fire_forward(uint64_t time, std::vector<Signal> input);
 
-    void print_weights() const;
+    /*
+     * Gets the weights in the network. Suitable for printing them as
+     * one long list.
+     */
+    void get_weights(std::vector<Signal> &weights) const;
 
     static UnitTestResult run_tests();
 

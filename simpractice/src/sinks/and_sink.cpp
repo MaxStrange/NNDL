@@ -20,11 +20,11 @@ std::ostream& operator<<(std::ostream &outstream, const AndSink &s)
 std::vector<Signal> AndSink::take(uint64_t time, std::vector<Signal> &outputs,
         const std::vector<Signal> &inputs)
 {
+    static Signal batch_error(0.0);
     assert((outputs.size() == NUM_NEURONS_OUTPUT));
     assert((outputs.size() == 1));
 
     Signal output = outputs.at(0);
-    std::cout << "RAW: " << output << " ";
     output = output >= Signal(0.5) ? Signal(1) : Signal(0);
 
     auto val = (inputs.at(0) == 1 && inputs.at(1) == 1) ? 1 : 0;
@@ -32,8 +32,7 @@ std::vector<Signal> AndSink::take(uint64_t time, std::vector<Signal> &outputs,
     Signal diff = label - output;
 
     Signal err = diff * diff;
-    std::cout << "GOT: " << output << " " << "LABEL: " << label << " ";
-    std::cout << "ERROR: " << err << std::endl;
+    batch_error += err;
 
     std::vector<Signal> label_as_vec = { label };
     return label_as_vec;

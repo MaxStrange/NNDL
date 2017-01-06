@@ -33,7 +33,6 @@ std::ostream& operator<<(std::ostream &outstream, const SimpleSynapse &s)
 
 Signal SimpleSynapse::fire_backward(uint64_t t, const Signal &incoming)
 {
-    std::cout << "d_o: " << incoming << std::endl;
     static const Signal learning_rate(0.6);
     this->batch_sum += -learning_rate * incoming * this->last_input;
 
@@ -47,9 +46,8 @@ Signal SimpleSynapse::fire_backward(uint64_t t, const Signal &incoming)
 
 Signal SimpleSynapse::fire_forward(uint64_t t, const Signal &incoming)
 {
-    const Signal dI(0.1);
-    this->last_input = incoming + dI;
-    this->last_fired = (incoming + dI) * this->weight;
+    this->last_input = incoming;
+    this->last_fired = incoming * this->weight;
     return this->last_fired;
 }
 

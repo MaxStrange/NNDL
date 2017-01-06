@@ -48,12 +48,12 @@ public:
 
     void get_synapses(const Neuron *from, const Neuron *to, std::vector<Synapse *> &syn);
 
+    void get_weights(std::vector<Signal> &weights) const;
+
     /*
      * Gets whether or not n synapses onto m.
      */
     bool neuron_synapses_onto(const Neuron *n, const Neuron *m);
-
-    void print_weights() const;
 
     static UnitTestResult run_tests();
 
