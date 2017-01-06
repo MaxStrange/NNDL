@@ -20,7 +20,7 @@
 
 #define BATCH_SIZE              1
 
-#define DEBUG_NUM_RUNS          12
+#define DEBUG_NUM_RUNS          10000
 
 /*
  * Just hard-coded for testing

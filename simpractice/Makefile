@@ -53,10 +53,6 @@ obj                   := $(addprefix $(OBJDIR)/, $(notdir $(src)))
 obj                   := $(obj:.cpp=.o)
 obj                   := $(obj:.cu=.o)
 
-ifeq ($(filter clean,$(MAKECMDGOALS)),)
--include $(obj:.o=.d)
-endif
-
 empty :=
 space := $(empty) $(empty)
 vpath %.cpp $(subst $(space),:,$(sort $(dir $(src))))
@@ -69,12 +65,6 @@ all: $(appname)
 
 $(appname): $(obj)
 	$(Q) $(CXX) $^ $(CPPFLAGS) $(LDFLAGS) -o $@
-
-$(OBJDIR)/%.d: %.cpp | $(OBJDIR)
-	@set -e; $(RM) $@; \
-	$(CC) -MM -MT $(patsubst %$(suffix $<),$(dir $@)%.o,$(notdir $<)) $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$; \
-	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	$(RM) $@.$$$$
 
 .PHONY: clean
 clean:
@@ -90,6 +80,16 @@ $(OBJDIR)/%.o: %.cpp | $(OBJDIR)
 	@echo "$(CXX) $(notdir $<)"
 	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
+$(OBJDIR)/%.d: %.cpp | $(OBJDIR)
+	@set -e; $(RM) $@; \
+	$(CC) -MM -MT $(patsubst %$(suffix $<),$(dir $@)%.o,$(notdir $<)) $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$; \
+	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	$(RM) $@.$$$$
+
+
+ifeq ($(filter clean,$(MAKECMDGOALS)),)
+-include $(obj:.o=.d)
+endif
 
 
 
