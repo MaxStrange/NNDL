@@ -133,12 +133,16 @@ std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
                 for (unsigned int l = 0; l < layer_next->size(); l++)
                 {
                     Signal w = generate_random_weight();
-                    std::cout << "Weight: " << w << std::endl;
+                    std::cout << "Weight (" << i << "_" << j << ", " << i + 1
+                            << "_" << l << "): " << w << std::endl;
                     Neuron *neuron_l_pointer = layer_next->at(l);
                     //Synapse from j to l
                     Synapse *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
                     if (j == 0)
                     {
+                        std::cout << "Bias weight (" << i << "_" << j << ", " << i + 1
+                                << "_" << l << "): " << w << std::endl;
+
                         Synapse *b = new BIAS(neuron_j_pointer, neuron_l_pointer, w);
                         connections.push_back(b);
                     }

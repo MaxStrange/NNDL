@@ -31,6 +31,12 @@ private:
     Network *network;
     Sink *sink;
     Source *source;
+
+    void print_stats(uint64_t t, const Signal &label,
+            const std::vector<Signal> &weights_before,
+            const std::vector<Signal> &weights_after,
+            const std::vector<Signal> &data_vector,
+            const std::vector<Signal> &raw_output) const;
 };
 
 
