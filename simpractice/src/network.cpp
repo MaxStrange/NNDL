@@ -280,8 +280,8 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
         for (unsigned int i = 0; i < outputs.size(); i++)
         {
             Neuron *m;
-            Signal s;
-            std::tie(m, s) = outputs.at(i);
+            Signal input_to_synapse;
+            std::tie(m, input_to_synapse) = outputs.at(i);
             if (this->connection_map.neuron_synapses_onto(n, m))
             {
                 std::vector<Synapse *> syns;
@@ -293,13 +293,15 @@ std::vector<Signal>& Network::get_node_inputs_backward(uint64_t t, const Neuron 
                     if (dynamic_cast<SYNAPSE *>(syn) != nullptr)
                     {
                         syn = dynamic_cast<SYNAPSE *>(syn);
-                        s = syn->fire_backward(t, s);
-                        inputs.push_back(s);
+                        Signal output_from_synapse =
+                                syn->fire_backward(t, input_to_synapse);
+                        inputs.push_back(output_from_synapse);
                     }
                     else
                     {
                         syn = dynamic_cast<BIAS *>(syn);
-                        s = syn->fire_backward(t, s);
+                        Signal output_from_synapse =
+                                syn->fire_backward(t, input_to_synapse);
                         //don't send the bias synapse's value back through
                         //the network
                     }
