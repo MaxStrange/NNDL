@@ -2,6 +2,8 @@
 ADT for holding random network stuff.
 """
 
+import os
+
 class Network:
     """
     """
@@ -9,6 +11,12 @@ class Network:
         self.connections = []
         self.layers = []
         self.layer_names = []
+
+    def __str__(self):
+        as_str = "{Connections: " + str(self.connections) + ";" + os.linesep
+        as_str += "Layers: " + str(self.layers) + ";" + os.linesep
+        as_str += "Layer_names: " + str(self.layer_names) + ";}"
+        return as_str
 
     def add_layer(self, nrows, ncols, neurtype, name):
         """

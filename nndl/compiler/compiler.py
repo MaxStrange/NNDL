@@ -4,6 +4,7 @@ The main compiler file for the nndl compiler.
 
 import antlr4
 import compiler.dotgen as dotgen
+import compiler.cppwriter as cppwriter
 from grammar import NNDLLexer
 from grammar import NNDLParser
 import os
@@ -37,9 +38,16 @@ def _compile_file(file_to_compile):
     stream = antlr4.CommonTokenStream(lexer)
     parser = NNDLParser.NNDLParser(stream)
     tree = parser.prog()
+
+    # Walk the tree and generate the dot file
     dg = dotgen.DotGenerator(file_to_compile, output_file_name + ".dot")
     walker = antlr4.ParseTreeWalker()
     walker.walk(dg, tree)
+
+    # Use the dotgenerator's network that it figured out from the nndl file
+    # to generate the cpp file
+    nw = dg._network
+    cppwriter.write_file(nw, output_file_name)
 
 
 
