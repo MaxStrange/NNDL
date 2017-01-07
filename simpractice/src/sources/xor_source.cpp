@@ -52,8 +52,7 @@ std::vector<Signal> XorSource::get(uint64_t time)
 
 bool XorSource::has_more(uint64_t time)
 {
-    static const unsigned int max_times = 1000;
-    return time < max_times;
+    return true;
 }
 
 

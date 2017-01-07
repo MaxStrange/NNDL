@@ -18,7 +18,7 @@
  */
 #define RUN_UNIT_TESTS          false
 
-#define BATCH_SIZE              1
+#define BATCH_SIZE              4
 
 #define DEBUG_NUM_RUNS          10000
 
