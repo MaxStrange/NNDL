@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "connection_map.h"
+#include "headers.h"
 #include "layer.h"
 #include "network.h"
 #include "simulator.h"
@@ -16,10 +17,12 @@
 #include SYNAPSE_HEADER
 
 
+#if 0
 std::vector<Layer *> create_layers(void);
 std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
         std::vector<Synapse *> &connections);
 Signal generate_random_weight();
+#endif
 
 int main(int argv, char **argc)
 {
@@ -74,6 +77,7 @@ int main(int argv, char **argc)
     #endif
 }
 
+#if 0
 std::vector<Layer *> create_layers(void)
 {
     std::cout << "Creating the layers..." << std::endl;
@@ -167,7 +171,7 @@ Signal generate_random_weight()
     return Signal(rn);
 }
 
-
+#endif
 
 
 

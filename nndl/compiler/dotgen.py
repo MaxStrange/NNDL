@@ -24,13 +24,8 @@ class DotGenerator(NNDLListener.NNDLListener):
 
     def exitProg(self, ctx):
         dotwriter.write_end(self._output_fname);
-        with open(self._output_fname) as f:
-            lines = [line for line in f]
         subprocess.call(["dot", "-Tpng", self._output_fname, "-o",\
                 self._output_fname[:-4] + ".png"])
-        with open(self._output_fname, 'w') as f:
-            for line in lines:
-                f.write(line)
         print("Wrote dot file for %s to %s." %\
                 (self._fname, self._output_fname))
         print("Also compiled it into a .png file %s." %\
