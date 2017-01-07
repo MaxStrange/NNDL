@@ -1,0 +1,15 @@
+import n;
+import s;
+
+network
+    neurons
+        layer : in 2x1 = n;
+        layer : h 2x1 = n;
+        layer : out 1x1 = n;
+    end neurons
+
+    connections
+        (0, [ALL]) : connect (1, [ALL]) = s;
+        (1, [ALL]) : connect (2, [ALL]) = s;
+    end connections
+end network
