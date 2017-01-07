@@ -3,21 +3,55 @@ Module responsible for writing the C++ file to be used in the simulator.
 """
 
 import os
+import subprocess
 
 
-def write_file(nw, output_file_name):
+def write_file(nw, output_file_name, sim_dir):
     """
     Writes the file needed by the simulator to the output_file.
     nw is a network populated by the nndl file.
+    sim_dir is the directory where the simulator source code lives
     """
+    output_file_name = output_file_name + "_autogen"
     with open(output_file_name + ".cpp", 'w') as of:
         _write_boilerplate(of)
         _write_create_layers(nw, of)
         _write_connect_layers(nw, of)
 
     with open(output_file_name + ".h", 'w') as of:
-        _write_headerfile(of)
+        _write_headerfile(of, output_file_name)
 
+    print("Wrote code to " + output_file_name + ".cpp"\
+            + " and " + output_file_name + ".h")
+    subprocess.call(["mv", output_file_name + ".cpp",
+            sim_dir + os.pathsep + output_file_name + ".cpp"])
+    subprocess.call(["mv", output_file_name + ".h",
+            sim_dir + os.pathsep + output_file_name + ".h"])
+    print("And then moved to: " + sim_dir)
+
+
+def _write_headerfile(of, output_file_name):
+    to_write = """
+/*
+ * This file and the corresponding .cpp file was auto generated
+ * with the nndl compiler for the nndl simulator.
+ */
+#ifndef __""" + output_file_name.upper() + """_H__
+#define __""" + output_file_name.upper() + """_H__
+
+#include <vector>
+
+#include "layer.h"
+#include "synapse.h"
+
+std::vector<Layer *> create_layers(void);
+
+std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<Synapse *> &connections);
+
+#endif //header guard"""
+
+    of.write(to_write)
 
 
 def _write_boilerplate(of):
@@ -35,6 +69,11 @@ def _write_boilerplate(of):
     for inc in l_includes:
         to_write += "#include \"" + inc + "\"" + os.linesep
 
+    to_write += "#include SYNAPSE_HEADER" + os.linesep
+    to_write += "#include NEURON_HEADER" + os.linesep
+    to_write += "#include BIAS_HEADER" + os.linesep
+
+    to_write += os.linesep
     to_write += "static Signal generate_random_weight();" + (os.linesep * 2)
 
     to_write += """Signal generate_random_weight()
@@ -87,6 +126,55 @@ def _write_create_layers(nw, of):
     of.write(to_write)
 
 
+def _write_connect_layers(nw, of):
+    """
+    Writes the connect_layers function to the cpp file.
+    """
+    to_write = """
+std::vector<Synapse *>& connect_layers(const std::vector<Layer *> &layers,
+        std::vector<Synapse *> &connections)
+{
+    std::cout << "Connecting layers..." << std::endl;
+
+    for (unsigned int i = 0; i < layers.size(); i++)
+    {
+        std::cout << "Connecting layer " << std::to_string(i) << std::endl;
+        std::cout << "Number of neurons in this layer: " <<
+                std::to_string(layers.at(i)->size()) << std::endl;
+        if (i != layers.size() - 1)
+        {
+            //We are not the last layer, so add forward connections
+            Layer *layer_i = layers.at(i);
+            for (unsigned int j = 0; j < layer_i->size(); j++)
+            {
+                Neuron *neuron_j_pointer = layer_i->at(j);
+                Layer *layer_next = layers.at(i + 1);
+                //Connect neuron_j to each neuron_l in layer i + 1
+                for (unsigned int l = 0; l < layer_next->size(); l++)
+                {
+                    Signal w = generate_random_weight();
+                    std::cout << "Weight (" << i << "_" << j << ", " << i + 1
+                            << "_" << l << "): " << w << std::endl;
+                    Neuron *neuron_l_pointer = layer_next->at(l);
+                    //Synapse from j to l
+                    Synapse *s = new SYNAPSE(neuron_j_pointer, neuron_l_pointer, w);
+                    if (j == 0)
+                    {
+                        std::cout << "Bias weight (" << i << "_" << j << ", " << i + 1
+                                << "_" << l << "): " << w << std::endl;
+
+                        Synapse *b = new BIAS(neuron_j_pointer, neuron_l_pointer, w);
+                        connections.push_back(b);
+                    }
+                    connections.push_back(s);
+                }
+            }
+        }
+    }
+    return connections;
+}"""
+
+    of.write(to_write)
 
 
 
