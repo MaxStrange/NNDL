@@ -3,10 +3,10 @@ import s;
 
 network
     neurons
-        layer : input 3x1 = n;
-        layer : h0 3x1 = n;
-        layer : h1 3x1 = n;
-        layer : output 3x1 = n;
+        layer : input 3 x 1 = n;
+        layer : h0 3 x 1 = n;
+        layer : h1 3 x 1 = n;
+        layer : output 3 x 1 = n;
     end neurons
 
     connections

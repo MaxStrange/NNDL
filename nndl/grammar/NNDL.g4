@@ -16,7 +16,7 @@ connection_stat:    CONNECT_OPEN (con_stat)* CONNECT_END
                     ;
 
 //TODO: Make layer_stat allow multiple types of neurons in a single layer
-layer_stat:         LAYER ':' ID MAT_DECL '=' ID STAT_END
+layer_stat:         LAYER ':' ID NUM 'x' NUM '=' ID STAT_END
                     ;
 
 con_stat:           neuron_selection ':' CONNECT neuron_selection (',' neuron_selection)* '=' ID STAT_END
@@ -71,7 +71,7 @@ CONNECT_END:        'end connections'
 LAYER:              'layer'
                     ;
 
-MAT_DECL:           NUM+ 'x' NUM+
+MAT_DECL:           NUM 'x' NUM
                     ;
 
 CONNECT:            'connect'

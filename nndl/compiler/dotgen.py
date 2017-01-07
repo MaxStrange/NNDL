@@ -33,8 +33,8 @@ class DotGenerator(NNDLListener.NNDLListener):
 
     def exitLayer_stat(self, ctx):
         layer_name = ctx.ID()[0].getText()
-        num_rows = int(ctx.MAT_DECL().getText()[0])
-        num_cols = int(ctx.MAT_DECL().getText()[-1])
+        num_rows = int(ctx.NUM()[0].getText())
+        num_cols = int(ctx.NUM()[1].getText())
         neuron_type = ctx.ID()[1].getText()
         color = dotwriter.get_color(len(self._network.layers))
         dotwriter.write_layer(name=layer_name, nrows=num_rows,

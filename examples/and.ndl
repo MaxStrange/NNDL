@@ -3,8 +3,8 @@ import s;
 
 network
     neurons
-        layer : in 2x1 = n;
-        layer : out 1x1 = n;
+        layer : in 2 x 1 = n;
+        layer : out 1 x 1 = n;
     end neurons
 
     connections

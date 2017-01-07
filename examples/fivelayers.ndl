@@ -3,11 +3,11 @@ import s;
 
 network
     neurons
-        layer : input 4x1 = n;
-        layer : h0 4x1 = n;
-        layer : h1 4x1 = n;
-        layer : h2 4x1 = n;
-        layer : output 2x1 = n;
+        layer : input 4 x 1 = n;
+        layer : h0 4 x 1 = n;
+        layer : h1 4 x 1 = n;
+        layer : h2 4 x 1 = n;
+        layer : output 2 x 1 = n;
     end neurons
 
     connections
