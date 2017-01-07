@@ -40,12 +40,14 @@ def _compile_file(file_to_compile, src_dir):
     tree = parser.prog()
 
     # Walk the tree and generate the dot file
+    print("Walking tree...")
     dg = dotgen.DotGenerator(file_to_compile, output_file_name + ".dot")
     walker = antlr4.ParseTreeWalker()
     walker.walk(dg, tree)
 
     # Use the dotgenerator's network that it figured out from the nndl file
     # to generate the cpp file
+    print("Generating cpp files...")
     nw = dg._network
     cppwriter.write_file(nw, output_file_name, src_dir)
 

@@ -75,7 +75,10 @@ def pygen(rules, network):
     with open("apply_rules.py", 'w') as f:
         f.write(t)
     mod = __import__("apply_rules")
+    print("Python module written to apply_rules.py.")
+    print("Applying the logic from the python module. For large networks, this may take a while...")
     mod.apply_rules(network)
+    print("Done.")
     return network
 
 

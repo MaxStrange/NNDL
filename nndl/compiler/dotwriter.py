@@ -71,7 +71,12 @@ def write_connections(conx, fname):
     """
     Writes the connections to the file.
     """
+    if len(conx) > 1000:
+        print("Too many connections. Aborting the dot file.")
+        return False
+
     weights = []
+    print("Making connections...")
     for pair in conx:
         n0, n1 = pair[0], pair[1]
         index_from = int(n0.split('_')[1])
@@ -81,22 +86,28 @@ def write_connections(conx, fname):
         weight = _gauss(index_from - index_to)
         weights.append(weight)
 
-    # Now scale the weights so that they are all n.x where n > 0
-    smallest = min(weights)
-    # one-off function that calculates the number of leading zeros
-    # in a floating point value
-    def calc_sf(x):
-        sf = 0
-        while x < 1.0:
-            x = x * 10
-            sf += 1
-        return sf
-    scale_factor = calc_sf(smallest)
-    weights = [int(w * 10 ** scale_factor) for w in weights]
-    weights = _interpolate(weights, 0, 100)
-    weights = [int(x) for x in weights]
+    if len(weights) < 1000:
+        # Now scale the weights so that they are all n.x where n > 0
+        print("Finding the smallest...")
+        smallest = min(weights)
+        # one-off function that calculates the number of leading zeros
+        # in a floating point value
+        def calc_sf(x):
+            sf = 0
+            while x < 1.0:
+                x = x * 10
+                sf += 1
+            return sf
+        print("Calculating weights...")
+        scale_factor = calc_sf(smallest)
+        weights = [int(w * 10 ** scale_factor) for w in weights]
+        weights = _interpolate(weights, 0, 100)
+        weights = [int(x) for x in weights]
+    else:
+        weights = [1 for _ in weights]
 
     lines = []
+    print("Writing the connections...")
     for weight, pair in zip(weights, conx):
         n0, n1 = pair[0], pair[1]
         line = "    " + n0 + " -> " + n1
@@ -106,6 +117,8 @@ def write_connections(conx, fname):
     with open(fname, 'a') as f:
         for line in lines:
             f.write(line + os.linesep)
+
+    return True
 
 
 def _gauss(x):

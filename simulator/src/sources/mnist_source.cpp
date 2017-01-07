@@ -17,8 +17,8 @@ MnistSource::MnistSource()
 {
     this->seed = 5;
     this->load_dataset();
-    std::default_random_engine rnd(this->seed);
-    shuffle(this->dataset.begin(), this->dataset.end(), rnd);
+    //std::default_random_engine rnd(this->seed);
+    //shuffle(this->dataset.begin(), this->dataset.end(), rnd);
 }
 
 MnistSource::~MnistSource()

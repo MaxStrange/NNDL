@@ -18,18 +18,23 @@ class DotGenerator(NNDLListener.NNDLListener):
         self._fname = fname
         self._output_fname = output_fname
         self._network = network.Network()
+        self._aborted_dot_file = False
 
     def enterProg(self, ctx):
         dotwriter.write_boilerplate(self._output_fname)
 
     def exitProg(self, ctx):
-        dotwriter.write_end(self._output_fname);
-        subprocess.call(["dot", "-Tpng", self._output_fname, "-o",\
-                self._output_fname[:-4] + ".png"])
-        print("Wrote dot file for %s to %s." %\
-                (self._fname, self._output_fname))
-        print("Also compiled it into a .png file %s." %\
-                (self._output_fname[:-4] + ".png"))
+        if self._aborted_dot_file:
+            subprocess.call(["rm", self._output_fname])
+            print("Couldn't write the dot file - it was too big.")
+        else:
+            dotwriter.write_end(self._output_fname);
+            subprocess.call(["dot", "-Tpng", self._output_fname, "-o",\
+                    self._output_fname[:-4] + ".png"])
+            print("Wrote dot file for %s to %s." %\
+                    (self._fname, self._output_fname))
+            print("Also compiled it into a .png file %s." %\
+                    (self._output_fname[:-4] + ".png"))
 
     def exitLayer_stat(self, ctx):
         layer_name = ctx.ID()[0].getText()
@@ -37,9 +42,11 @@ class DotGenerator(NNDLListener.NNDLListener):
         num_cols = int(ctx.NUM()[1].getText())
         neuron_type = ctx.ID()[1].getText()
         color = dotwriter.get_color(len(self._network.layers))
-        dotwriter.write_layer(name=layer_name, nrows=num_rows,
-                ncols=num_cols, neur_type=neuron_type, color=color,
-                fname=self._output_fname)
+
+        if not self._aborted_dot_file:
+            dotwriter.write_layer(name=layer_name, nrows=num_rows,
+                    ncols=num_cols, neur_type=neuron_type, color=color,
+                    fname=self._output_fname)
 
         self._network.add_layer(nrows=num_rows, ncols=num_cols,
                 neurtype=neuron_type, name=layer_name)
@@ -81,7 +88,7 @@ class DotGenerator(NNDLListener.NNDLListener):
             rules.append((from_rule, to_rules))
 
         self._network = logic.pygen(rules, self._network)
-        dotwriter.write_connections(self._network.connections,
+        self._aborted_dot_file = not dotwriter.write_connections(self._network.connections,
                 self._output_fname)
 
 

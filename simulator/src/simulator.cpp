@@ -40,8 +40,8 @@ void Simulator::run()
     bool debug_not_done = true;
     while (this->source->has_more(t) && debug_not_done)
     {
-        std::vector<Signal> weights_before;
-        this->network->get_weights(weights_before);
+//        std::vector<Signal> weights_before;
+//        this->network->get_weights(weights_before);
 
         std::vector<Signal> inputs = this->source->get(t);
         std::vector<Signal> outputs = this->network->fire_forward(t, inputs);
@@ -49,10 +49,10 @@ void Simulator::run()
         std::vector<Signal> back_outputs =
                 this->network->fire_backward(t, back_inputs);
 
-        std::vector<Signal> weights_after;
-        this->network->get_weights(weights_after);
-        this->print_stats(t, back_inputs.at(0), weights_before, weights_after,
-                inputs, outputs);
+//        std::vector<Signal> weights_after;
+//        this->network->get_weights(weights_after);
+//        this->print_stats(t, back_inputs.at(0), weights_before, weights_after,
+//                inputs, outputs);
 
         t++;
 

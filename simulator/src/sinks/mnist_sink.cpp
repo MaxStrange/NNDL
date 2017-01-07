@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include <cmath>
 #include <stdexcept>
 #include <random>
 #include <vector>
@@ -12,14 +13,13 @@
 #include "mnist_sink.h"
 
 
-
 MnistSink::MnistSink()
 {
     this->index = 0;
     this->load_labels();
-    this->seed = 5;
-    std::default_random_engine rnd(this->seed);
-    shuffle(this->labels.begin(), this->labels.end(), rnd);
+//    this->seed = 5;
+//    std::default_random_engine rnd(this->seed);
+//    shuffle(this->labels.begin(), this->labels.end(), rnd);
 }
 
 MnistSink::~MnistSink()
@@ -35,7 +35,8 @@ std::ostream& operator<<(std::ostream &outstream, const MnistSink &s)
 std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs,
         const std::vector<Signal> &inputs)
 {
-    std::vector<Signal> one_hot_label = this->get_next_label();
+    uint8_t label_true = this->get_next_label();
+    std::vector<Signal> one_hot_label = this->convert_to_one_hot(label_true);
     std::vector<Signal> diffs;
 
     assert((outputs.size() == NUM_NEURONS_OUTPUT));
@@ -49,7 +50,10 @@ std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs,
         diffs.push_back(dif);
     }
 
-    if (time % 10 == 0)
+    Signal soft_max_val = this->soft_max(outputs);
+    std::cout << "Got: " << soft_max_val << " Label: " << std::to_string(label_true) << std::endl;
+
+    if (time % BATCH_SIZE == 0)
     {
         Signal err;
         for (unsigned int i = 0; i < diffs.size(); i++)
@@ -63,11 +67,13 @@ std::vector<Signal> MnistSink::take(uint64_t time, std::vector<Signal> &outputs,
     return one_hot_label;
 }
 
-std::vector<Signal> MnistSink::get_next_label()
+uint8_t MnistSink::get_next_label()
 {
-    uint8_t label = this->labels.at(this->index);
-    this->index++;
+    return this->labels.at(this->index++);
+}
 
+std::vector<Signal> MnistSink::convert_to_one_hot(uint8_t label)
+{
     //convert to one-hot
     std::vector<Signal> onehot;
     for (unsigned int i = 0; i < 10; i++)
@@ -85,7 +91,6 @@ void MnistSink::load_labels()
 {
     std::string path("mnist/train-labels-idx1-ubyte");//This one is for training
     //std::string path("mnist/t10k-labels-idx1-ubyte");//This one is for testing
-
 
     auto reverse_int = [](int i)
     {
@@ -128,7 +133,38 @@ void MnistSink::load_labels()
     }
 }
 
+Signal MnistSink::soft_max(const std::vector<Signal> &vec) const
+{
+    Signal denominator(0.0);
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        Signal at_i(vec.at(i));
+        fpoint_t e_i = (fpoint_t)(exp((double)at_i));
+        denominator += Signal(e_i);
+    }
 
+    std::cout << "Softmax: ";
+    Signal max_sm(0.0);
+    std::vector<Signal> sm;
+    auto max_sm_index = 0;
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        Signal at_i(vec.at(i));
+        fpoint_t e_i = (fpoint_t)(exp((double)at_i));
+        Signal sm_i = Signal(e_i) / denominator;
+        sm.push_back(sm_i);
+        std::cout << sm_i << " ";
+
+        if (sm_i >= max_sm)
+        {
+            max_sm = sm_i;
+            max_sm_index = i;
+        }
+    }
+
+    std::cout << " ---> " << max_sm_index << std::endl;
+    return max_sm_index; //The index of the highest value is the chosen digit
+}
 
 
 

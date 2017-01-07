@@ -25,8 +25,10 @@ private:
     std::vector<uint8_t> labels;
     unsigned int seed;
 
-    std::vector<Signal> get_next_label();
+    uint8_t get_next_label();
+    std::vector<Signal> convert_to_one_hot(uint8_t label);
     void load_labels();
+    Signal soft_max(const std::vector<Signal> &vec) const;
 };
 
 

@@ -104,7 +104,7 @@ def _write_boilerplate(of):
     static auto seed = 5;
     std::mt19937 rng(seed++);
     double min = -0.5;
-    double max = -0.5;
+    double max = 0.5;
     std::uniform_real_distribution<double> uni(min, max);
 
     double rn = uni(rng);

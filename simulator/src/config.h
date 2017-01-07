@@ -8,9 +8,9 @@
 /*
  * The example to use.
  */
-#define MNIST_EXAMPLE           false
+#define MNIST_EXAMPLE           true
 #define XOR_EXAMPLE             false
-#define AND_EXAMPLE             true
+#define AND_EXAMPLE             false
 
 /*
  * True if you want to run the unit tests rather than running the
@@ -22,9 +22,9 @@
  * If you want to use batch training, define the number of data vectors
  * in a batch here, or set it to 1 for no batch training.
  */
-#define BATCH_SIZE              4
+#define BATCH_SIZE              10
 
-#define DEBUG_NUM_RUNS          10000
+#define DEBUG_NUM_RUNS          10000000
 
 #if MNIST_EXAMPLE
     #define NUM_NEURONS_INPUT       784

@@ -40,6 +40,7 @@ WARNING               += -Wfatal-errors
 WARNING               += -Wno-unused-local-typedefs
 WARNING               += -Wno-unused-variable
 WARNING               += -Wno-unused-function
+WARNING               += -Wno-unused-private-field
 
 OPTIMIZATION          ?= -O0 -ggdb3
 
