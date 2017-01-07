@@ -24,10 +24,33 @@ def write_file(nw, output_file_name, sim_dir):
     print("Wrote code to " + output_file_name + ".cpp"\
             + " and " + output_file_name + ".h")
     subprocess.call(["mv", output_file_name + ".cpp",
-            sim_dir + os.pathsep + output_file_name + ".cpp"])
+            sim_dir + os.sep + output_file_name + ".cpp"])
     subprocess.call(["mv", output_file_name + ".h",
-            sim_dir + os.pathsep + output_file_name + ".h"])
+            sim_dir + os.sep + output_file_name + ".h"])
     print("And then moved to: " + sim_dir)
+
+    _update_main([output_file_name + ".h"], sim_dir)
+    print("Updated simulator's main to know where to find them.")
+
+
+def _update_main(files, src_dir):
+    """
+    Updates src/headers.h to include the right files.
+    """
+    path = src_dir + os.sep + "headers.h"
+
+    lines = []
+    lines += "#ifndef __HEADERS_H__" + os.linesep
+    lines += "#define __HEADERS_H__" + os.linesep + os.linesep
+
+    for f in files:
+        lines += ["#include \"" + f + "\"" + os.linesep]
+
+    lines += "#endif //header guard" + os.linesep
+
+    with open(path, 'w') as f:
+        for line in lines:
+            f.write(line)
 
 
 def _write_headerfile(of, output_file_name):
@@ -58,7 +81,7 @@ def _write_boilerplate(of):
     """
     Writes the cpp file's boilerplate.
     """
-    c_includes = ["iostream", "vector"]
+    c_includes = ["iostream", "vector", "random"]
     l_includes = ["layer.h", "neuron.h", "synapse.h"]
 
     to_write = ""
@@ -108,6 +131,7 @@ def _write_create_layers(nw, of):
 
         to_write += "    for (unsigned int i = 0; i < " + str(len(layer))
         to_write += "; i++)" + os.linesep
+        to_write += "    {" + os.linesep
 
         # neuron_id is like: neuron_0_1
         neuron_id = "\"neuron_" + str(i) + "_\"" + " + std::to_string(i)"
