@@ -71,7 +71,7 @@ CONNECT_END:        'end connections'
 LAYER:              'layer'
                     ;
 
-MAT_DECL:           NUM 'x' NUM
+MAT_DECL:           NUM+ 'x' NUM+
                     ;
 
 CONNECT:            'connect'
