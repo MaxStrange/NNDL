@@ -8,8 +8,8 @@
 /*
  * The example to use.
  */
-#define MNIST_EXAMPLE           true
-#define XOR_EXAMPLE             false
+#define MNIST_EXAMPLE           false
+#define XOR_EXAMPLE             true
 #define AND_EXAMPLE             false
 
 /*
@@ -24,7 +24,7 @@
  */
 #define BATCH_SIZE              10
 
-#define DEBUG_NUM_RUNS          10000000
+#define DEBUG_NUM_RUNS          100000
 
 #if MNIST_EXAMPLE
     #define NUM_NEURONS_INPUT       784
