@@ -24,6 +24,7 @@ Now that everything is installed. Let's make sure that it works. navigate to the
 This should spew out a bit of console stuff and then tell you that it has done some helpful things. Yay. Specifically, it should have generated a few files:
 - xor.dot
 - xor.png
+
 Both of these files can be found in the same directory that you are currently in (NNDL/nndl). It also created a couple of C++ files to be used in the simulator framework:
 - xor_autogen.cpp
 - xor_autogen.h
@@ -33,12 +34,9 @@ If you want to run the simulator on this beautiful network, you can. From here o
 
 Go into the NNDL/simulator/src directory. Edit the config.h file. Change the #defines at the top to be false for the examples that aren't the XOR example and true for that one. Now go back up one directory to the NNDL/simulator dir and type `make` into the console and let it do its thing.
 
-Once the Makefile has finished compiling, you can `./simulator` to have it run the XOR example. If you have it run enough batches (configurable in the config.h file and on the order of 10000), you will find that the accuracy converges on 1 (that's 100%). Hurray science.
+Once the Makefile has finished compiling, you can `./simulator` to have it run the XOR example. If you have it run enough batches (configurable in the config.h file and on the order of 100000), you will find that the accuracy converges on 1 (that's 100%). Hurray science.
 
 I'm afraid that's where the fun ends for now (and likely forever). I never got around to having it save the model that you have trained, or spout out stats about it after the training is complete. I also never validated that it could really run the MNIST dataset, but then, I also never parallelized it either. It's unlikely that I will ever get around to doing any of that, but it is still pretty neat if I do say so myself.
-
-## Example DOT diagrams
-Here are some example DOT diagrams output by the compiler.
 
 ## Grammar
 I find it unlikely that I will ever actually write a description of the grammar, but it is very simple and you can look at the examples to figure out most of what it is capable of. If you know ANTLR, you can look at the ANTLR grammar file. The one thing that's a little odd is that it REQUIRES that you put those two import statements at the top of the page... or at least I think it does. Can't remember... Anyway, those were going to be so that you could swap out neuron/synapse models and even have several different ones in the same network.
